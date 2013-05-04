@@ -1,0 +1,119 @@
+/* --------------------------
+a bullet Entity
+------------------------ */
+var Melon = me.ObjectEntity.extend({
+    init: function(x, y, direction, settings) {
+        // define this here instead of tiled
+        //console.log(settings.image);
+        //settings.spritewidth = 32;
+        //settings.spriteheight = 32;
+        //console.log(x);
+        //console.log(y);
+        //this.pos.x=50;
+        //this.pos.y=50;
+        // call the parent constructor
+        this.parent(x, y, settings);
+
+
+        this.addAnimation ("setMelonSprite", [9]);
+        this.setCurrentAnimation("setMelonSprite");
+
+        // make it collidable
+        this.collidable = true;
+
+        //this.startX = 10;
+        //this.startY = 10;
+        // walking & jumping speed
+        this.setVelocity(6, 6);
+
+        // make it collidable
+        //this.collidable = true;
+        // make it a enemy object
+        //this.type = me.game.ENEMY_OBJECT;
+
+        this.direction = direction;
+        this.type = me.game.ACTION_OBJECT;
+
+    },
+
+    // call by the engine when colliding with another object
+    // obj parameter corresponds to the other object (typically the player) touching this one
+    onCollision: function(res, obj) {
+            //console.log(obj.type);
+            //console.log(me.game.ENEMY_OBJECT);
+            // if we collide with an enemy
+            if (obj.type == me.game.ENEMY_OBJECT) {
+                this.flicker(45);
+                // make sure it cannot be collidable "again"
+                this.collidable = false;
+            }
+            //if (obj.type == me.game.ACTION_OBJECT) {
+            //    this.flicker(45);
+            //}   
+    },
+
+    // manage the enemy movement
+    update: function() {
+        // do nothing if not visible
+        if (!this.visible)
+            return false;
+
+        var collided = me.game.collide(this);
+        if (!collided) {
+
+        }
+
+        if (collided) {
+            //console.log("hey");
+            // if we collide with an enemy
+            if (collided.obj.type == me.game.ENEMY_OBJECT) {
+                // let's flicker in case we touched an enemy
+                this.flicker(45);
+            }
+        }
+
+        switch(this.direction){//name of the animation
+            case 'walkLeft':
+              this.vel.x-=5;
+              break;
+            case 'walkRight':
+              this.vel.x+=5;
+              break;
+            case 'walkUp':
+              this.vel.y-=5;
+              break;
+            case 'walkDown':
+              this.vel.y+=5;
+        }
+
+        switch(this.direction){//name of the animation
+            case 'walkLeft2':
+              this.vel.x-=5;
+              break;
+            case 'walkRight2':
+              this.vel.x+=5;
+              break;
+            case 'walkUp2':
+              this.vel.y-=5;
+              break;
+            case 'walkDown2':
+              this.vel.y+=5;
+        }
+        //this.vel.x=0;
+        //this.vel.y=0;
+
+
+        // check and update movement
+        this.updateMovement();
+
+        // update animation if necessary
+        if (this.vel.x!==0 || this.vel.y!==0) {
+            // update object animation
+            this.parent();
+            return true;
+        }
+
+        //me.game.remove(this, true); //removing an object and force immidiate deletion with true
+        return false;
+    }
+});
