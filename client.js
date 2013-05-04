@@ -8,7 +8,7 @@
 (function () {
 
     function init() {
-        var socket = io.connect('http://localhost:8002');
+
         var localUID = 0;
         var players = [];
 
