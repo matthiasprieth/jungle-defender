@@ -58,23 +58,30 @@ var Gorilla = Player.extend({
         this.shootReady = true;
     },
     shoot: function() {
+        console.log(this.shootReady);
         var posX = this.pos.x;
         var posY = this.pos.y;
         if(this.shootReady===true){
+            var widthOffset = this.width;
+            var heightOffset = this.height;
+            if (this.vel.x!==0 || this.vel.y!==0) {//if object moving set another Offset
+                widthOffset += this.accel.x*2;//dependency of player moving speed in x-direction
+                heightOffset += this.accel.y*2;//dependency of player moving speed in y-direction
+            }
             switch(this.current.name){//name of the animation
                 case 'walkLeft':
-                  posX = this.pos.x - this.width;
+                  posX = this.pos.x - widthOffset;
                   break;
                 case 'walkRight':
-                  posX = this.pos.x + this.width;
+                  posX = this.pos.x + widthOffset;
                   break;
                 case 'walkUp':
-                  posY = this.pos.y - this.height;
+                  posY = this.pos.y - heightOffset;
                   break;
                 case 'walkDown':
-                  posY = this.pos.y + this.height;
+                  posY = this.pos.y + heightOffset;
             }
-            var shot = new Melon(posX, posY, this.current.name, {image: "Fruits", spritewidth: 32, spriteheight: 32});
+            var shot = new Melon(posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});
             me.game.add(shot, this.z+1); //bullet should appear 1 layer before the mainPlayer
             me.game.sort();
             this.shootReady = false;
@@ -163,16 +170,25 @@ var Gorilla = Player.extend({
         // check & update player movement
         this.updateMovement();
         var collided = me.game.collide(this);
-        if(!collided){
-            this.setOpacity(1);
-        }
+
         if (collided) {
+            var that = this;
             // if we collide with an enemy
             if (collided.obj.type == me.game.ENEMY_OBJECT) {
                 // let's flicker in case we touched an enemy
                 //this.flicker(45);
-
-                this.setOpacity(0.4);
+                this.setOpacity(0.5);
+                setTimeout(function(){
+                    that.setOpacity(1);
+                },50);
+            }
+            if (collided.obj.type == me.game.ACTION_OBJECT) {
+                // let's flicker in case we touched an enemy
+                //this.flicker(45);
+                this.setOpacity(0.3);
+                setTimeout(function(){
+                    that.setOpacity(1);
+                },2000);
             }
         }
         // update animation if necessary
@@ -214,23 +230,30 @@ var  Military = Player.extend({
         this.shootReady = true;
     },
     shoot: function() {
+        console.log(this.shootReady);
         var posX = this.pos.x;
         var posY = this.pos.y;
         if(this.shootReady===true){
+            var widthOffset = this.width;
+            var heightOffset = this.height;
+            if (this.vel.x!==0 || this.vel.y!==0) {//if object moving set another Offset
+                widthOffset += this.accel.x*2;//dependency of player moving speed in x-direction
+                heightOffset += this.accel.y*2;//dependency of player moving speed in y-direction
+            }
             switch(this.current.name){//name of the animation
                 case 'walkLeft2':
-                  posX = this.pos.x - this.width;
+                  posX = this.pos.x - widthOffset;
                   break;
                 case 'walkRight2':
-                  posX = this.pos.x + this.width;
+                  posX = this.pos.x + widthOffset;
                   break;
                 case 'walkUp2':
-                  posY = this.pos.y - this.height;
+                  posY = this.pos.y - heightOffset;
                   break;
                 case 'walkDown2':
-                  posY = this.pos.y + this.height;
+                  posY = this.pos.y + heightOffset;
             }
-            var shot = new Melon(posX, posY, this.current.name, {image: "Fruits", spritewidth: 32, spriteheight: 32});
+            var shot = new Melon(posX, posY, this.current.name, {image: "Waterbomb", spritewidth: 32, spriteheight: 32});
             me.game.add(shot, this.z+1); //bullet should appear 1 layer before the mainPlayer
             me.game.sort();
             this.shootReady = false;
@@ -319,16 +342,25 @@ var  Military = Player.extend({
         this.updateMovement();
         var collided = me.game.collide(this);
 
-        if(!collided){
-            this.setOpacity(1);
-        }
         if (collided) {
+            var that = this;
             // if we collide with an enemy
             if (collided.obj.type == me.game.ENEMY_OBJECT) {
                 // let's flicker in case we touched an enemy
                 //this.flicker(45);
-
-                this.setOpacity(0.7);
+                this.setOpacity(0.5);
+                setTimeout(function(){
+                    that.setOpacity(1);
+                },50);
+            }
+            if (collided.obj.type == me.game.ACTION_OBJECT) {
+                // let's flicker in case we touched an enemy
+                //this.flicker(45);
+                console.log("hey");
+                this.setOpacity(0.3);
+                setTimeout(function(){
+                    that.setOpacity(1);
+                },2000);
             }
         }
         // update animation if necessary

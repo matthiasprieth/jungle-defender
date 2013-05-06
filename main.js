@@ -46,9 +46,14 @@ var g_resources = [{
     src: "data/sprite/Enemy.png"
 }, {
 	//fruitBomb image
-    name: "Fruits",
+    name: "GreenCoconut",
     type: "image",
-    src: "data/sprite/weapons/fruitBomb/Fruits.png"
+    src: "data/sprite/weapons/fruitBomb/GreenCoconut.png"
+}, {
+	//normalBomb image
+    name: "Waterbomb",
+    type: "image",
+    src: "data/sprite/weapons/bomb/Waterbomb.png"
 }, {
 	//explosion image
     name: "Explosion",
@@ -106,7 +111,8 @@ var jsApp	=
 		me.entityPool.add("Enemy", Enemy);
 		me.entityPool.add("Military", Military);
 
-		me.debug.renderHitBox = true;
+		//debugBox
+		//me.debug.renderHitBox = true;
 
 		// enable the keyboard
 		//good old settings
@@ -137,15 +143,15 @@ var jsApp	=
 		me.input.bindKey(me.input.KEY.G, "shootDown");
 
 		//player2
-		me.input.bindKey(me.input.KEY.LEFT,  "left2");
-		me.input.bindKey(me.input.KEY.RIGHT, "right2");
-		me.input.bindKey(me.input.KEY.UP,  "up2");
-		me.input.bindKey(me.input.KEY.DOWN, "down2");
+		me.input.bindKey(me.input.KEY.J,  "left2");
+		me.input.bindKey(me.input.KEY.L, "right2");
+		me.input.bindKey(me.input.KEY.I,  "up2");
+		me.input.bindKey(me.input.KEY.K, "down2");
 
-		me.input.bindKey(me.input.KEY.J,  "shootLeft2");
-		me.input.bindKey(me.input.KEY.L, "shootRight2");
-		me.input.bindKey(me.input.KEY.I, "shootUp2");
-		me.input.bindKey(me.input.KEY.K, "shootDown2");
+		me.input.bindKey(me.input.KEY.LEFT,  "shootLeft2");
+		me.input.bindKey(me.input.KEY.RIGHT, "shootRight2");
+		me.input.bindKey(me.input.KEY.UP, "shootUp2");
+		me.input.bindKey(me.input.KEY.DOWN, "shootDown2");
 
 		//old
 		//me.input.bindKey(me.input.KEY.SPACE, "shoot");
