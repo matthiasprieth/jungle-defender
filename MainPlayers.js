@@ -60,18 +60,24 @@ var Gorilla = Player.extend({
         var posX = this.pos.x;
         var posY = this.pos.y;
         if(this.shootReady===true){
+            var widthOffset = this.width;
+            var heightOffset = this.height;
+            if (this.vel.x!==0 || this.vel.y!==0) {//if object moving set another Offset
+                widthOffset += this.accel.x*2;//dependency of player moving speed in x-direction
+                heightOffset += this.accel.y*2;//dependency of player moving speed in y-direction
+            }
             switch(this.current.name){//name of the animation
                 case 'walkLeft':
-                  posX = this.pos.x - this.width;
+                  posX = this.pos.x - widthOffset;
                   break;
                 case 'walkRight':
-                  posX = this.pos.x + this.width;
+                  posX = this.pos.x + widthOffset;
                   break;
                 case 'walkUp':
-                  posY = this.pos.y - this.height;
+                  posY = this.pos.y - heightOffset;
                   break;
                 case 'walkDown':
-                  posY = this.pos.y + this.height;
+                  posY = this.pos.y + heightOffset;
             }
             var shot = new Melon(posX, posY, this.current.name, {image: "Fruits", spritewidth: 32, spriteheight: 32});
             me.game.add(shot, this.z+1); //bullet should appear 1 layer before the mainPlayer
@@ -211,18 +217,24 @@ var  Military = Player.extend({
         var posX = this.pos.x;
         var posY = this.pos.y;
         if(this.shootReady===true){
+            var widthOffset = this.width;
+            var heightOffset = this.height;
+            if (this.vel.x!==0 || this.vel.y!==0) {//if object moving set another Offset
+                widthOffset += this.accel.x*2;//dependency of player moving speed in x-direction
+                heightOffset += this.accel.y*2;//dependency of player moving speed in y-direction
+            }
             switch(this.current.name){//name of the animation
                 case 'walkLeft2':
-                  posX = this.pos.x - this.width;
+                  posX = this.pos.x - widthOffset;
                   break;
                 case 'walkRight2':
-                  posX = this.pos.x + this.width;
+                  posX = this.pos.x + widthOffset;
                   break;
                 case 'walkUp2':
-                  posY = this.pos.y - this.height;
+                  posY = this.pos.y - heightOffset;
                   break;
                 case 'walkDown2':
-                  posY = this.pos.y + this.height;
+                  posY = this.pos.y + heightOffset;
             }
             var shot = new Melon(posX, posY, this.current.name, {image: "Fruits", spritewidth: 32, spriteheight: 32});
             me.game.add(shot, this.z+1); //bullet should appear 1 layer before the mainPlayer

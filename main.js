@@ -106,7 +106,8 @@ var jsApp	=
 		me.entityPool.add("Enemy", Enemy);
 		me.entityPool.add("Military", Military);
 
-		me.debug.renderHitBox = true;
+		//debugBox
+		//me.debug.renderHitBox = true;
 
 		// enable the keyboard
 		//good old settings
