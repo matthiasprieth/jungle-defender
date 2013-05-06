@@ -1,6 +1,28 @@
 /* --------------------------
 a bullet Entity
 ------------------------ */
+var Explosion = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    settings.image = "Explosion";
+    settings.spritewidth = 64;
+    settings.spriteheight = 64;
+    this.parent(x, y, settings);
+    this.addAnimation ("explode", [10, 20, 30, 40, 50, 60]);
+    console.log("Explosion");
+    this.setCurrentAnimation('explode', function () {
+        me.game.remove(this);
+    });
+  },
+
+  update: function() {
+    this.animationpause = false;
+    this.parent();
+    return true;
+  }
+
+});
+
 var Melon = me.ObjectEntity.extend({
     init: function(x, y, direction, settings) {
         // define this here instead of tiled
@@ -44,9 +66,14 @@ var Melon = me.ObjectEntity.extend({
             // if we collide with an enemy
             if (obj.type == me.game.ENEMY_OBJECT) {
                 this.flicker(45);
+                var explosion = new Explosion(this.pos.x, this.pos.y, {});
+                me.game.add(explosion, this.z+1); //bullet should appear 1 layer before the mainPlayer
+                me.game.sort();
+                me.game.remove(this, true);
                 // make sure it cannot be collidable "again"
-                this.collidable = false;
+                //this.collidable = false;
             }
+
             //if (obj.type == me.game.ACTION_OBJECT) {
             //    this.flicker(45);
             //}   
@@ -64,7 +91,6 @@ var Melon = me.ObjectEntity.extend({
         }
 
         if (collided) {
-            //console.log("hey");
             // if we collide with an enemy
             if (collided.obj.type == me.game.ENEMY_OBJECT) {
                 // let's flicker in case we touched an enemy
