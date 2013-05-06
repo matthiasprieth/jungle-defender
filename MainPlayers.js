@@ -18,13 +18,14 @@ var Player = me.ObjectEntity.extend({
             //console.log(me.game.ENEMY_OBJECT);
             // if we collide with an enemy
             if (obj.type == me.game.ACTION_OBJECT) {
-                this.flicker(4);
+                //this.flicker(4);
+                this.setOpacity(0.7);
                 // make sure it cannot be collidable "again"
                 //this.collidable = false;
             }
             //if (obj.type == me.game.ACTION_OBJECT) {
-            //    this.flicker(45);
-            //}   
+            //    //this.flicker(45);
+            //}
     }
 });
 
@@ -168,11 +169,16 @@ var Gorilla = Player.extend({
         // check & update player movement
         this.updateMovement();
         var collided = me.game.collide(this);
+        if(!collided){
+            this.setOpacity(1);
+        }
         if (collided) {
             // if we collide with an enemy
             if (collided.obj.type == me.game.ENEMY_OBJECT) {
                 // let's flicker in case we touched an enemy
-                this.flicker(45);
+                //this.flicker(45);
+
+                this.setOpacity(0.4);
             }
         }
         // update animation if necessary
@@ -324,11 +330,17 @@ var  Military = Player.extend({
         // check & update player movement
         this.updateMovement();
         var collided = me.game.collide(this);
+
+        if(!collided){
+            this.setOpacity(1);
+        }
         if (collided) {
             // if we collide with an enemy
             if (collided.obj.type == me.game.ENEMY_OBJECT) {
                 // let's flicker in case we touched an enemy
-                this.flicker(45);
+                //this.flicker(45);
+
+                this.setOpacity(0.7);
             }
         }
         // update animation if necessary
