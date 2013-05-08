@@ -16,10 +16,10 @@ body > *{
 canvas {
     margin: 0% auto;
     display: block;
-    /*border-color: black;
+    border-color: black;
     border-image: url("../assets/images/WoodBorder.png") 15% repeat;
     border-style: solid;
-    border-width: 60px;*/
+    border-width: 60px;
     /*border: 10px ridge #825211;*/
 
 }
