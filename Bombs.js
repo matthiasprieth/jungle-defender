@@ -9,7 +9,6 @@ var Explosion = me.ObjectEntity.extend({
     settings.spriteheight = 64;
     this.parent(x, y, settings);
     this.addAnimation ("explode", [10, 20, 30, 40, 50, 60]);
-    console.log("Explosion");
     this.setCurrentAnimation('explode', function () {
         me.game.remove(this);
     });
@@ -20,7 +19,6 @@ var Explosion = me.ObjectEntity.extend({
     this.parent();
     return true;
   }
-
 });
 
 var Melon = me.ObjectEntity.extend({
@@ -55,14 +53,16 @@ var Melon = me.ObjectEntity.extend({
 
         this.direction = direction;
         this.type = me.game.ACTION_OBJECT;
+        this.bombIsSpam = true;
+        this.timeout = setTimeout(function () {
+            this.bombIsSpam = false;//set flags to avoid bomb in bomb spamming
+        }.bind(this), 33);
 
     },
 
     // call by the engine when colliding with another object
     // obj parameter corresponds to the other object (typically the player) touching this one
     onCollision: function(res, obj) {
-            //console.log(obj.type);
-            //console.log(me.game.ENEMY_OBJECT);
             // if we collide with an enemy
             if (obj.type == me.game.ENEMY_OBJECT) {
                 this.flicker(45);
@@ -87,18 +87,7 @@ var Melon = me.ObjectEntity.extend({
 
         var collided = me.game.collide(this);
         if (!collided) {
-
-        }
-
-        if (collided) {
-            // if we collide with an enemy
-            if (collided.obj.type == me.game.ENEMY_OBJECT) {
-                // let's flicker in case we touched an enemy
-                this.flicker(45);
-            }
-        }
-
-        switch(this.direction){//name of the animation
+            switch(this.direction){//name of the animation
             case 'walkLeft':
               this.vel.x-=5;
               break;
@@ -110,24 +99,37 @@ var Melon = me.ObjectEntity.extend({
               break;
             case 'walkDown':
               this.vel.y+=5;
+            }
+
+            switch(this.direction){//name of the animation
+                case 'walkLeft2':
+                  this.vel.x-=5;
+                  break;
+                case 'walkRight2':
+                  this.vel.x+=5;
+                  break;
+                case 'walkUp2':
+                  this.vel.y-=5;
+                  break;
+                case 'walkDown2':
+                  this.vel.y+=5;
+            }
         }
 
-        switch(this.direction){//name of the animation
-            case 'walkLeft2':
-              this.vel.x-=5;
-              break;
-            case 'walkRight2':
-              this.vel.x+=5;
-              break;
-            case 'walkUp2':
-              this.vel.y-=5;
-              break;
-            case 'walkDown2':
-              this.vel.y+=5;
+        if (collided) {
+            if (collided.obj.type == me.game.ACTION_OBJECT) {
+                if (this.bombIsSpam){
+                    me.game.remove(this, true);
+                }
+                this.vel.x = 0;
+                this.vel.y = 0;
+            }
+            // if we collide with an enemy
+            if (collided.obj.type == me.game.ENEMY_OBJECT) {
+                // let's flicker in case we touched an enemy
+                this.flicker(45);
+            }
         }
-        //this.vel.x=0;
-        //this.vel.y=0;
-
 
         // check and update movement
         this.updateMovement();

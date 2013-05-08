@@ -58,7 +58,6 @@ var Gorilla = Player.extend({
         this.shootReady = true;
     },
     shoot: function () {
-        console.log(this.shootReady);
         var posX = this.pos.x;
         var posY = this.pos.y;
 
@@ -94,7 +93,7 @@ var Gorilla = Player.extend({
                 this.shootReady = true;
                //console.log(this);
             }.bind(this), 400);
-            //clearTimeout()
+
         }
     },
     /* -----
@@ -236,7 +235,6 @@ var Military = Player.extend({
         this.shootReady = true;
     },
     shoot: function () {
-        console.log(this.shootReady);
         var posX = this.pos.x;
         var posY = this.pos.y;
         if (this.shootReady === true) {
@@ -365,7 +363,6 @@ var Military = Player.extend({
             if (collided.obj.type == me.game.ACTION_OBJECT) {
                 // let's flicker in case we touched an enemy
                 //this.flicker(45);
-                console.log("hey");
                 this.setOpacity(0.3);
                 setTimeout(function () {
                     that.setOpacity(1);
