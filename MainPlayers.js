@@ -190,6 +190,8 @@ var Gorilla = Player.extend({
             if (collided.obj.type == me.game.ACTION_OBJECT) {
                 // let's flicker in case we touched an enemy
                 //this.flicker(45);
+                me.game.HUD.updateItemValue("scorePlayer1", 1);
+
                 this.setOpacity(0.3);
                 setTimeout(function () {
                     that.setOpacity(1);
@@ -363,6 +365,9 @@ var Military = Player.extend({
             if (collided.obj.type == me.game.ACTION_OBJECT) {
                 // let's flicker in case we touched an enemy
                 //this.flicker(45);
+                // give some score
+                me.game.HUD.updateItemValue("scorePlayer2", 1);
+
                 this.setOpacity(0.3);
                 setTimeout(function () {
                     that.setOpacity(1);

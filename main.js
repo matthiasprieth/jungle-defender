@@ -10,6 +10,11 @@ var g_resources = [{
     type: "image",
     src: "data/battlezone_tileset/metatiles32x32.png"
 }, {
+    // game font
+    name: "32x32_font",
+    type: "image",
+    src: "data/sprite/32x32_font.png"
+}, {
 	//gamefieldSprite1
     name: "TileB",
     type: "image",
@@ -61,7 +66,7 @@ var g_resources = [{
     src: "data/sprite/explosions/Explosion.png"
 }];
 
-var jsApp	=
+var game	=
 {
 	/* ---
 	
@@ -94,7 +99,7 @@ var jsApp	=
 	loaded: function ()
 	{
 		// set the "Play/Ingame" Screen Object
-		me.state.set(me.state.PLAY, new PlayScreen());
+		me.state.set(me.state.PLAY, new game.PlayScreen());
 
 		// setting global gravity 0
 		me.sys.gravity = 0;
@@ -107,10 +112,9 @@ var jsApp	=
 			@param3: objectPooling (if we want to allow more than 1 object of this)
 			@param4: optional init values
 		*/
-		me.entityPool.add("Gorilla", Gorilla);
+		me.entityPool.add("Gorilla", Gorilla, true);
 		me.entityPool.add("Enemy", Enemy);
 		me.entityPool.add("Military", Military);
-
 		//debugBox
 		//me.debug.renderHitBox = true;
 
@@ -163,8 +167,34 @@ var jsApp	=
 
 }; // jsApp
 
+/*-------------- 
+a score HUD Item
+--------------------- */
+ 
+game.HUD_Object = me.HUD_Item.extend({
+    init: function(x, y, align, value) {
+        // call the parent constructor
+        this.parent(x, y);
+        // create a font
+        this.font = new me.BitmapFont("32x32_font", 32);
+        this.font.set(align);
+        if(value)
+        	this.value = value;
+    },
+ 
+    /* -----
+ 
+    draw our score
+ 
+    ------ */
+    draw: function(context, x, y) {
+        this.font.draw(context, this.value, this.pos.x + x, this.pos.y + y);
+    }
+ 
+});
+
 /* the in game stuff*/
-var PlayScreen = me.ScreenObject.extend(
+game.PlayScreen = me.ScreenObject.extend(
 {
 
    onResetEvent: function()
@@ -172,6 +202,28 @@ var PlayScreen = me.ScreenObject.extend(
       // stuff to reset on state change
         // load a level
         me.levelDirector.loadLevel("battlezone");
+
+         // add a default HUD to the game mngr
+        me.game.addHUD(0, 430, 640, 60);
+
+        me.game.HUD.addItem("Start", new game.HUD_Object(230, 10, "left", "START!"));
+    	setTimeout(function () {
+            me.game.HUD.removeItem("Start");
+        }, 2000);
+ 
+        // add a new HUD item
+        me.game.HUD.addItem("scorePlayer1", new game.HUD_Object(620, 10, "right"));
+        me.game.HUD.addItem("scorePlayer2", new game.HUD_Object(10, 10, "left"));
+
+        setInterval(function(){
+        	me.game.HUD.addItem("Shuffle", new game.HUD_Object(200, 10, "left", "SHUFFLE!"));
+        	setTimeout(function () {
+                me.game.HUD.removeItem("Shuffle");
+            }, 2000);
+        }, 10000);
+        
+        // make sure everything is in the right order
+        me.game.sort();
 	},
 
 	/* ---
@@ -181,8 +233,9 @@ var PlayScreen = me.ScreenObject.extend(
 		---	*/
 	onDestroyEvent: function()
 	{
-
-   }
+		// remove the HUD
+        me.game.disableHUD();
+    }
 
 });
 
@@ -190,5 +243,5 @@ var PlayScreen = me.ScreenObject.extend(
 //bootstrap :)
 window.onReady(function()
 {
-	jsApp.onload();
+	game.onload();
 });
