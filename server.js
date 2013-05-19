@@ -35,12 +35,13 @@ sio.sockets.on('connection', function (socket) {
     newClient(socket);
 
     socket.on('clientMessage', onClientMessage);
-    /*socket.on('disconnect', onDisconnect);*/
+    socket.on('disconnect', onDisconnect);
 });
 
 function onClientMessage(data) {
     console.log(data);
-    clients[data.uid].data = data;
+    clients[data.uid].data.action = data.action;
+    console.log(clients[data.uid].data);
     sio.sockets.emit('clientMessage', data);
     console.log(' client \t - '.blue + data.uid + 'sends data', data);
 }
@@ -53,11 +54,16 @@ function onDisconnect() {
 }
 function newClient(socket) {
     var clientUID = socket.id;
-    console.log("CLIENT_UID: " + clientUID);
+    var posX=parseInt(Math.random()*20*32);
+    var posY=parseInt(Math.random()*20*32);
+
+    console.log("CLIENT_UID: ".black + clientUID);
     clients[clientUID] = {
         'data': {
-            'x': 0,
-            'uid': clientUID
+            'x': posX,
+            'y': posY,
+            'uid': clientUID,
+            'action': ''
         }
     };
 
@@ -67,7 +73,9 @@ function newClient(socket) {
     });
 
     socket.broadcast.emit('clientConnect', {
-        'uid': clientUID
+        'uid': clientUID,
+        'x': posX,
+        'y': posY
     });
 
     console.log(' client\t - '.green + clientUID + ' connected');
