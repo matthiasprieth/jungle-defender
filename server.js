@@ -54,8 +54,8 @@ function onDisconnect() {
 }
 function newClient(socket) {
     var clientUID = socket.id;
-    var posX=parseInt(Math.random()*20*32);
-    var posY=parseInt(Math.random()*20*32);
+    var posX=parseInt(15*32);
+    var posY=parseInt(15*32);
 
     console.log("CLIENT_UID: ".black + clientUID);
     clients[clientUID] = {
