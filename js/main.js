@@ -2,7 +2,7 @@ require.config({
     baseUrl: 'js'
 });
 require(["resources","MainPlayers", "client"], function(g_resources, Players, initNetwork) {
-
+	console.log("mainready");
 
 
     var jsApp =
@@ -130,6 +130,7 @@ require(["resources","MainPlayers", "client"], function(g_resources, Players, in
 
     window.onReady(function()
     {
+	console.log("window ready");
         jsApp.onload();
     });
 
