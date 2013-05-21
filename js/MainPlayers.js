@@ -57,7 +57,9 @@ define([], function() {
             this.addAnimation("walkRight", [6, 7, 8]);
             this.addAnimation("walkUp", [9, 10, 11]);
 
-            this.setVelocity(3, 3);
+            this.setVelocity(12, 12);
+            this.accel.x=3;
+            this.accel.y=3;
             //define the positions for the specific animation in the spritesheet
             /*if(this.uid==localUID){
              this.addAnimation("walkDown", [0, 1, 2]);
@@ -135,54 +137,57 @@ define([], function() {
          ------ ,*/
         update: function () {
 
+            var max_velocity= 3*(60/me.timer.fps);
+            this.setVelocity(max_velocity);
+
             switch( this.action){
                 case "left":
                     console.log(this.action);
                     this.setCurrentAnimation("walkLeft");
                     this.vel.y=0;
-                    this.vel.x -= this.accel.x * me.timer.tick;
+                    this.vel.x -= this.accel.x * (60/ me.timer.fps);
                     break;
                 case "leftdown":
                     console.log(this.action);
                     this.setCurrentAnimation("walkLeft");
                     this.vel.y += this.accel.y * me.timer.tick;
-                    this.vel.x -= this.accel.x * me.timer.tick;
+                    this.vel.x -= this.accel.x * (60/ me.timer.fps);
                     break;
                 case "leftup":
                     console.log(this.action);
                     this.setCurrentAnimation("walkLeft");
-                    this.vel.y -= this.accel.y * me.timer.tick;
-                    this.vel.x -= this.accel.x * me.timer.tick;
+                    this.vel.y -= this.accel.y * (60/ me.timer.fps);
+                    this.vel.x -= this.accel.x * (60/ me.timer.fps);
                     break;
                 case "right":
                     console.log(this.action);
                     this.setCurrentAnimation("walkRight");
                     this.vel.y = 0;
-                    this.vel.x += this.accel.x * me.timer.tick;
+                    this.vel.x += this.accel.x * (60/ me.timer.fps);
                     break;
                 case "rightdown":
                     console.log(this.action);
                     this.setCurrentAnimation("walkRight");
-                    this.vel.y += this.accel.y * me.timer.tick;
-                    this.vel.x += this.accel.x * me.timer.tick;
+                    this.vel.y += this.accel.y * (60/ me.timer.fps);
+                    this.vel.x += this.accel.x * (60/ me.timer.fps);
                     break;
                 case "rightup":
                     console.log(this.action);
                     this.setCurrentAnimation("walkRight");
-                    this.vel.y -= this.accel.y * me.timer.tick;
-                    this.vel.x += this.accel.x * me.timer.tick;
+                    this.vel.y -= this.accel.y * (60/ me.timer.fps);
+                    this.vel.x += this.accel.x * (60/ me.timer.fps);
                     break;
                 case "up":
                     console.log(this.action);
                     this.setCurrentAnimation("walkUp");
                     this.vel.x=0;
-                    this.vel.y -= this.accel.y * me.timer.tick;
+                    this.vel.y -= this.accel.y * (60/ me.timer.fps);
                     break;
                 case "down":
                     console.log(this.action);
                     this.setCurrentAnimation("walkDown");
                     this.vel.x = 0;
-                    this.vel.y += this.accel.y * me.timer.tick;
+                    this.vel.y += this.accel.y * (60/ me.timer.fps);
                     break;
                 case "stand":
                     console.log(this.action);
@@ -399,7 +404,10 @@ define([], function() {
 
             this.setCurrentAnimation("walkDown");
             // set the default horizontal & vertical speed (accel vector)
-            this.setVelocity(3, 3);
+            this.setVelocity(12, 12);
+            this.accel.x=3;
+            this.accel.y=3;
+
             // set the display to follow our position on both axis*/
             me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
             //this.shootReady = true;
@@ -407,10 +415,17 @@ define([], function() {
             //this.emitPosition();
         },
         update: function () {
+            //console.log(me.timer.fps);
+            var max_velocity= 3*(60/me.timer.fps);
+            this.setVelocity(max_velocity);
+
             if (me.input.isKeyPressed('left')) {
+                //console.log("x: "+this.vel.x+" y: "+this.accel.y);
                 this.setCurrentAnimation("walkLeft");
                 if (me.input.isKeyPressed('down')) {
-                    this.vel.y += this.accel.y * me.timer.tick;
+
+                    this.vel.y += this.accel.y * (60/ me.timer.fps);
+
                     if (this.last_send_action != "leftdown") {
                         this.last_send_action = "leftdown";
                         socket.emit("clientMessage", {action: "leftdown", uid: this.uid});
@@ -418,7 +433,7 @@ define([], function() {
                     }
 
                 } else if (me.input.isKeyPressed('up')) {
-                    this.vel.y -= this.accel.y * me.timer.tick;
+                    this.vel.y -= (this.accel.y * (60/ me.timer.fps));
                     if (this.last_send_action != "leftup") {
                         this.last_send_action = "leftup";
                         socket.emit("clientMessage", {action: "leftup", uid: this.uid});
@@ -435,11 +450,17 @@ define([], function() {
 
                 }
                 // update the entity velocity
-                this.vel.x -= this.accel.x * me.timer.tick;
+                this.vel.x -= this.accel.x *(60/ me.timer.fps);
+
+
+                /*console.log("Velocity\n=========");
+                console.log("x: "+this.vel.x+" y: "+this.vel.y);
+                console.log(me.timer.tick);*/
+
             } else if (me.input.isKeyPressed('right')) {
                 this.setCurrentAnimation("walkRight");
                 if (me.input.isKeyPressed('down')) {
-                    this.vel.y += this.accel.y * me.timer.tick;
+                    this.vel.y += this.accel.y * (60/ me.timer.fps);
                     if (this.last_send_action != "rightdown") {
                         this.last_send_action = "rightdown";
                         socket.emit("clientMessage", {action: "rightdown", uid: this.uid});
@@ -447,7 +468,7 @@ define([], function() {
                     }
 
                 } else if (me.input.isKeyPressed('up')) {
-                    this.vel.y -= this.accel.y * me.timer.tick;
+                    this.vel.y -= this.accel.y * (60/ me.timer.fps);
                     if (this.last_send_action != "rightup") {
                         this.last_send_action = "rightup";
                         socket.emit("clientMessage", {action: "rightup", uid: this.uid});
@@ -464,13 +485,13 @@ define([], function() {
 
                 }
                 // update the entity velocity
-                this.vel.x += this.accel.x * me.timer.tick;
+                this.vel.x += this.accel.x * (60/ me.timer.fps);
             } else if (me.input.isKeyPressed('up')) {
                 this.setCurrentAnimation("walkUp");
                 if (!me.input.isKeyPressed('right') || (me.input.isKeyPressed('left'))) {
                     this.vel.x = 0;
                 }
-                this.vel.y -= this.accel.y * me.timer.tick;
+                this.vel.y -= this.accel.y * (60/ me.timer.fps);
                 if (this.last_send_action != "up") {
                     this.last_send_action = "up";
                     socket.emit("clientMessage", {action: "up", uid: this.uid});
@@ -487,7 +508,7 @@ define([], function() {
                     this.vel.x = 0;
                 }
                 // update the entity velocity
-                this.vel.y += this.accel.y * me.timer.tick;
+                this.vel.y += this.accel.y * (60/ me.timer.fps);
                 if (this.last_send_action != "down") {
                     this.last_send_action = "down";
                     socket.emit("clientMessage", {action: "down", uid: this.uid});
