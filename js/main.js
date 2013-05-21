@@ -85,10 +85,10 @@ require(["resources","MainPlayers", "client"], function(g_resources, Players, in
             me.input.bindKey(me.input.KEY.W, "up");
             me.input.bindKey(me.input.KEY.S, "down");
 
-            /*me.input.bindKey(me.input.KEY.F, "shootLeft");
+            me.input.bindKey(me.input.KEY.F, "shootLeft");
              me.input.bindKey(me.input.KEY.H, "shootRight");
              me.input.bindKey(me.input.KEY.T, "shootUp");
-             me.input.bindKey(me.input.KEY.G, "shootDown");*/
+             me.input.bindKey(me.input.KEY.G, "shootDown");
 
 
             //old
