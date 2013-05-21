@@ -438,9 +438,20 @@ define(['Bombs'], function (Melon) {
                     case 'walkDown':
                         posY = this.pos.y + heightOffset;
                 }
+
                 var shot = new Melon(posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});
                 me.game.add(shot, this.z + 1); //bullet should appear 1 layer before the mainPlayer
+                var melonObj= me.game.getLastGameObject();
+
                 me.game.sort();
+
+                bombs.push(melonObj);
+                socket.emit("bombMessage",{
+                   x: melonObj.pos.x,
+                   y: melonObj.pos.y,
+                   direction: melonObj.direction,
+                   bombtype: melonObj.bombtype
+                });
                 this.shootReady = false;
                 //var myPlayer = this;
                 //console.log(this);
@@ -625,6 +636,7 @@ define(['Bombs'], function (Melon) {
                 this.parent();
                 return true;
             }
+            return false;
         }
 
 

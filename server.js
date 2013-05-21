@@ -1,5 +1,6 @@
 var serverPort = 8002,
     clients = {},
+    bombs = [],
     colors = require('colors'),
     express = require('express'),
     verbose = false,
@@ -41,8 +42,11 @@ sio.sockets.on('connection', function (socket) {
     newClient(socket);
 
     socket.on('clientMessage', onClientMessage);
+    socket.on('bombMessage', onBombMessage);
+
     socket.on('disconnect', onDisconnect);
 });
+
 
 function onClientMessage(data) {
     console.log(data);
@@ -50,6 +54,10 @@ function onClientMessage(data) {
     console.log(clients[data.uid].data);
     sio.sockets.emit('clientMessage', data);
     console.log(' client \t - '.blue + data.uid + 'sends data', data);
+}
+function onBombMessage(data){
+    bombs.push(data);
+    console.log(bombs);
 }
 
 function onDisconnect() {

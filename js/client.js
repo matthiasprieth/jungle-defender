@@ -13,6 +13,7 @@ define(['MainPlayers'], function( Players) {
         localUID = 0;
         var players = [];
 
+        bombs = [];
         /*socket.on('message', function (data) {
          console.log(data);
          });

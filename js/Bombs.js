@@ -1,26 +1,27 @@
 /* --------------------------
  a bullet Entity
  ------------------------ */
-var Explosion = me.ObjectEntity.extend({
-
-    init: function (x, y, settings) {
-        settings.image = "Explosion";
-        settings.spritewidth = 64;
-        settings.spriteheight = 64;
-        this.parent(x, y, settings);
-        this.addAnimation("explode", [10, 20, 30, 40, 50, 60]);
-        this.setCurrentAnimation('explode', function () {
-            me.game.remove(this);
-        });
-    },
-
-    update: function () {
-        this.animationpause = false;
-        this.parent();
-        return true;
-    }
-});
 define(function () {
+    var Explosion = me.ObjectEntity.extend({
+
+        init: function (x, y, settings) {
+            settings.image = "Explosion";
+            settings.spritewidth = 64;
+            settings.spriteheight = 64;
+            this.parent(x, y, settings);
+            this.addAnimation("explode", [10, 20, 30, 40, 50, 60]);
+            this.setCurrentAnimation('explode', function () {
+                me.game.remove(this);
+            });
+        },
+
+        update: function () {
+            this.animationpause = false;
+            this.parent();
+            return true;
+        }
+    });
+
     var Melon = me.ObjectEntity.extend({
         init: function (x, y, direction, settings) {
             // define this here instead of tiled
@@ -33,7 +34,7 @@ define(function () {
             //this.pos.y=50;
             // call the parent constructor
             this.parent(x, y, settings);
-
+            this.bombtype=settings.image;
 
             this.addAnimation("setMelonSprite", [9]);
             this.setCurrentAnimation("setMelonSprite");
