@@ -43,10 +43,20 @@ sio.sockets.on('connection', function (socket) {
 
     socket.on('clientMessage', onClientMessage);
     socket.on('bombMessage', onBombMessage);
+    socket.on('removeBomb', onRemoveBomb);
+
 
     socket.on('disconnect', onDisconnect);
 });
 
+function onRemoveBomb(data){
+    for(var i=0;i<bombs.length;i++){
+        if(parseInt(bombs[i].x==parseInt(data.x)) && parseInt(bombs[i].y)==parseInt(data.y)){
+            delete bombs[i];
+            break;
+        }
+    }
+}
 
 function onClientMessage(data) {
     console.log(data);

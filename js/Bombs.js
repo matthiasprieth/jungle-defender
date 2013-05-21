@@ -79,7 +79,14 @@ define(function () {
             //    this.flicker(45);
             //}   
         },
-
+        isCollided: function(){
+            var collided= me.game.collide(this);
+            if(collided && collided.obj.type == me.game.ACTION_OBJECT){
+                me.game.remove(this, true);
+                return true;
+            }
+            return false;
+        },
         // manage the enemy movement
         update: function () {
             // do nothing if not visible
@@ -121,6 +128,7 @@ define(function () {
                 if (collided.obj.type == me.game.ACTION_OBJECT) {
                     if (this.bombIsSpam) {
                         me.game.remove(this, true);
+                        //socket.emit("removeBomb", { x: this.pos.x, y: this.pos.y});
                     }
                     this.vel.x = 0;
                     this.vel.y = 0;

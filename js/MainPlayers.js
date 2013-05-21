@@ -441,17 +441,20 @@ define(['Bombs'], function (Melon) {
 
                 var shot = new Melon(posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});
                 me.game.add(shot, this.z + 1); //bullet should appear 1 layer before the mainPlayer
+
                 var melonObj= me.game.getLastGameObject();
+                //console.log(melonObj.isCollided());
 
+                if(!melonObj.isCollided()){
+                    bombs.push(melonObj);
+                    socket.emit("bombMessage",{
+                        x: melonObj.pos.x,
+                        y: melonObj.pos.y,
+                        direction: melonObj.direction,
+                        bombtype: melonObj.bombtype
+                    });
+                }
                 me.game.sort();
-
-                bombs.push(melonObj);
-                socket.emit("bombMessage",{
-                   x: melonObj.pos.x,
-                   y: melonObj.pos.y,
-                   direction: melonObj.direction,
-                   bombtype: melonObj.bombtype
-                });
                 this.shootReady = false;
                 //var myPlayer = this;
                 //console.log(this);
