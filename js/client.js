@@ -80,13 +80,13 @@ define(['MainPlayers', 'Bombs'], function( Players, Melon) {
            console.log(bombs_data);
             for(var i=0;i<= bombs_data.length; i++){
 
-                var shot = new Melon(counter, bombs_data.posX, bombs_data.posY, bombs_data.direction, {image: bombs_data.bombtype, spritewidth: 32, spriteheight: 32});
+                var shot = new Melon(counter, bombs_data[i].x, bombs_data[i].y, bombs_data[i].direction, {image: bombs_data[i].bombtype, spritewidth: 32, spriteheight: 32});
                 //z-index of player=99 , 99 + 1
                 me.game.add(shot, 99 + 1); //bullet should appear 1 layer before the mainPlayer
 
                 var melonObj= me.game.getLastGameObject();
                 //console.log(melonObj.isCollided());
-
+		console.log(melonObj);
                 if(!melonObj.isCollided()){
                     counter++;
 
