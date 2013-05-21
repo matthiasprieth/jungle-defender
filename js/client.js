@@ -42,7 +42,7 @@ define(['MainPlayers'], function( Players) {
                     //var gameObj=me.game.getGameObjects();
                     //console.log(gameObj);
 
-                    me.game.add(gamePlayer, 3);
+                    me.game.add(gamePlayer, 99);
                     me.game.sort();
 
 
@@ -80,7 +80,7 @@ define(['MainPlayers'], function( Players) {
             //var gameObj=me.game.getGameObjects();
             //console.log(gameObj);
 
-            me.game.add(gorilla, 3);
+            me.game.add(gorilla, 99);
             me.game.sort();
             var gorillaObj=me.game.findGameObject(gorilla.uid);
             players.push(gorillaObj);
