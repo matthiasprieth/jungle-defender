@@ -137,9 +137,6 @@ define([], function() {
          ------ ,*/
         update: function () {
 
-            var max_velocity= 3*(60/me.timer.fps);
-            this.setVelocity(max_velocity);
-
             switch( this.action){
                 case "left":
                     console.log(this.action);
@@ -417,7 +414,7 @@ define([], function() {
         update: function () {
             //console.log(me.timer.fps);
             var max_velocity= 3*(60/me.timer.fps);
-            this.setVelocity(max_velocity);
+            this.setVelocity(max_velocity, max_velocity);
 
             if (me.input.isKeyPressed('left')) {
                 //console.log("x: "+this.vel.x+" y: "+this.accel.y);
