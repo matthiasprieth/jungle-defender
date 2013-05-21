@@ -5,7 +5,7 @@
 define(['Bombs'], function (Melon) {
 
 
-    var counter=1;
+    counter=1;
 
     var Player = me.ObjectEntity.extend({
         /* -----
@@ -445,7 +445,6 @@ define(['Bombs'], function (Melon) {
 
                 var shot = new Melon(counter, posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});
                 me.game.add(shot, this.z + 1); //bullet should appear 1 layer before the mainPlayer
-
                 var melonObj= me.game.getLastGameObject();
                 //console.log(melonObj.isCollided());
 

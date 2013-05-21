@@ -51,7 +51,6 @@ sio.sockets.on('connection', function (socket) {
 
 function onRemoveBomb(id){
     for(var i=0;i<bombs.length;i++){
-        console.log("i: "+i);
         if(bombs[i].id==id){
             bombs.splice(i,1);
             break;
@@ -95,6 +94,8 @@ function newClient(socket) {
         'uid': clientUID,
         'clients': clients
     });
+
+    socket.emit('getAllBombs', bombs);
 
     socket.broadcast.emit('clientConnect', {
         'uid': clientUID,

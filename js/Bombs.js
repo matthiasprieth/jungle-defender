@@ -8,7 +8,7 @@ define(function () {
             settings.image = "Explosion";
             settings.spritewidth = 64;
             settings.spriteheight = 64;
-            this.bombtype=settings.image;
+
             this.parent(x, y, settings);
             this.addAnimation("explode", [10, 20, 30, 40, 50, 60]);
             this.setCurrentAnimation('explode', function () {
@@ -36,6 +36,8 @@ define(function () {
             // call the parent constructor
 
             this.id=id;
+            this.bombtype=settings.image;
+
             this.parent(x, y, settings);
 
 
