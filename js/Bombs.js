@@ -8,6 +8,7 @@ define(function () {
             settings.image = "Explosion";
             settings.spritewidth = 64;
             settings.spriteheight = 64;
+            this.bombtype=settings.image;
             this.parent(x, y, settings);
             this.addAnimation("explode", [10, 20, 30, 40, 50, 60]);
             this.setCurrentAnimation('explode', function () {
@@ -23,7 +24,7 @@ define(function () {
     });
 
     var Melon = me.ObjectEntity.extend({
-        init: function (x, y, direction, settings) {
+        init: function (id,x, y, direction, settings) {
             // define this here instead of tiled
             //console.log(settings.image);
             //settings.spritewidth = 32;
@@ -33,8 +34,10 @@ define(function () {
             //this.pos.x=50;
             //this.pos.y=50;
             // call the parent constructor
+
+            this.id=id;
             this.parent(x, y, settings);
-            this.bombtype=settings.image;
+
 
             this.addAnimation("setMelonSprite", [9]);
             this.setCurrentAnimation("setMelonSprite");
@@ -71,6 +74,7 @@ define(function () {
                 me.game.add(explosion, this.z + 1); //bullet should appear 1 layer before the mainPlayer
                 me.game.sort();
                 me.game.remove(this, true);
+                socket.emit("removeBomb", this.id);
                 // make sure it cannot be collidable "again"
                 //this.collidable = false;
             }
@@ -80,6 +84,7 @@ define(function () {
             //}   
         },
         isCollided: function(){
+            //console.log("isCollided");
             var collided= me.game.collide(this);
             if(collided && collided.obj.type == me.game.ACTION_OBJECT){
                 me.game.remove(this, true);
@@ -90,6 +95,7 @@ define(function () {
         // manage the enemy movement
         update: function () {
             // do nothing if not visible
+            //console.log("update");
             if (!this.visible)
                 return false;
 
@@ -128,7 +134,7 @@ define(function () {
                 if (collided.obj.type == me.game.ACTION_OBJECT) {
                     if (this.bombIsSpam) {
                         me.game.remove(this, true);
-                        //socket.emit("removeBomb", { x: this.pos.x, y: this.pos.y});
+                        socket.emit("removeBomb", this.id);
                     }
                     this.vel.x = 0;
                     this.vel.y = 0;

@@ -3,6 +3,10 @@
  -------------------------------- */
 
 define(['Bombs'], function (Melon) {
+
+
+    var counter=1;
+
     var Player = me.ObjectEntity.extend({
         /* -----
          constructor
@@ -439,15 +443,18 @@ define(['Bombs'], function (Melon) {
                         posY = this.pos.y + heightOffset;
                 }
 
-                var shot = new Melon(posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});
+                var shot = new Melon(counter, posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});
                 me.game.add(shot, this.z + 1); //bullet should appear 1 layer before the mainPlayer
 
                 var melonObj= me.game.getLastGameObject();
                 //console.log(melonObj.isCollided());
 
                 if(!melonObj.isCollided()){
+                    counter++;
+
                     bombs.push(melonObj);
                     socket.emit("bombMessage",{
+                        id: melonObj.id,
                         x: melonObj.pos.x,
                         y: melonObj.pos.y,
                         direction: melonObj.direction,

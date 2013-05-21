@@ -49,19 +49,19 @@ sio.sockets.on('connection', function (socket) {
     socket.on('disconnect', onDisconnect);
 });
 
-function onRemoveBomb(data){
+function onRemoveBomb(id){
     for(var i=0;i<bombs.length;i++){
-        if(parseInt(bombs[i].x==parseInt(data.x)) && parseInt(bombs[i].y)==parseInt(data.y)){
-            delete bombs[i];
+        console.log("i: "+i);
+        if(bombs[i].id==id){
+            bombs.splice(i,1);
             break;
         }
     }
+    console.log(bombs);
 }
 
 function onClientMessage(data) {
-    console.log(data);
     clients[data.uid].data.action = data.action;
-    console.log(clients[data.uid].data);
     sio.sockets.emit('clientMessage', data);
     console.log(' client \t - '.blue + data.uid + 'sends data', data);
 }
