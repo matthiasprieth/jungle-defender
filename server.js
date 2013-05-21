@@ -28,6 +28,12 @@ sio.configure(function () {
     sio.set('authorization', function (handshakeData, callback) {
         callback(null, true); // error first callback style
     });
+	
+	/*below line -->ajax long polling
+		by default nodejs determines the best transport based on browser
+		capabilities, f.e. WebSockets*/
+	
+	//sio.set('transports', ['xhr-polling']);
 });
 
 sio.sockets.on('connection', function (socket) {

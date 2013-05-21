@@ -9,6 +9,7 @@ define(['MainPlayers'], function( Players) {
     //game resources
     var initNetwork = function() {
 
+	socket= io.connect('/');
         localUID = 0;
         var players = [];
 
@@ -82,6 +83,7 @@ define(['MainPlayers'], function( Players) {
 
             me.game.add(gorilla, 99);
             me.game.sort();
+	    me.game.repaint();
             var gorillaObj=me.game.findGameObject(gorilla.uid);
             players.push(gorillaObj);
             console.log("clientConnect\n==============");
