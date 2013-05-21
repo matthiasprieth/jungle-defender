@@ -64,7 +64,7 @@
  <objectgroup name="Enemy" width="50" height="35" visible="0">
   <object name="Enemy" x="1024" y="576" width="32" height="32"/>
  </objectgroup>
- <objectgroup name="MainPlayers" width="50" height="35">
+ <objectgroup name="MainPlayers" width="50" height="35" visible="0">
   <object name="Gorilla" x="128" y="288" width="32" height="32" visible="0"/>
  </objectgroup>
  <layer name="collision" width="50" height="35">

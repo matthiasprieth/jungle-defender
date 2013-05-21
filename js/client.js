@@ -62,6 +62,7 @@ define(['MainPlayers'], function( Players) {
                      }*/
                 }
             }
+            me.game.repaint();
             console.log("connected\n==============");
             console.log(players);
             console.log("==========");
