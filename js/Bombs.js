@@ -85,6 +85,19 @@ define(function () {
             //    this.flicker(45);
             //}   
         },
+        onBombsCollision: function(obj){
+            if (obj.type == me.game.ACTION_OBJECT) {
+                this.flicker(45);
+                var explosion = new Explosion(this.pos.x, this.pos.y, {});
+                me.game.add(explosion, this.z + 1); //bullet should appear 1 layer before the mainPlayer
+                me.game.sort();
+                me.game.remove(this, true);
+                socket.emit("removeBomb", this.id);
+                // make sure it cannot be collidable "again"
+                //this.collidable = false;
+            }
+        },
+
         isCollided: function(){
             //console.log("isCollided");
             var collided= me.game.collide(this);
@@ -95,10 +108,37 @@ define(function () {
             return false;
         },
         onDestroyEvent:function(){
+            if(this.stacked){
+                console.log("stacked");
+                //this.collisionBox.translate(-48,-48);
+                //this.collisionBox.adjustSize(-48,32,-48, 32);
+                //this.collisionBox.colPos.x+=20;
+                //this.collisionBox.colPos.y+=20;
+                /*this.collisionBox.pos.x-=50;
+                this.collisionBox.pos.y-=50;
+                this.collisionBox.width*=2;
+                this.collisionBox.height*=2;
+                this.collisionBox.hHeight*=2;
+                this.collisionBox.hWidth*=2;*/
+                this.updateColRect(-48,this.collisionBox.width*2,
+                    -48,this.collisionBox.height*2);
+                this.update();
+                //this.update();
+                //this.collisionBox.translate(48,48);
+                console.log(this.collisionBox);
+
+                var collided=me.game.collide(this);
+
+                if(collided && collided.obj.type == me.game.ACTION_OBJECT){
+                   // me.game.remove(collided.obj);
+                    collided.obj.onBombsCollision(this);
+                }
+            }
             /*var checkpos={
                 x: this.pos.x-24,
                 y:this.pos.y-24
             }
+
            this.collisionBox.set(checkpos,48,48);
            console.log(this.collisionBox);
             var collided=me.game.collide(this);

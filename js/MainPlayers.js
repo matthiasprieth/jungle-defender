@@ -397,7 +397,7 @@ define(['Bombs'], function (Melon) {
             this.parent(x, y, settings);
 
             this.setTransparency("#78C380");
-            this.updateColRect(0, 32, 18, 15); //set specific collision box
+            //this.updateColRect(0, 32, 18, 15); //set specific collision box
             //define the positions for the specific animation in the spritesheet
 
             this.addAnimation("walkDown", [0, 1, 2]);
@@ -631,7 +631,7 @@ define(['Bombs'], function (Melon) {
                 if (collided.obj.type == me.game.ACTION_OBJECT) {
                     // let's flicker in case we touched an enemy
                     //this.flicker(45);
-                    me.game.HUD.updateItemValue("scorePlayer1", 1);
+                    //me.game.HUD.updateItemValue("scorePlayer1", 1);
 
                     this.setOpacity(0.3);
                     setTimeout(function () {
