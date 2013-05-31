@@ -110,8 +110,8 @@ define(function () {
         update: function () {
             // do nothing if not visible
             //console.log("update");
-            if (!this.visible)
-                return false;
+            /*if (!this.visible)
+                return false;*/
 
             var collided = me.game.collide(this);
             if (!collided) {
