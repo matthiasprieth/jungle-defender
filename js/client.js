@@ -74,6 +74,8 @@ define(['MainPlayers', 'Bombs'], function( Players, Melon) {
              uid: localUID
              });*/
 
+            me.debug.renderHitBox = true;
+
         });
 
         socket.on('getAllBombs', function(bombs_data){

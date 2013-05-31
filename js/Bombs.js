@@ -94,6 +94,18 @@ define(function () {
             }
             return false;
         },
+        onDestroyEvent:function(){
+            /*var checkpos={
+                x: this.pos.x-24,
+                y:this.pos.y-24
+            }
+           this.collisionBox.set(checkpos,48,48);
+           console.log(this.collisionBox);
+            var collided=me.game.collide(this);
+            if(collided && collided.obj.type != me.game.ENEMY_OBJECT){
+                me.game.remove(collided.obj);
+            }*/
+        },
         // manage the enemy movement
         update: function () {
             // do nothing if not visible
