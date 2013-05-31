@@ -56,7 +56,7 @@ define(function () {
             //this.collidable = true;
             // make it a enemy object
             //this.type = me.game.ENEMY_OBJECT;
-
+            this.stacked=false;
             this.direction = direction;
             this.type = me.game.ACTION_OBJECT;
             this.bombIsSpam = true;
@@ -114,7 +114,7 @@ define(function () {
                 return false;*/
 
             var collided = me.game.collide(this);
-            if (!collided) {
+            if (!collided && this.stacked==false) {
                 switch (this.direction) {//name of the animation
                     case 'walkLeft':
                         this.vel.x -= 5;
@@ -152,9 +152,13 @@ define(function () {
                     }
                     this.vel.x = 0;
                     this.vel.y = 0;
+                    //this.maxVel = 0;
+                    this.stacked=true;
+                    //this.setMaxVelocity(0,0);
+
                 }
                 // if we collide with an enemy
-                if (collided.obj.type == me.game.ENEMY_OBJECT) {
+                else if (collided.obj.type == me.game.ENEMY_OBJECT) {
                     // let's flicker in case we touched an enemy
                     this.flicker(45);
                 }

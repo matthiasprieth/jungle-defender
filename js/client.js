@@ -80,7 +80,7 @@ define(['MainPlayers', 'Bombs'], function( Players, Melon) {
 
         socket.on('getAllBombs', function(bombs_data){
            console.log(bombs_data);
-            for(var i=0;i<= bombs_data.length; i++){
+            for(var i=0;i< bombs_data.length; i++){
 
                 var shot = new Melon(counter, bombs_data[i].x, bombs_data[i].y, bombs_data[i].direction, {image: bombs_data[i].bombtype, spritewidth: 32, spriteheight: 32});
                 //z-index of player=99 , 99 + 1
@@ -105,7 +105,7 @@ define(['MainPlayers', 'Bombs'], function( Players, Melon) {
 
             me.game.add(gorilla, 99);
             me.game.sort();
-	    me.game.repaint();
+            me.game.repaint();
             var gorillaObj=me.game.findGameObject(gorilla.uid);
             players.push(gorillaObj);
             console.log("clientConnect\n==============");
