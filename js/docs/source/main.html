@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> */
+require.config({
+    baseUrl: 'js'
+});
+require([&quot;resources&quot;,&quot;MainPlayers&quot;, &quot;client&quot;], function(g_resources, Players, initNetwork) {
+	console.log(&quot;mainready&quot;);
+
+
+    var jsApp =
+    {
+        /* ---
+
+         Initialize the jsApp
+
+         ---			*/
+        onload: function () {
+            // init the video
+            if (!me.video.init('jsapp', 640, 480, false, 1.0)) {
+                alert(&quot;Sorry but your browser does not support html 5 canvas.&quot;);
+                return;
+            }
+            // initialize the &quot;audio&quot;
+            me.audio.init(&quot;mp3,ogg&quot;);
+            // set all resources to be loaded
+            me.loader.onload = this.loaded.bind(this);
+            // set all resources to be loaded
+            me.loader.preload(g_resources);
+            // load everything &amp; display a loading screen
+            me.state.change(me.state.LOADING);
+        },
+
+        /* ---
+
+         callback when everything is loaded
+
+         ---										*/
+        loaded: function () {
+
+
+            // set the &quot;Play/Ingame&quot; Screen Object
+            me.state.set(me.state.PLAY, new PlayScreen());
+
+            // setting global gravity 0
+            me.sys.gravity = 0;
+
+            // add our player entity in the entity pool
+            //me.entityPool.add(&quot;MainPlayer&quot;, MainPlayer);
+            /*
+             @param1: className
+             @param2: class
+             @param3: objectPooling (if we want to allow more than 1 object of this)
+             @param4: optional init values
+             */
+            //me.entityPool.add(&quot;Gorilla&quot;, Gorilla);
+            //me.entityPool.add(&quot;Gorilla&quot;, Gorilla2);
+            /*me.entityPool.add(&quot;Gorilla&quot;, Gorilla);
+             me.entityPool.add(&quot;Gorilla&quot;, Gorilla);*/
+
+            //var gorilla2= me.entityPool.newInstanceOf(&quot;Gorilla&quot;);
+            //me.entityPool.add(&quot;Enemy&quot;, Enemy);
+            //me.entityPool.add(&quot;Military&quot;, Military);
+
+            //debugBox
+            //me.debug.renderHitBox = true;
+
+            // enable the keyboard
+            //good old settings
+
+            /* me.input.bindKey(me.input.KEY.A,  &quot;left&quot;);
+             me.input.bindKey(me.input.KEY.D, &quot;right&quot;);
+             me.input.bindKey(me.input.KEY.W,  &quot;up&quot;);
+             me.input.bindKey(me.input.KEY.S, &quot;down&quot;);
+
+             me.input.bindKey(me.input.KEY.LEFT,  &quot;shootLeft&quot;);
+             me.input.bindKey(me.input.KEY.RIGHT, &quot;shootRight&quot;);
+             me.input.bindKey(me.input.KEY.UP, &quot;shootUp&quot;);
+             me.input.bindKey(me.input.KEY.DOWN, &quot;shootDown&quot;);*/
+
+
+
+            //Settings for 2PlayerOn1Machine
+            //player1
+
+            me.input.bindKey(me.input.KEY.A, &quot;left&quot;);
+            me.input.bindKey(me.input.KEY.D, &quot;right&quot;);
+            me.input.bindKey(me.input.KEY.W, &quot;up&quot;);
+            me.input.bindKey(me.input.KEY.S, &quot;down&quot;);
+
+            me.input.bindKey(me.input.KEY.F, &quot;shootLeft&quot;);
+             me.input.bindKey(me.input.KEY.H, &quot;shootRight&quot;);
+             me.input.bindKey(me.input.KEY.T, &quot;shootUp&quot;);
+             me.input.bindKey(me.input.KEY.G, &quot;shootDown&quot;);
+
+
+            //old
+            //me.input.bindKey(me.input.KEY.SPACE, &quot;shoot&quot;);
+            //me.input.bindKey(me.input.KEY.W, &quot;jump&quot;, true);
+
+            // start the game
+            me.state.change(me.state.PLAY);
+
+        }
+
+    }; // jsApp
+
+    var PlayScreen = me.ScreenObject.extend(
+        {
+
+            onResetEvent: function () {
+                // stuff to reset on state change
+                // load a level
+                me.levelDirector.loadLevel(&quot;battlezone&quot;);
+
+
+
+                /*initialize Network*/
+                initNetwork();
+            },
+
+            /* ---
+
+             action to perform when game is finished (state change)
+
+             ---	*/
+            onDestroyEvent: function () {
+
+            }
+
+        });
+
+
+    window.onReady(function()
+    {
+	console.log(&quot;window ready&quot;);
+        jsApp.onload();
+    });
+
+});
+
+
+</pre>
+</body>
+</html>

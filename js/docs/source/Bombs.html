@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> * Bombs!
+ */
+define(function () {
+
+<span id='Explosion'>    /**
+</span>     * @class Explosion
+     * create and animates Explosion
+     */
+    var Explosion = me.ObjectEntity.extend({
+<span id='Explosion-method-constructor'>        /**
+</span>         * @constructor
+         * initialize sprites and animation for Explosion
+         */
+        init: function (x, y, settings) {
+<span id='Explosion-cfg-image'>            /**
+</span>             * @cfg
+             */
+            settings.image = &quot;Explosion&quot;;
+            settings.spritewidth = 64;
+            settings.spriteheight = 64;
+
+            this.parent(x, y, settings);
+            this.addAnimation(&quot;explode&quot;, [10, 20, 30, 40, 50, 60]);
+            this.setCurrentAnimation('explode', function () {
+                me.game.remove(this);
+            });
+        },
+<span id='Explosion-method-update'>        /**
+</span>         * updates Explosion movement
+         * @return{Boolean} Returns true for always updating the movement
+         */
+        update: function () {
+            this.animationpause = false;
+            this.parent();
+            return true;
+        }
+    });
+
+<span id='Melon'>    /**
+</span>     * @class Melon
+     * these are bombs for animals
+     */
+    var Melon = me.ObjectEntity.extend({
+<span id='Melon-method-constructor'>        /**
+</span>         * @constructor
+         * initialize sprites, animation for Explosion
+         * and other properties
+         */
+        init: function (id, x, y, direction, settings) {
+
+<span id='Melon-property-id'>            /**
+</span>             * @type{Number}
+             * unique id for identifying object
+             */
+            this.id = id;
+            this.bombtype = settings.image;
+
+            // call the parent constructor
+
+            this.parent(x, y, settings);
+
+
+            this.addAnimation(&quot;setMelonSprite&quot;, [9]);
+            this.setCurrentAnimation(&quot;setMelonSprite&quot;);
+
+<span id='Melon-property-collidable'>            /**
+</span>             * make it collidable
+             */
+            this.collidable = true;
+
+            this.setVelocity(6, 6);
+
+<span id='Melon-property-stacked'>            /**
+</span>             * defines, if melon is stacked or not
+             * @type {boolean}
+             */
+            this.stacked = false;
+
+<span id='Melon-property-direction'>            /**
+</span>             * direction of melon animation
+             * @type {String}
+             */
+            this.direction = direction;
+
+
+            this.type = me.game.ACTION_OBJECT;
+
+<span id='Melon-property-bombIsSpam'>            /**
+</span>             * secure mechanism to prevent spaming,
+             * melons should only create, if they don`t collide right now with a other object
+             * @type {boolean}
+             */
+            this.bombIsSpam = true;
+            this.timeout = setTimeout(function () {
+                this.bombIsSpam = false;//set flags to avoid bomb in bomb spamming
+            }.bind(this), 33);
+
+        },
+
+        // call by the engine when colliding with another object
+        // obj parameter corresponds to the other object (typically the player) touching this one
+<span id='Melon-method-onCollision'>        /**
+</span>         * on Collision with another Object, MelonJS calls this method
+         * @param res
+         * @param obj
+         */
+        onCollision: function (res, obj) {
+            // if we collide with an enemy
+            if (obj.type == me.game.ENEMY_OBJECT) {
+                this.flicker(45);
+                var explosion = new Explosion(this.pos.x, this.pos.y, {});
+                me.game.add(explosion, this.z + 1); //bullet should appear 1 layer before the mainPlayer
+                me.game.sort();
+                me.game.remove(this, true);
+                socket.emit(&quot;removeBomb&quot;, this.id);
+                // make sure it cannot be collidable &quot;again&quot;
+                //this.collidable = false;
+            }
+
+            //if (obj.type == me.game.ACTION_OBJECT) {
+            //    this.flicker(45);
+            //}   
+        },
+        onBombsCollision: function (obj) {
+            if (obj.type == me.game.ACTION_OBJECT) {
+                this.flicker(45);
+                var explosion = new Explosion(this.pos.x, this.pos.y, {});
+                me.game.add(explosion, this.z + 1); //bullet should appear 1 layer before the mainPlayer
+                me.game.sort();
+                me.game.remove(this, true);
+                socket.emit(&quot;removeBomb&quot;, this.id);
+                // make sure it cannot be collidable &quot;again&quot;
+                //this.collidable = false;
+            }
+        },
+
+        isCollided: function () {
+            //console.log(&quot;isCollided&quot;);
+            var collided = me.game.collide(this);
+            if (collided &amp;&amp; collided.obj.type == me.game.ACTION_OBJECT) {
+                me.game.remove(this, true);
+                return true;
+            }
+            return false;
+        },
+        onDestroyEvent: function () {
+            if (this.stacked) {
+                console.log(&quot;stacked&quot;);
+                //this.collisionBox.translate(-48,-48);
+                //this.collisionBox.adjustSize(-48,32,-48, 32);
+                //this.collisionBox.colPos.x+=20;
+                //this.collisionBox.colPos.y+=20;
+                /*this.collisionBox.pos.x-=50;
+                 this.collisionBox.pos.y-=50;
+                 this.collisionBox.width*=2;
+                 this.collisionBox.height*=2;
+                 this.collisionBox.hHeight*=2;
+                 this.collisionBox.hWidth*=2;*/
+                this.updateColRect(-48, this.collisionBox.width * 2,
+                    -48, this.collisionBox.height * 2);
+                this.update();
+                //this.update();
+                //this.collisionBox.translate(48,48);
+                console.log(this.collisionBox);
+
+                var collided = me.game.collide(this);
+
+                if (collided &amp;&amp; collided.obj.type == me.game.ACTION_OBJECT) {
+                    // me.game.remove(collided.obj);
+                    collided.obj.onBombsCollision(this);
+                }
+            }
+            /*var checkpos={
+             x: this.pos.x-24,
+             y:this.pos.y-24
+             }
+
+             this.collisionBox.set(checkpos,48,48);
+             console.log(this.collisionBox);
+             var collided=me.game.collide(this);
+             if(collided &amp;&amp; collided.obj.type != me.game.ENEMY_OBJECT){
+             me.game.remove(collided.obj);
+             }*/
+        },
+        // manage the enemy movement
+        update: function () {
+            // do nothing if not visible
+            //console.log(&quot;update&quot;);
+            /*if (!this.visible)
+             return false;*/
+
+            var collided = me.game.collide(this);
+            if (!collided &amp;&amp; this.stacked == false) {
+                switch (this.direction) {//name of the animation
+                    case 'walkLeft':
+                        this.vel.x -= 5;
+                        break;
+                    case 'walkRight':
+                        this.vel.x += 5;
+                        break;
+                    case 'walkUp':
+                        this.vel.y -= 5;
+                        break;
+                    case 'walkDown':
+                        this.vel.y += 5;
+                }
+
+                switch (this.direction) {//name of the animation
+                    case 'walkLeft2':
+                        this.vel.x -= 5;
+                        break;
+                    case 'walkRight2':
+                        this.vel.x += 5;
+                        break;
+                    case 'walkUp2':
+                        this.vel.y -= 5;
+                        break;
+                    case 'walkDown2':
+                        this.vel.y += 5;
+                }
+            }
+
+            if (collided) {
+                if (collided.obj.type == me.game.ACTION_OBJECT) {
+                    if (this.bombIsSpam) {
+                        me.game.remove(this, true);
+                        socket.emit(&quot;removeBomb&quot;, this.id);
+                    }
+                    this.vel.x = 0;
+                    this.vel.y = 0;
+                    //this.maxVel = 0;
+                    this.stacked = true;
+                    //this.setMaxVelocity(0,0);
+
+                }
+                // if we collide with an enemy
+                else if (collided.obj.type == me.game.ENEMY_OBJECT) {
+                    // let's flicker in case we touched an enemy
+                    this.flicker(45);
+                }
+            }
+
+            // check and update movement
+            this.updateMovement();
+
+            // update animation if necessary
+            if (this.vel.x !== 0 || this.vel.y !== 0) {
+                // update object animation
+                this.parent();
+                return true;
+            }
+
+            //me.game.remove(this, true); //removing an object and force immidiate deletion with true
+            return false;
+        }
+
+    });
+    return Melon;
+});
+</pre>
+</body>
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> */
+
+/*-------------------
+ a player entity
+ -------------------------------- */
+
+define(['Bombs'], function (Melon) {
+
+
+    counter=1;
+
+    var Player = me.ObjectEntity.extend({
+        /* -----
+         constructor
+         ------ */
+        init: function (x, y, settings) {
+            // call the constructor
+            this.parent(x, y, settings);
+            // make it collidable
+            this.collidable = true;
+            this.type = me.game.ENEMY_OBJECT;
+            //this.addAnimation (&quot;explosion&quot;, [0,1,2]);
+        },
+        onCollision: function (res, obj) {
+            //console.log(obj.type);
+            //console.log(me.game.ENEMY_OBJECT);
+            // if we collide with an enemy
+            if (obj.type == me.game.ACTION_OBJECT) {
+                //this.flicker(4);
+                this.setOpacity(0.7);
+                // make sure it cannot be collidable &quot;again&quot;
+                //this.collidable = false;
+            }
+            //if (obj.type == me.game.ACTION_OBJECT) {
+            //    //this.flicker(45);
+            //}
+        }
+    });
+
+
+    var Gorilla = Player.extend({
+        /* -----
+         constructor
+         ------ */
+        init: function (x, y, settings, uid) {
+            // call the constructor
+            //those settings we could also save in the .tmx file for every entity
+            //console.log(settings);
+            settings.image = &quot;Gorilla&quot;;
+            settings.spritewidth = 32;
+            settings.spriteheight = 32;
+            this.uid = uid;
+
+            this.action = &quot;&quot;;
+
+            this.parent(x, y, settings);
+
+            this.setTransparency(&quot;#78C380&quot;);
+            this.updateColRect(0, 32, 18, 15); //set specific collision box
+
+            this.addAnimation(&quot;walkDown&quot;, [0, 1, 2]);
+            this.addAnimation(&quot;walkLeft&quot;, [3, 4, 5]);
+            this.addAnimation(&quot;walkRight&quot;, [6, 7, 8]);
+            this.addAnimation(&quot;walkUp&quot;, [9, 10, 11]);
+
+            this.setVelocity(12, 12);
+            this.accel.x = 3;
+            this.accel.y = 3;
+            //define the positions for the specific animation in the spritesheet
+            /*if(this.uid==localUID){
+             this.addAnimation(&quot;walkDown&quot;, [0, 1, 2]);
+             this.addAnimation(&quot;walkLeft&quot;, [3, 4, 5]);
+             this.addAnimation(&quot;walkRight&quot;, [6, 7, 8]);
+             this.addAnimation(&quot;walkUp&quot;, [9, 10, 11]);
+
+             this.setCurrentAnimation(&quot;walkDown&quot;);
+             // set the default horizontal &amp; vertical speed (accel vector)
+             this.setVelocity(3, 3);
+             // set the display to follow our position on both axis
+             me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
+             //this.shootReady = true;
+             }*/
+
+            //this.emitPosition();
+        },
+        setAction: function (action) {
+            this.action = action;
+        },
+        /*shoot: function () {
+         console.log(this.shootReady);
+         var posX = this.pos.x;
+         var posY = this.pos.y;
+
+         if (this.shootReady === true) {
+         clearTimeout(this.timeout);
+         var widthOffset = this.width;
+         var heightOffset = this.height;
+         if (this.vel.x !== 0 || this.vel.y !== 0) {//if object moving set another Offset
+         widthOffset += this.accel.x * 2;//dependency of player moving speed in x-direction
+         heightOffset += this.accel.y * 2;//dependency of player moving speed in y-direction
+         }
+         switch (this.current.name) {//name of the animation
+         case 'walkLeft':
+         posX = this.pos.x - widthOffset;
+         break;
+         case 'walkRight':
+         posX = this.pos.x + widthOffset;
+         break;
+         case 'walkUp':
+         posY = this.pos.y - heightOffset;
+         break;
+         case 'walkDown':
+         posY = this.pos.y + heightOffset;
+         }
+         var shot = new Melon(posX, posY, this.current.name, {image: &quot;GreenCoconut&quot;, spritewidth: 32, spriteheight: 32});
+         me.game.add(shot, this.z + 1); //bullet should appear 1 layer before the mainPlayer
+         me.game.sort();
+         this.shootReady = false;
+         //var myPlayer = this;
+         //console.log(this);
+         this.timeout = setTimeout(function () {
+         //console.log(&quot;shootReady Gorilla&quot;);
+         this.shootReady = true;
+         //console.log(this);
+         }.bind(this), 400);
+         //clearTimeout()
+         }
+         },*/
+
+        /*
+         emitPosition: function () {
+         setInterval(function(){
+         socket.emit('clientMessage', {
+         x: this.pos.x,
+         y: this.pos.y,
+         uid: this.uid
+         });
+         }.bind(this),200);
+         console.log(&quot;Piiiiiiiiiiiiiep&quot;);
+         }*/
+        /* -----
+         update the player pos
+         ------ ,*/
+        update: function () {
+            var max_velocity = 3 * (60 / me.timer.fps);
+            this.setVelocity(max_velocity, max_velocity);
+
+            switch (this.action) {
+                case &quot;left&quot;:
+                    console.log(this.action);
+                    this.setCurrentAnimation(&quot;walkLeft&quot;);
+                    this.vel.y = 0;
+                    this.vel.x -= this.accel.x * (60 / me.timer.fps);
+                    break;
+                case &quot;leftdown&quot;:
+                    console.log(this.action);
+                    this.setCurrentAnimation(&quot;walkLeft&quot;);
+                    this.vel.y += this.accel.y * me.timer.tick;
+                    this.vel.x -= this.accel.x * (60 / me.timer.fps);
+                    break;
+                case &quot;leftup&quot;:
+                    console.log(this.action);
+                    this.setCurrentAnimation(&quot;walkLeft&quot;);
+                    this.vel.y -= this.accel.y * (60 / me.timer.fps);
+                    this.vel.x -= this.accel.x * (60 / me.timer.fps);
+                    break;
+                case &quot;right&quot;:
+                    console.log(this.action);
+                    this.setCurrentAnimation(&quot;walkRight&quot;);
+                    this.vel.y = 0;
+                    this.vel.x += this.accel.x * (60 / me.timer.fps);
+                    break;
+                case &quot;rightdown&quot;:
+                    console.log(this.action);
+                    this.setCurrentAnimation(&quot;walkRight&quot;);
+                    this.vel.y += this.accel.y * (60 / me.timer.fps);
+                    this.vel.x += this.accel.x * (60 / me.timer.fps);
+                    break;
+                case &quot;rightup&quot;:
+                    console.log(this.action);
+                    this.setCurrentAnimation(&quot;walkRight&quot;);
+                    this.vel.y -= this.accel.y * (60 / me.timer.fps);
+                    this.vel.x += this.accel.x * (60 / me.timer.fps);
+                    break;
+                case &quot;up&quot;:
+                    console.log(this.action);
+                    this.setCurrentAnimation(&quot;walkUp&quot;);
+                    this.vel.x = 0;
+                    this.vel.y -= this.accel.y * (60 / me.timer.fps);
+                    break;
+                case &quot;down&quot;:
+                    console.log(this.action);
+                    this.setCurrentAnimation(&quot;walkDown&quot;);
+                    this.vel.x = 0;
+                    this.vel.y += this.accel.y * (60 / me.timer.fps);
+                    break;
+                case &quot;stand&quot;:
+                    console.log(this.action);
+                    this.vel.x = 0;
+                    this.vel.y = 0;
+                    this.setAnimationFrame(1); //render the standing frame of every Animation if no key input action
+                    break;
+                default:
+                    this.vel.x = 0;
+                    this.vel.y = 0;
+                    this.setAnimationFrame(1); //render the standing frame of every Animation if no key input action
+                    break;
+                /*default:
+                 this.vel.x = 0;
+                 this.vel.y = 0;
+                 this.setAnimationFrame(1); //render the standing frame of every Animation if no key input action
+                 break;*/
+            }
+
+
+            this.updateMovement();
+
+            // update animation if necessary
+            if (this.vel.x !== 0 || this.vel.y !== 0) {
+                // update object animation
+                this.parent();
+                return true;
+            }
+
+
+            /*
+             if (me.input.isKeyPressed('shootLeft')) {
+             this.setCurrentAnimation(&quot;walkLeft&quot;);
+             this.shoot();
+             }
+             if (me.input.isKeyPressed('shootRight')) {
+             this.setCurrentAnimation(&quot;walkRight&quot;);
+             this.shoot();
+             }
+             if (me.input.isKeyPressed('shootUp')) {
+             this.setCurrentAnimation(&quot;walkUp&quot;);
+             this.shoot();
+             }
+             if (me.input.isKeyPressed('shootDown')) {
+             this.setCurrentAnimation(&quot;walkDown&quot;);
+             this.shoot();
+             }
+             */
+
+
+            /*if (me.input.isKeyPressed('jump')) {
+             // make sure we are not already jumping or falling
+             if (!this.jumping &amp;&amp; !this.falling) {
+             // set current vel to the maximum defined value
+             // gravity will then do the rest
+             this.vel.y = -this.maxVel.y * me.timer.tick;
+             // set the jumping flag
+             this.jumping = true;
+             }
+             }*/
+            // check &amp; update player movement
+            /*      this.updateMovement();
+             var collided = me.game.collide(this);
+
+             if (collided) {
+             var that = this;
+             // if we collide with an enemy
+             if (collided.obj.type == me.game.ENEMY_OBJECT) {
+             // let's flicker in case we touched an enemy
+             //this.flicker(45);
+             this.setOpacity(0.5);
+             setTimeout(function () {
+             that.setOpacity(1);
+             }, 50);
+             }
+             if (collided.obj.type == me.game.ACTION_OBJECT) {
+             // let's flicker in case we touched an enemy
+             //this.flicker(45);
+             this.setOpacity(0.3);
+             setTimeout(function () {
+             that.setOpacity(1);
+             }, 2000);
+             }
+             }
+             // update animation if necessary
+             if (this.vel.x !== 0 || this.vel.y !== 0) {
+             // update object animation
+             this.parent();
+             return true;
+             }*/
+            // else inform the engine we did not perform
+            // any update (e.g. position, animation)
+            return false;
+        }/*,
+         initKeys: function () {
+         console.log(&quot;initKeys&quot;);
+         //var canvas = document.getElementsByTagName(&quot;canvas&quot;)[0];
+         this.action = &quot;&quot;;
+         this.prev_action = &quot;&quot;;
+         var keys = [];
+
+         document.addEventListener('keypress', function (e) {
+
+         console.log(e);
+         switch (e.keyCode) {
+         //'w'
+         case 119:
+         this.action = &quot;up&quot;;
+         console.log(&quot;w&quot;);
+         break;
+         //'a'
+         case 97:
+         this.action = &quot;left&quot;;
+         console.log(&quot;a&quot;);
+         break;
+         //'s'
+         case 115:
+         this.action = &quot;down&quot;;
+         console.log(&quot;s&quot;);
+         break;
+         //'d'
+         case 100:
+         this.action = &quot;right&quot;;
+         console.log(&quot;d&quot;);
+         break;
+         default:
+         this.action = &quot;&quot;;
+         break;
+         }
+         ;
+         if (this.action != &quot;&quot;) {
+         socket.emit('clientMessage', {
+         event: this.action,
+         uid: this.uid
+         });
+         }
+         this.prev_action = this.action;
+
+
+         }.bind(this), false);
+         },
+         movePlayer: function (event) {
+         if (event == 'left') {
+
+         this.setCurrentAnimation(&quot;walkLeft&quot;);
+         if (me.input.isKeyPressed('down')) {
+         this.vel.y += this.accel.y * me.timer.tick;
+         } else if (me.input.isKeyPressed('up')) {
+         this.vel.y -= this.accel.y * me.timer.tick;
+         } else {
+         this.vel.y = 0;
+         }
+         // update the entity velocity
+         this.vel.x -= this.accel.x * me.timer.tick;
+         } else if (event == 'right') {
+         this.setCurrentAnimation(&quot;walkRight&quot;);
+         if (me.input.isKeyPressed('down')) {
+         this.vel.y += this.accel.y * me.timer.tick;
+         } else if (me.input.isKeyPressed('up')) {
+         this.vel.y -= this.accel.y * me.timer.tick;
+         } else {
+         this.vel.y = 0;
+         }
+         // update the entity velocity
+         this.vel.x += this.accel.x * me.timer.tick;
+         } else if (event == 'up') {
+         this.setCurrentAnimation(&quot;walkUp&quot;);
+         if (!me.input.isKeyPressed('right') || (me.input.isKeyPressed('left'))) {
+         this.vel.x = 0;
+         }
+         // update the entity velocity
+         this.vel.y -= this.accel.y * me.timer.tick;
+         } else if (event == 'down') {
+         this.setCurrentAnimation(&quot;walkDown&quot;);
+         if (!me.input.isKeyPressed('right') || (me.input.isKeyPressed('left'))) {
+         this.vel.x = 0;
+         }
+         // update the entity velocity
+         this.vel.y += this.accel.y * me.timer.tick;
+         }
+         else {
+         //reset the current animation to the first frame
+         this.vel.x = 0;
+         this.vel.y = 0;
+         this.setAnimationFrame(1); //render the standing frame of every Animation if no key input action
+         }
+         }*/
+    });
+
+    var MainPlayer = Player.extend({
+        /* -----
+         constructor
+         ------ */
+        init: function (x, y, settings, uid) {
+            // call the constructor
+            //those settings we could also save in the .tmx file for every entity
+            settings.image = &quot;Gorilla&quot;;
+            settings.spritewidth = 32;
+            settings.spriteheight = 32;
+            this.uid = uid;
+
+            this.last_send_action = &quot;&quot;;
+
+            this.parent(x, y, settings);
+
+            this.setTransparency(&quot;#78C380&quot;);
+            //this.updateColRect(0, 32, 18, 15); //set specific collision box
+            //define the positions for the specific animation in the spritesheet
+
+            this.addAnimation(&quot;walkDown&quot;, [0, 1, 2]);
+            this.addAnimation(&quot;walkLeft&quot;, [3, 4, 5]);
+            this.addAnimation(&quot;walkRight&quot;, [6, 7, 8]);
+            this.addAnimation(&quot;walkUp&quot;, [9, 10, 11]);
+
+            this.setCurrentAnimation(&quot;walkDown&quot;);
+            // set the default horizontal &amp; vertical speed (accel vector)
+            this.setVelocity(12, 12);
+            this.accel.x = 3;
+            this.accel.y = 3;
+
+            // set the display to follow our position on both axis*/
+            me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
+            this.shootReady = true;
+
+            //this.emitPosition();
+        },
+        shoot: function () {
+            var posX = this.pos.x;
+            var posY = this.pos.y;
+
+            if (this.shootReady === true) {
+                clearTimeout(this.timeout);
+                var widthOffset = this.width;
+                var heightOffset = this.height;
+                if (this.vel.x !== 0 || this.vel.y !== 0) {//if object moving set another Offset
+                    widthOffset += this.accel.x * 2;//dependency of player moving speed in x-direction
+                    heightOffset += this.accel.y * 2;//dependency of player moving speed in y-direction
+                }
+                switch (this.current.name) {//name of the animation
+                    case 'walkLeft':
+                        posX = this.pos.x - widthOffset;
+                        break;
+                    case 'walkRight':
+                        posX = this.pos.x + widthOffset;
+                        break;
+                    case 'walkUp':
+                        posY = this.pos.y - heightOffset;
+                        break;
+                    case 'walkDown':
+                        posY = this.pos.y + heightOffset;
+                }
+
+                var shot = new Melon(counter, posX, posY, this.current.name, {image: &quot;GreenCoconut&quot;, spritewidth: 32, spriteheight: 32});
+                me.game.add(shot, this.z + 1); //bullet should appear 1 layer before the mainPlayer
+                var melonObj= me.game.getLastGameObject();
+                //console.log(melonObj.isCollided());
+
+                if(!melonObj.isCollided()){
+                    counter++;
+
+                    bombs.push(melonObj);
+                    socket.emit(&quot;bombMessage&quot;,{
+                        id: melonObj.id,
+                        x: melonObj.pos.x,
+                        y: melonObj.pos.y,
+                        direction: melonObj.direction,
+                        bombtype: melonObj.bombtype
+                    });
+                }
+                me.game.sort();
+                this.shootReady = false;
+                //var myPlayer = this;
+                //console.log(this);
+                this.timeout = setTimeout(function () {
+                    //console.log(&quot;shootReady Gorilla&quot;);
+                    this.shootReady = true;
+                    //console.log(this);
+                }.bind(this), 400);
+
+            }
+        },
+        update: function () {
+            //console.log(me.timer.fps);
+            var max_velocity = 3 * (60 / me.timer.fps);
+            this.setVelocity(max_velocity, max_velocity);
+
+            if (me.input.isKeyPressed('left')) {
+                //console.log(&quot;x: &quot;+this.vel.x+&quot; y: &quot;+this.accel.y);
+                this.setCurrentAnimation(&quot;walkLeft&quot;);
+                if (me.input.isKeyPressed('down')) {
+
+                    this.vel.y += this.accel.y * (60 / me.timer.fps);
+
+                    if (this.last_send_action != &quot;leftdown&quot;) {
+                        this.last_send_action = &quot;leftdown&quot;;
+                        socket.emit(&quot;clientMessage&quot;, {action: &quot;leftdown&quot;, uid: this.uid});
+
+                    }
+
+                } else if (me.input.isKeyPressed('up')) {
+                    this.vel.y -= (this.accel.y * (60 / me.timer.fps));
+                    if (this.last_send_action != &quot;leftup&quot;) {
+                        this.last_send_action = &quot;leftup&quot;;
+                        socket.emit(&quot;clientMessage&quot;, {action: &quot;leftup&quot;, uid: this.uid});
+
+                    }
+
+                } else {
+                    this.vel.y = 0;
+                    if (this.last_send_action != &quot;left&quot;) {
+                        this.last_send_action = &quot;left&quot;;
+                        socket.emit(&quot;clientMessage&quot;, {action: &quot;left&quot;, uid: this.uid});
+
+                    }
+
+                }
+                // update the entity velocity
+                this.vel.x -= this.accel.x * (60 / me.timer.fps);
+
+
+                /*console.log(&quot;Velocity\n=========&quot;);
+                 console.log(&quot;x: &quot;+this.vel.x+&quot; y: &quot;+this.vel.y);
+                 console.log(me.timer.tick);*/
+
+            } else if (me.input.isKeyPressed('right')) {
+                this.setCurrentAnimation(&quot;walkRight&quot;);
+                if (me.input.isKeyPressed('down')) {
+                    this.vel.y += this.accel.y * (60 / me.timer.fps);
+                    if (this.last_send_action != &quot;rightdown&quot;) {
+                        this.last_send_action = &quot;rightdown&quot;;
+                        socket.emit(&quot;clientMessage&quot;, {action: &quot;rightdown&quot;, uid: this.uid});
+
+                    }
+
+                } else if (me.input.isKeyPressed('up')) {
+                    this.vel.y -= this.accel.y * (60 / me.timer.fps);
+                    if (this.last_send_action != &quot;rightup&quot;) {
+                        this.last_send_action = &quot;rightup&quot;;
+                        socket.emit(&quot;clientMessage&quot;, {action: &quot;rightup&quot;, uid: this.uid});
+
+                    }
+
+                } else {
+                    this.vel.y = 0;
+                    if (this.last_send_action != &quot;right&quot;) {
+                        this.last_send_action = &quot;right&quot;;
+                        socket.emit(&quot;clientMessage&quot;, {action: &quot;right&quot;, uid: this.uid});
+
+                    }
+
+                }
+                // update the entity velocity
+                this.vel.x += this.accel.x * (60 / me.timer.fps);
+            } else if (me.input.isKeyPressed('up')) {
+                this.setCurrentAnimation(&quot;walkUp&quot;);
+                if (!me.input.isKeyPressed('right') || (me.input.isKeyPressed('left'))) {
+                    this.vel.x = 0;
+                }
+                this.vel.y -= this.accel.y * (60 / me.timer.fps);
+                if (this.last_send_action != &quot;up&quot;) {
+                    this.last_send_action = &quot;up&quot;;
+                    socket.emit(&quot;clientMessage&quot;, {action: &quot;up&quot;, uid: this.uid});
+
+                }
+
+                // update the entity velocity
+
+            }
+            else if (me.input.isKeyPressed('down')) {
+                this.setCurrentAnimation(&quot;walkDown&quot;);
+
+                if (!me.input.isKeyPressed('right') || (me.input.isKeyPressed('left'))) {
+                    this.vel.x = 0;
+                }
+                // update the entity velocity
+                this.vel.y += this.accel.y * (60 / me.timer.fps);
+                if (this.last_send_action != &quot;down&quot;) {
+                    this.last_send_action = &quot;down&quot;;
+                    socket.emit(&quot;clientMessage&quot;, {action: &quot;down&quot;, uid: this.uid});
+
+                }
+            }
+            else {
+                //reset the current animation to the first frame
+                this.vel.x = 0;
+                this.vel.y = 0;
+                if (this.last_send_action != &quot;stand&quot;) {
+                    this.last_send_action = &quot;stand&quot;;
+                    socket.emit(&quot;clientMessage&quot;, {action: &quot;stand&quot;, uid: this.uid});
+
+                }
+
+                this.setAnimationFrame(1); //render the standing frame of every Animation if no key input action
+            }
+
+            if (me.input.isKeyPressed('shootLeft')) {
+
+                this.setCurrentAnimation(&quot;walkLeft&quot;);
+                this.shoot();
+            }
+            if (me.input.isKeyPressed('shootRight')) {
+                this.setCurrentAnimation(&quot;walkRight&quot;);
+                this.shoot();
+            }
+            if (me.input.isKeyPressed('shootUp')) {
+                this.setCurrentAnimation(&quot;walkUp&quot;);
+                this.shoot();
+            }
+            if (me.input.isKeyPressed('shootDown')) {
+                this.setCurrentAnimation(&quot;walkDown&quot;);
+                this.shoot();
+            }
+            /*if (me.input.isKeyPressed('jump')) {
+             // make sure we are not already jumping or falling
+             if (!this.jumping &amp;&amp; !this.falling) {
+             // set current vel to the maximum defined value
+             // gravity will then do the rest
+             this.vel.y = -this.maxVel.y * me.timer.tick;
+             // set the jumping flag
+             this.jumping = true;
+             }
+             }*/
+            // check &amp; update player movement
+            this.updateMovement();
+            var collided = me.game.collide(this);
+
+            if (collided) {
+                var that = this;
+                // if we collide with an enemy
+                if (collided.obj.type == me.game.ENEMY_OBJECT) {
+                    // let's flicker in case we touched an enemy
+                    //this.flicker(45);
+                    this.setOpacity(0.5);
+                    setTimeout(function () {
+                        that.setOpacity(1);
+                    }, 50);
+                }
+                if (collided.obj.type == me.game.ACTION_OBJECT) {
+                    // let's flicker in case we touched an enemy
+                    //this.flicker(45);
+                    //me.game.HUD.updateItemValue(&quot;scorePlayer1&quot;, 1);
+
+                    this.setOpacity(0.3);
+                    setTimeout(function () {
+                        that.setOpacity(1);
+                    }, 2000);
+                }
+            }
+            // update animation if necessary
+            if (this.vel.x !== 0 || this.vel.y !== 0) {
+                // update object animation
+                this.parent();
+                return true;
+            }
+            return false;
+        }
+
+
+    });
+
+    return {
+        'Gorilla': Gorilla,
+        'MainPlayer': MainPlayer
+    };
+});
+</pre>
+</body>
+</html>
