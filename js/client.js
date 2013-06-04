@@ -39,7 +39,14 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 createNewBomb(bombs_data[i]);
             }
         });
-
+	socket.on('updatePosToAll', function (playerData){
+			for(var i = 0; i < players.length; i++){
+				if(players[i].uid === playerData.uid){
+					players[i].setPos(playerData.pos);
+				}
+			}
+	});
+	
         socket.on('clientConnect', function (data) {
             createNewPlayer(data);
             console.log("clientConnect\n==============");

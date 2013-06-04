@@ -44,10 +44,16 @@ sio.sockets.on('connection', function (socket) {
     socket.on('clientMessage', onClientMessage);
     socket.on('bombMessage', onBombMessage);
     socket.on('removeBomb', onRemoveBomb);
-
-
+		socket.on('sendPos', function(data){
+	onClientPos(data);
+	socket.broadcast.emit('updatePosToAll', data);
+});
     socket.on('disconnect', onDisconnect);
 });
+function onClientPos(data){
+	clients[data.uid].data.x = data.pos.x;
+	clients[data.uid].data.y = data.pos.y;
+}
 
 function onRemoveBomb(id){
     for(var i=0;i<bombs.length;i++){

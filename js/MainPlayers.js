@@ -43,6 +43,10 @@ define(['Bombs'], function (Bomb) {
             this.accel.y = 3;
             //this.addAnimation ("explosion", [0,1,2]);
         },
+	setPos: function(data){
+	  this.pos.x=data.x;
+	  this.pos.y=data.y;
+	},
 
         onCollision: function (res, obj) {
             // if we collide with an enemy
@@ -178,9 +182,19 @@ define(['Bombs'], function (Bomb) {
             // set the display to follow our position on both axis*/
             me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
             this.shootReady = true;
+						this.sendPosition();	
 
             //this.emitPosition();
         },
+				sendPosition: function(){
+					var that=this;
+					setInterval(function(){
+						socket.emit("sendPos",{
+							uid: that.uid,
+							pos: that.pos
+						});
+					},500);
+				},
         shoot: function () {
             var posX = this.pos.x;
             var posY = this.pos.y;

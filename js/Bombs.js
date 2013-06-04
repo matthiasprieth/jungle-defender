@@ -116,7 +116,7 @@ define(function () {
         onCollision: function (res, obj) {
             // if we collide with an enemy
             if (obj.type == me.game.ENEMY_OBJECT) {
-                this.flicker(45);
+                //this.flicker(45);
                 makeExplosion(this);
                 socket.emit("removeBomb", this.id);
             }
@@ -147,7 +147,7 @@ define(function () {
             }
         },
         onDestroyEvent: function () {
-            if (this.stacked) {
+            /*if (this.stacked) {
                 console.log("stacked");
                 //this.collisionBox.translate(-48,-48);
                 //this.collisionBox.adjustSize(-48,32,-48, 32);
@@ -159,7 +159,7 @@ define(function () {
                  this.collisionBox.height*=2;
                  this.collisionBox.hHeight*=2;
                  this.collisionBox.hWidth*=2;*/
-                this.updateColRect(-48, this.collisionBox.width * 2,
+                /*this.updateColRect(-48, this.collisionBox.width * 2,
                     -48, this.collisionBox.height * 2);
                 this.update();
                 //this.update();
@@ -172,7 +172,7 @@ define(function () {
                     // me.game.remove(collided.obj);
                     collided.obj.onBombsCollision(this);
                 }
-            }
+            }*/
         },
         moveBomb: function(direction){
             switch (this.direction) {//name of the animation
@@ -208,7 +208,7 @@ define(function () {
                 // if we collide with an enemy
                 else if (collided.obj.type == me.game.ENEMY_OBJECT) {
                     // let's flicker in case we touched an enemy
-                    this.flicker(45);
+                   // this.flicker(45);
                 }
             }else if(!this.stacked){
                 this.moveBomb(this.direction);
