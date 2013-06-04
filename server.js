@@ -42,14 +42,31 @@ sio.sockets.on('connection', function (socket) {
     newClient(socket);
 
     socket.on('clientMessage', onClientMessage);
-    socket.on('bombMessage', onBombMessage);
+    socket.on('bombMessage', function(data){
+	onBombMessage(data);
+	console.log("bombMessage");
+	socket.broadcast.emit("newBomb",data);
+	});
     socket.on('removeBomb', onRemoveBomb);
 		socket.on('sendPos', function(data){
 	onClientPos(data);
 	socket.broadcast.emit('updatePosToAll', data);
 });
+    socket.on("updateBomb",function(data){
+	console.log(data);
+	onBombUpdate(data);
+	socket.broadcast.emit('updateBombPos', data);
+});
     socket.on('disconnect', onDisconnect);
 });
+function onBombUpdate(data){
+  for(var i=0;i<bombs.length;i++){
+    if(bombs[i].id==data.id){
+			bombs[i].x=data.pos.x;
+			bombs[i].y=data.pos.y;		
+		}
+  }
+}
 function onClientPos(data){
 	clients[data.uid].data.x = data.pos.x;
 	clients[data.uid].data.y = data.pos.y;
@@ -62,17 +79,16 @@ function onRemoveBomb(id){
             break;
         }
     }
-    console.log(bombs);
 }
 
 function onClientMessage(data) {
     clients[data.uid].data.action = data.action;
     sio.sockets.emit('clientMessage', data);
-    console.log(' client \t - '.blue + data.uid + 'sends data', data);
+    //console.log(' client \t - '.blue + data.uid + 'sends data', data);
 }
 function onBombMessage(data){
     bombs.push(data);
-    console.log(bombs);
+    //console.log(bombs);
 }
 
 function onDisconnect() {
@@ -86,7 +102,7 @@ function newClient(socket) {
     var posX=parseInt(15*32);
     var posY=parseInt(15*32);
 
-    console.log("CLIENT_UID: ".black + clientUID);
+    //console.log("CLIENT_UID: ".black + clientUID);
     clients[clientUID] = {
         'data': {
             'x': posX,
@@ -109,5 +125,5 @@ function newClient(socket) {
         'y': posY
     });
 
-    console.log(' client\t - '.green + clientUID + ' connected');
+    //console.log(' client\t - '.green + clientUID + ' connected');
 };

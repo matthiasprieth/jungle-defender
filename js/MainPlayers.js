@@ -117,6 +117,24 @@ define(['Bombs'], function (Bomb) {
         setAction: function (action) {
             this.action = action;
         },
+	
+        createNewBomb: function(data){
+            console.log("createNewBomb, enemy");
+	    
+		var bomb = new Bomb(counter, data.x, data.y, data.direction, {image: data.bombtype});
+            //z-index of player=99 , 99 + 1
+
+            me.game.add(bomb, 99 + 1); //bullet should appear 1 layer before the mainPlayer
+
+            var bombObj = me.game.getLastGameObject();
+            //console.log(melonObj.isCollided());
+            if (!bombObj.isCollided()) {
+                counter++;
+
+                bombs.push(bombObj);
+            }
+            me.game.sort();
+        },
 
         update: function () {
             var max_velocity = 3 * (60 / me.timer.fps);
@@ -231,7 +249,8 @@ define(['Bombs'], function (Bomb) {
 
                     bombs.push(bombObj);
                     socket.emit("bombMessage", {
-                        id: bombObj.id,
+                        uid: localUID,
+			id: bombObj.id,
                         x: bombObj.pos.x,
                         y: bombObj.pos.y,
                         direction: bombObj.direction,

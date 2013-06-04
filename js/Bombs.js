@@ -77,14 +77,17 @@ define(function () {
              */
             this.collidable = true;
 
-            this.setVelocity(6, 6);
+            this.setVelocity(24, 24);
 
+	    this.accel.x = 6;
+	    this.accel.y = 6;
             /**
              * defines, if melon is stacked or not
              * @type {boolean}
              */
             this.stacked = false;
 
+	    this.bomb_updated=false;
             /**
              * direction of melon animation
              * @type {String}
@@ -113,6 +116,11 @@ define(function () {
          * @param res
          * @param obj
          */
+	setPos: function(pos){
+	console.log("Bombs: SetPos()");		
+	this.pos.x=pos.x;
+		this.pos.y=pos.y;
+	},
         onCollision: function (res, obj) {
             // if we collide with an enemy
             if (obj.type == me.game.ENEMY_OBJECT) {
@@ -191,19 +199,27 @@ define(function () {
         },
         checkCollision: function(){
             var collided = me.game.collide(this);
-
             if (collided) {
                 if (collided.obj.type == me.game.ACTION_OBJECT) {
                     if (this.bombIsSpam) {
                         me.game.remove(this, true);
                         socket.emit("removeBomb", this.id);
                     }
-                    this.vel.x = 0;
-                    this.vel.y = 0;
-                    //this.maxVel = 0;
-                    this.stacked = true;
-                    //this.setMaxVelocity(0,0);
-
+		    
+		    if(this.bomb_updated!=true){
+                    	this.vel.x = 0;
+                    	this.vel.y = 0;
+                    	//this.maxVel = 0;
+                    	this.stacked = true;
+		    	//console.log("EEEEEEEEMIT");
+			socket.emit("updateBomb", 
+				{
+			  	id: this.id,
+			  	pos: this.pos	
+				});
+			this.bomb_updated=true;
+                    	//this.setMaxVelocity(0,0);
+			}
                 }
                 // if we collide with an enemy
                 else if (collided.obj.type == me.game.ENEMY_OBJECT) {
@@ -211,11 +227,14 @@ define(function () {
                    // this.flicker(45);
                 }
             }else if(!this.stacked){
+		this.bomb_updated=false;
                 this.moveBomb(this.direction);
             }
         },
         // manage the enemy movement
         update: function () {
+	    var max_velocity = 6 * (60 / me.timer.fps);
+	    this.setVelocity(max_velocity, max_velocity);
 
             this.checkCollision();
 

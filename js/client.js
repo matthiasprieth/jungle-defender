@@ -25,16 +25,32 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 }
             }
             me.game.repaint();
-            console.log("connected\n==============");
+            /*console.log("connected\n==============");
             console.log(players);
-            console.log("==========");
+            console.log("==========");*/
 
             me.debug.renderHitBox = true;
 
         });
-
+	socket.on('updateBombPos', function(data){
+		console.log(data);
+		for(var i=0; i<bombs.length; i++){
+	if(bombs[i].id==data.id){
+		bombs[i].setPos(data);
+	}
+}	
+	});
+	socket.on("newBomb", function(data){
+	console.log(data);
+	for(var i=0; i<players.length; i++){
+	  if(players[i].uid===data.uid){
+		players[i].createNewBomb(data);
+}
+	}
+	
+});
         socket.on('getAllBombs', function (bombs_data) {
-            console.log(bombs_data);
+            //console.log(bombs_data);
             for (var i = 0; i < bombs_data.length; i++) {
                 createNewBomb(bombs_data[i]);
             }
@@ -49,43 +65,42 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
 	
         socket.on('clientConnect', function (data) {
             createNewPlayer(data);
+	/*
             console.log("clientConnect\n==============");
             console.log(players);
-            console.log("==========");
+            console.log("==========");*/
         });
 
 
         socket.on('clientDisconnect', function (data) {
-            console.log("clientDisconnect");
+            //console.log("clientDisconnect");
             for (var i = 0; i < players.length; i++) {
                 if (players[i].uid === data.uid) {
                     me.game.remove(players[i]);
                     players.splice(i, 1);
                 }
             }
+		/*
             console.log("clientDisconnect\n==============");
             console.log(players);
-            console.log("==========");
+            console.log("==========");*/
         });
 
         socket.on('clientMessage', function (data) {
             for (var i = 0; i < players.length; i++) {
                 if (players[i].uid === data.uid && data.uid != localUID) {
-                    console.log("sendAction");
+                    //console.log("sendAction");
                     players[i].setAction(data.action);
                 }
             }
         });
 
         socket.on('connect', function () {
-            console.log('connect');
+            //console.log('connect');
         });
 
         socket.on('disconnect', function (data) {
             players = [];
-            console.log("disconnect\n==============");
-            console.log(players);
-            console.log("==========");
         });
         createNewPlayer = function(data){
             //var client = data.clients[prop];
@@ -103,22 +118,17 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
 
             players.push(gamePlayerObj);
         };
-        createNewBomb= function(data){
-            var bomb = new Bomb(counter, data.x, data.y, data.direction, {image: data.bombtype});
-            //z-index of player=99 , 99 + 1
-
-            me.game.add(bomb, 99 + 1); //bullet should appear 1 layer before the mainPlayer
-
-            var bombObj = me.game.getLastGameObject();
-            //console.log(melonObj.isCollided());
-            console.log(bombObj);
-            if (!bombObj.isCollided()) {
-                counter++;
-
-                bombs.push(bombObj);
-            }
-            me.game.sort();
-        }
+	createNewBomb= function(data){
+	  var bomb = new Bomb(counter, data.x, data.y, data.direction, {image: data.bombtype});
+	  me.game.add(bomb, 99+1);
+	  var bombObj = me.game.getLastGameObject();
+	  console.log(bombObj);
+	  if (!bombObj.isCollided()){
+		counter++;
+		bombs.push(bombObj);
+	  }
+	  me.game.sort();
+	}
 
     };
     return initNetwork;
