@@ -104,11 +104,20 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
         });
         createNewPlayer = function(data){
             //var client = data.clients[prop];
+            console.log(players.length);
             var gamePlayer = null;
+            //if (data.uid == localUID) {
+            //if (data.team == 1) {    
+            var playerType;
+            if(data.team == 1){
+                foo="Gorilla"
+            }else{
+                foo="Military"
+            }
             if (data.uid == localUID) {
-                gamePlayer = new Players.MainPlayer(data.x, data.y, {image: "Gorilla"}, data.uid);
+                gamePlayer = new Players.MainPlayer(data.x, data.y, {image: foo}, data.uid);
             } else {
-                gamePlayer = new Players.EnemyPlayer(data.x, data.y, {image: "Gorilla"}, data.uid);
+                gamePlayer = new Players.EnemyPlayer(data.x, data.y, {image: foo}, data.uid);
             }
             me.game.add(gamePlayer, 99);
             me.game.sort();

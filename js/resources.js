@@ -50,13 +50,13 @@ define(function(){
             name: "chars",
             type: "image",
             src: "data/sprite/chars.png"
-        },/*
+        },
          {
          //MilitaryPlayer images
          name: "Military",
          type: "image",
          src: "data/sprite/mainPlayer/military/Military.png"
-         },*/
+         },
         {
             //Enemy images
             name: "Enemy",

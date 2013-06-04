@@ -26,10 +26,17 @@ define(['Bombs'], function (Bomb) {
             this.setTransparency("#78C380");
             this.updateColRect(0, 32, 18, 15); //set specific collision box
             //define the positions for the specific animation in the spritesheet
-            this.addAnimation("walkDown", [0, 1, 2]);
-            this.addAnimation("walkLeft", [3, 4, 5]);
-            this.addAnimation("walkRight", [6, 7, 8]);
-            this.addAnimation("walkUp", [9, 10, 11]);
+            if (settings.image == "Gorilla"){
+                this.addAnimation("walkDown", [0, 1, 2]);
+                this.addAnimation("walkLeft", [3, 4, 5]);
+                this.addAnimation("walkRight", [6, 7, 8]);
+                this.addAnimation("walkUp", [9, 10, 11]);
+            } else if (settings.image == "Military") {
+                this.addAnimation("walkDown", [0, 1, 2]);
+                this.addAnimation("walkLeft", [12, 13, 14]);
+                this.addAnimation("walkRight", [24, 25, 26]);
+                this.addAnimation("walkUp", [36, 37, 38]);
+            }
 
             this.setCurrentAnimation("walkDown");
 

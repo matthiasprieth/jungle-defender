@@ -8,7 +8,7 @@ var serverPort = 8002,
     http = require('http'),
     server = http.createServer(app),
     sio = require('socket.io').listen(server);
-
+    team = 1;
 
 /* ------  ------  ------ Express ------  ------  ------ */
 
@@ -108,9 +108,15 @@ function newClient(socket) {
             'x': posX,
             'y': posY,
             'uid': clientUID,
-            'action': ''
+            'action': '',
+            'team' : team
         }
     };
+    if (team == 1) {
+        team = 2;
+    } else {
+        team = 1;
+    }
 
     socket.emit('connected', {
         'uid': clientUID,
