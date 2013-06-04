@@ -95,6 +95,9 @@ function onDisconnect() {
     var uid = this.id;
     sio.sockets.emit('clientDisconnect', {uid: uid});
     delete clients[uid];
+    if(clients=={}){
+	bombs=[];
+	}
     console.log(' client\t - '.red + uid + ' disconnected');
 }
 function newClient(socket) {
