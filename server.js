@@ -1,6 +1,4 @@
 var serverPort = 8002,
-    clients = {},
-    bombs = [],
     colors = require('colors'),
     express = require('express'),
     verbose = false,
@@ -8,7 +6,7 @@ var serverPort = 8002,
     http = require('http'),
     server = http.createServer(app),
     sio = require('socket.io').listen(server);
-    team = 1;
+team = 1;
 
 /* ------  ------  ------ Express ------  ------  ------ */
 
@@ -29,112 +27,128 @@ sio.configure(function () {
     sio.set('authorization', function (handshakeData, callback) {
         callback(null, true); // error first callback style
     });
-	
-	/*below line -->ajax long polling
-		by default nodejs determines the best transport based on browser
-		capabilities, f.e. WebSockets*/
-	
-	//sio.set('transports', ['xhr-polling']);
+
+    /*below line -->ajax long polling
+     by default nodejs determines the best transport based on browser
+     capabilities, f.e. WebSockets*/
+
+    //sio.set('transports', ['xhr-polling']);
 });
+
+
+var Bombs = {
+    bombs: [],
+    onUpdate: function (data) {
+
+        for (var i = 0; i < Bombs.bombs.length; i++) {
+            if (Bombs.bombs[i].id == data.id) {
+                Bombs.bombs[i].x = data.pos.x;
+                Bombs.bombs[i].y = data.pos.y;
+            }
+        }
+
+    },
+    onRemove: function (id) {
+        for (var i = 0; i < Bombs.bombs.length; i++) {
+            if (Bombs.bombs[i].id == id) {
+                Bombs.bombs.splice(i, 1);
+                break;
+            }
+        }
+    },
+    onMessage: function (data) {
+        Bombs.bombs.push(data);
+        //console.log(bombs);
+    },
+    all: function () {
+        return Bombs.bombs;
+    },
+    clean: function () {
+        Bombs.bombs = [];
+    }
+};
+
+
+var Client = {
+    clients: {},
+
+    newClient: function (socket) {
+        var clientUID = socket.id;
+        var posX = parseInt(15 * 32);
+        var posY = parseInt(15 * 32);
+
+        //console.log("CLIENT_UID: ".black + clientUID);
+        Client.clients[clientUID] = {
+            'data': {
+                'x': posX,
+                'y': posY,
+                'uid': clientUID,
+                'action': '',
+                'team': team
+            }
+        };
+
+        socket.emit('connected', {
+            'uid': clientUID,
+            'clients': Client.clients
+        });
+
+        socket.emit('getAllBombs', Bombs.all());
+
+        socket.broadcast.emit('clientConnect', {
+            'uid': clientUID,
+            'x': posX,
+            'y': posY,
+            'team': team
+        });
+
+        //console.log(' client\t - '.green + clientUID + ' connected');
+
+        if (team == 1) {
+            team = 2;
+        } else {
+            team = 1;
+        }
+    },
+    onPos: function (data) {
+        Client.clients[data.uid].data.x = data.pos.x;
+        Client.clients[data.uid].data.y = data.pos.y;
+    },
+    onMessage: function (data) {
+        Client.clients[data.uid].data.action = data.action;
+        sio.sockets.emit('clientMessage', data);
+        //console.log(' client \t - '.blue + data.uid + 'sends data', data);
+    },
+    onDisconnect: function () {
+        var uid = this.id;
+        sio.sockets.emit('clientDisconnect', {uid: uid});
+        delete Client.clients[uid];
+        if (Client.clients == {}) {
+            Bombs.clean();
+        }
+        console.log(' client\t - '.red + uid + ' disconnected');
+    }
+};
 
 sio.sockets.on('connection', function (socket) {
 
-    newClient(socket);
+    Client.newClient(socket);
 
-    socket.on('clientMessage', onClientMessage);
-    socket.on('bombMessage', function(data){
-	onBombMessage(data);
-	console.log("bombMessage");
-	socket.broadcast.emit("newBomb",data);
-	});
-    socket.on('removeBomb', onRemoveBomb);
-		socket.on('sendPos', function(data){
-	onClientPos(data);
-	socket.broadcast.emit('updatePosToAll', data);
-});
-    socket.on("updateBomb",function(data){
-	console.log(data);
-	onBombUpdate(data);
-	socket.broadcast.emit('updateBombPos', data);
-});
-    socket.on('disconnect', onDisconnect);
-});
-function onBombUpdate(data){
-  for(var i=0;i<bombs.length;i++){
-    if(bombs[i].id==data.id){
-			bombs[i].x=data.pos.x;
-			bombs[i].y=data.pos.y;		
-		}
-  }
-}
-function onClientPos(data){
-	clients[data.uid].data.x = data.pos.x;
-	clients[data.uid].data.y = data.pos.y;
-}
-
-function onRemoveBomb(id){
-    for(var i=0;i<bombs.length;i++){
-        if(bombs[i].id==id){
-            bombs.splice(i,1);
-            break;
-        }
-    }
-}
-
-function onClientMessage(data) {
-    clients[data.uid].data.action = data.action;
-    sio.sockets.emit('clientMessage', data);
-    //console.log(' client \t - '.blue + data.uid + 'sends data', data);
-}
-function onBombMessage(data){
-    bombs.push(data);
-    //console.log(bombs);
-}
-
-function onDisconnect() {
-    var uid = this.id;
-    sio.sockets.emit('clientDisconnect', {uid: uid});
-    delete clients[uid];
-    if(clients=={}){
-	bombs=[];
-	}
-    console.log(' client\t - '.red + uid + ' disconnected');
-}
-function newClient(socket) {
-    var clientUID = socket.id;
-    var posX=parseInt(15*32);
-    var posY=parseInt(15*32);
-
-    //console.log("CLIENT_UID: ".black + clientUID);
-    clients[clientUID] = {
-        'data': {
-            'x': posX,
-            'y': posY,
-            'uid': clientUID,
-            'action': '',
-            'team' : team
-        }
-    };
-
-    socket.emit('connected', {
-        'uid': clientUID,
-        'clients': clients
+    socket.on('clientMessage', Client.onMessage);
+    socket.on('bombMessage', function (data) {
+        Bombs.onMessage(data);
+        console.log("bombMessage");
+        socket.broadcast.emit("newBomb", data);
     });
-
-    socket.emit('getAllBombs', bombs);
-
-    socket.broadcast.emit('clientConnect', {
-        'uid': clientUID,
-        'x': posX,
-        'y': posY,
-        'team' : team
+    socket.on('removeBomb', Bombs.onRemove);
+    socket.on('sendPos', function (data) {
+        Client.onPos(data);
+        socket.broadcast.emit('updatePosToAll', data);
     });
-
-    //console.log(' client\t - '.green + clientUID + ' connected');
-
-    if (team == 1) {
-        team = 2;
-    } else {
-        team = 1;
-    }
-};
+    socket.on("updateBomb", function (data) {
+        console.log(data);
+        Bombs.onUpdate(data);
+        socket.broadcast.emit('updateBombPos', data);
+    });
+    socket.on('disconnect', Client.onDisconnect);
+});

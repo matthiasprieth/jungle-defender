@@ -27,6 +27,10 @@ require(["resources", "MainPlayers", "client"], function (g_resources, Players, 
             me.loader.preload(g_resources);
             // load everything & display a loading screen
             me.state.change(me.state.LOADING);
+            //dadurch können wir das onblur listener deaktivieren bzw. dessen getriggerte
+            //Funktion deaktivieren -> besser zum testen!
+            me.state.pause = function (){};
+            me.state.resume = function (){};
         },
 
         /* ---
