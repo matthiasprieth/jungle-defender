@@ -109,6 +109,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
             //if (data.uid == localUID) {
             //if (data.team == 1) {    
             var playerType;
+            console.log("Team joined: "+ data.team);
             if(data.team == 1){
                 foo="Gorilla"
             }else{

@@ -115,11 +115,6 @@ function newClient(socket) {
             'team' : team
         }
     };
-    if (team == 1) {
-        team = 2;
-    } else {
-        team = 1;
-    }
 
     socket.emit('connected', {
         'uid': clientUID,
@@ -131,8 +126,15 @@ function newClient(socket) {
     socket.broadcast.emit('clientConnect', {
         'uid': clientUID,
         'x': posX,
-        'y': posY
+        'y': posY,
+        'team' : team
     });
 
     //console.log(' client\t - '.green + clientUID + ' connected');
+
+    if (team == 1) {
+        team = 2;
+    } else {
+        team = 1;
+    }
 };
