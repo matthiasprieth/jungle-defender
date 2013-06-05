@@ -34,7 +34,7 @@ sio.configure(function () {
 		by default nodejs determines the best transport based on browser
 		capabilities, f.e. WebSockets*/
 	
-	//sio.set('transports', ['xhr-polling']);
+	sio.set('transports', ['xhr-polling']);
 });
 
 sio.sockets.on('connection', function (socket) {
@@ -44,7 +44,7 @@ sio.sockets.on('connection', function (socket) {
     socket.on('clientMessage', onClientMessage);
     socket.on('bombMessage', function(data){
 	onBombMessage(data);
-	console.log("bombMessage");
+	//console.log("bombMessage");
 	socket.broadcast.emit("newBomb",data);
 	});
     socket.on('removeBomb', onRemoveBomb);
@@ -53,7 +53,7 @@ sio.sockets.on('connection', function (socket) {
 	socket.broadcast.emit('updatePosToAll', data);
 });
     socket.on("updateBomb",function(data){
-	console.log(data);
+	//console.log(data);
 	onBombUpdate(data);
 	socket.broadcast.emit('updateBombPos', data);
 });
@@ -95,10 +95,14 @@ function onDisconnect() {
     var uid = this.id;
     sio.sockets.emit('clientDisconnect', {uid: uid});
     delete clients[uid];
-    if(clients=={}){
+    /*if(clients=={}){
 	bombs=[];
-	}
+	console.log("bombs and clients array empty");
+	}*/
     console.log(' client\t - '.red + uid + ' disconnected');
+    console.log("==========");
+    console.log(clients);
+    console.log("=========");
 }
 function newClient(socket) {
     var clientUID = socket.id;
@@ -131,7 +135,9 @@ function newClient(socket) {
     socket.broadcast.emit('clientConnect', {
         'uid': clientUID,
         'x': posX,
-        'y': posY
+        'y': posY,
+	'action': '',
+	'team': team
     });
 
     //console.log(' client\t - '.green + clientUID + ' connected');
