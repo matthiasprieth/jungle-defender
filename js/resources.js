@@ -16,7 +16,6 @@ define(function(){
             src: "data/battlezone.tmx"
         },
         {
-            //tmx-Object for all Images
             name: "metatiles32x32",
             type: "image",
             src: "data/battlezone_tileset/metatiles32x32.png"
@@ -34,10 +33,22 @@ define(function(){
             src: "data/battlezone_tileset/rainforest/1/JungleTileA2.png"
         },
         {
-            //gamefieldSprite2
+            //gamefieldSprite3
             name: "Wilderness-Jungle-04",
             type: "image",
             src: "data/battlezone_tileset/rainforest/2/Wilderness-Jungle-04.png"
+        },
+        {
+            //gamefieldSprite4
+            name: "Terrain",
+            type: "image",
+            src: "data/battlezone_tileset/terrain/Terrain.png"
+        },
+        {
+            //gamefieldSprite5
+            name: "JunglePlants",
+            type: "image",
+            src: "data/battlezone_tileset/rainforest/1/junglePlants.png"
         },
         {
             //animalPlayer1
