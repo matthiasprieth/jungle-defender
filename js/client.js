@@ -25,9 +25,9 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 }
             }
             me.game.repaint();
-            console.log("connected\n==============");
+            /*console.log("connected\n==============");
             console.log(players);
-            console.log("==========");
+            console.log("==========");*/
 
             me.debug.renderHitBox = true;
 
@@ -41,6 +41,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
 }	
 	});
 	socket.on("newBomb", function(data){
+	console.log(data);
 	for(var i=0; i<players.length; i++){
 	  if(players[i].uid===data.uid){
 		players[i].createNewBomb(data);
@@ -64,10 +65,10 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
 	
         socket.on('clientConnect', function (data) {
             createNewPlayer(data);
-	
+	/*
             console.log("clientConnect\n==============");
             console.log(players);
-            console.log("==========");
+            console.log("==========");*/
         });
 
 
@@ -79,10 +80,10 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                     players.splice(i, 1);
                 }
             }
-
+		/*
             console.log("clientDisconnect\n==============");
             console.log(players);
-            console.log("==========");
+            console.log("==========");*/
         });
 
         socket.on('clientMessage', function (data) {
@@ -100,8 +101,6 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
 
         socket.on('disconnect', function (data) {
             players = [];
-	    bombs = [];
-	    console.log("disconnect, set bombs and players to null\n===============");
         });
         createNewPlayer = function(data){
             //var client = data.clients[prop];
@@ -110,7 +109,6 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
             //if (data.uid == localUID) {
             //if (data.team == 1) {    
             var playerType;
-	    var foo;
             if(data.team == 1){
                 foo="Gorilla"
             }else{
@@ -133,6 +131,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
 	  var bomb = new Bomb(counter, data.x, data.y, data.direction, {image: data.bombtype});
 	  me.game.add(bomb, 99+1);
 	  var bombObj = me.game.getLastGameObject();
+	  console.log(bombObj);
 	  if (!bombObj.isCollided()){
 		counter++;
 		bombs.push(bombObj);
