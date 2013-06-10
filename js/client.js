@@ -7,6 +7,17 @@
  * Time: 14:32
  * To change this template use File | Settings | File Templates.
  */
+var toHHMMSS = function (sec) {
+    var sec_num = parseInt(sec, 10); // don't forget the second parm
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (seconds < 10) {seconds = "0"+seconds;}
+    var time    = minutes+':'+seconds;
+    return time;
+};
+
 define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
     //game resources
     var initNetwork = function () {
@@ -24,6 +35,14 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                     createNewPlayer(data.clients[prop].data);
                 }
             }
+
+            var timeLeft = data.timeLeft; 
+            me.game.HUD.setItemValue("timeLeft", toHHMMSS(timeLeft));
+            setInterval(function(){
+                timeLeft--;
+                me.game.HUD.setItemValue("timeLeft", toHHMMSS(timeLeft));
+            }, 1000);
+
             me.game.repaint();
             /*console.log("connected\n==============");
             console.log(players);
@@ -93,10 +112,6 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                     players[i].setAction(data.action);
                 }
             }
-        });
-
-        socket.on('connect', function () {
-            //console.log('connect');
         });
 
         socket.on('disconnect', function (data) {

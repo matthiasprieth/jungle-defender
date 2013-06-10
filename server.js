@@ -5,8 +5,13 @@ var serverPort = 8002,
     app = express(),
     http = require('http'),
     server = http.createServer(app),
-    sio = require('socket.io').listen(server);
-team = 1;
+    sio = require('socket.io').listen(server),
+    team = 1,
+    timeLeft = 300;
+
+setInterval(function(){
+    timeLeft--;
+}, 1000);
 
 /* ------  ------  ------ Express ------  ------  ------ */
 
@@ -93,7 +98,8 @@ var Client = {
 
         socket.emit('connected', {
             'uid': clientUID,
-            'clients': Client.clients
+            'clients': Client.clients,
+            'timeLeft': timeLeft
         });
 
         socket.emit('getAllBombs', Bombs.all());

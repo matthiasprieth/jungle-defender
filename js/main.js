@@ -6,7 +6,7 @@ require.config({
 require(["resources", "MainPlayers", "client"], function (g_resources, Players, initNetwork) {
 
 
-    var jsApp =
+    var game =
     {
         /* ---
 
@@ -15,7 +15,7 @@ require(["resources", "MainPlayers", "client"], function (g_resources, Players, 
          ---			*/
         onload: function () {
             // init the video
-            if (!me.video.init('jsapp', 640, 480, false, 1.0)) {
+            if (!me.video.init('game', 640, 480, false, 1.0)) {
                 alert("Sorry but your browser does not support html 5 canvas.");
                 return;
             }
@@ -42,7 +42,7 @@ require(["resources", "MainPlayers", "client"], function (g_resources, Players, 
 
 
             // set the "Play/Ingame" Screen Object
-            me.state.set(me.state.PLAY, new PlayScreen());
+            me.state.set(me.state.PLAY, new this.PlayScreen());
 
             // setting global gravity 0
             me.sys.gravity = 0;
@@ -81,9 +81,32 @@ require(["resources", "MainPlayers", "client"], function (g_resources, Players, 
 
         }
 
-    }; // jsApp
+    }; // game
 
-    var PlayScreen = me.ScreenObject.extend(
+
+    game.HUD_Object = me.HUD_Item.extend({
+        init: function(x, y, align, value) {
+            // call the parent constructor
+            this.parent(x, y);
+            // create a font
+            this.font = new me.BitmapFont("32x32_font", 32);
+            this.font.set(align);
+            if(value)
+                this.value = value;
+        },
+     
+        /* -----
+     
+        draw our score
+     
+        ------ */
+        draw: function(context, x, y) {
+            this.font.draw(context, this.value, this.pos.x + x, this.pos.y + y);
+        }
+     
+    });
+
+    game.PlayScreen = me.ScreenObject.extend(
         {
 
             onResetEvent: function () {
@@ -91,6 +114,30 @@ require(["resources", "MainPlayers", "client"], function (g_resources, Players, 
                 // load a level
                 me.levelDirector.loadLevel("battlezone");
 
+                // add a default HUD to the game mngr
+                me.game.addHUD(10, 10, 620, 460);
+
+                me.game.HUD.addItem("Start", new game.HUD_Object(215, 200, "left", "START!"));
+                setTimeout(function () {
+                    me.game.HUD.removeItem("Start");
+                }, 2500);
+                
+                // timeLeft
+                me.game.HUD.addItem("timeLeft", new game.HUD_Object(0, 0, "left", "-:--"));
+
+                // add scores
+                me.game.HUD.addItem("scoreTeam1", new game.HUD_Object(620, 420, "right"));
+                me.game.HUD.addItem("scoreTeam2", new game.HUD_Object(0, 420, "left"));
+
+                setInterval(function(){
+                    me.game.HUD.addItem("Shuffle", new game.HUD_Object(185, 420, "left", "SHUFFLE!"));
+                    setTimeout(function () {
+                        me.game.HUD.removeItem("Shuffle");
+                    }, 2000);
+                }, 15000);
+
+                // make sure everything is in the right order
+                me.game.sort();
 
                 /*initialize Network*/
                 initNetwork();
@@ -101,7 +148,8 @@ require(["resources", "MainPlayers", "client"], function (g_resources, Players, 
 
              ---	*/
             onDestroyEvent: function () {
-
+                // remove the HUD
+                me.game.disableHUD();
             }
 
         });
@@ -109,7 +157,7 @@ require(["resources", "MainPlayers", "client"], function (g_resources, Players, 
 
     window.onReady(function () {
         console.log("window ready");
-        jsApp.onload();
+        game.onload();
     });
 
 });
