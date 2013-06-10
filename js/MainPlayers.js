@@ -23,7 +23,7 @@ define(['Bombs'], function (Bomb) {
 
             this.parent(x, y, settings);
 
-            this.updateColRect(0, 32, 18, 15); //set specific collision box
+            //this.updateColRect(0, 32, 18, 15); //set specific collision box
             //define the positions for the specific animation in the spritesheet
             if (settings.image == "Gorilla") {
                 this.addAnimation("walkDown", [0, 1, 2]);
