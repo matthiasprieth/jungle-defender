@@ -117,10 +117,11 @@ require(["resources", "MainPlayers", "client"], function (g_resources, Players, 
                 // add a default HUD to the game mngr
                 me.game.addHUD(10, 10, 620, 460);
 
-                me.game.HUD.addItem("Start", new game.HUD_Object(215, 200, "left", "START!"));
-                setTimeout(function () {
-                    me.game.HUD.removeItem("Start");
-                }, 2500);
+                me.game.HUD.addItem("connectingStatus", new game.HUD_Object(150, 200, "left", "CONNECTING"));
+                
+                setInterval(function(){
+                    me.game.HUD.updateItemValue("connectingStatus", ".");
+                }, 300);
                 
                 // timeLeft
                 me.game.HUD.addItem("timeLeft", new game.HUD_Object(0, 0, "left", "-:--"));

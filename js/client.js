@@ -36,7 +36,9 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 }
             }
 
-            var timeLeft = data.timeLeft; 
+            me.game.HUD.removeItem("connectingStatus");
+
+            var timeLeft = data.timeLeft;
             me.game.HUD.setItemValue("timeLeft", toHHMMSS(timeLeft));
             setInterval(function(){
                 timeLeft--;
