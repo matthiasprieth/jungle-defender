@@ -23,7 +23,6 @@ define(['Bombs'], function (Bomb) {
 
             this.parent(x, y, settings);
 
-            this.setTransparency("#78C380");
             this.updateColRect(0, 32, 18, 15); //set specific collision box
             //define the positions for the specific animation in the spritesheet
             if (settings.image == "Gorilla"){
