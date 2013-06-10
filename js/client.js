@@ -30,116 +30,121 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
 
         bombs = [];
 
-        socket.on('connected', function (data) {
-            localUID = data.uid;
-            for (var prop in data.clients) {
-                if (data.clients.hasOwnProperty(prop)) {
-                    createNewPlayer(data.clients[prop].data);
+        var Client = {
+            onConnected: function (data) {
+                localUID = data.uid;
+                for (var prop in data.clients) {
+                    if (data.clients.hasOwnProperty(prop)) {
+                        createNewPlayer(data.clients[prop].data);
+                    }
                 }
-            }
-
 //<<<<<<< HEAD
 //=======
-            me.game.HUD.removeItem("connectingStatus");
+                me.game.HUD.removeItem("connectingStatus");
 
 //>>>>>>> 49739830fac96c269013496d4df673b0bce8708d
-            var timeLeft = data.timeLeft;
-            me.game.HUD.setItemValue("timeLeft", toHHMMSS(timeLeft));
-            setInterval(function () {
-                timeLeft--;
+                var timeLeft = data.timeLeft;
                 me.game.HUD.setItemValue("timeLeft", toHHMMSS(timeLeft));
-            }, 1000);
+                setInterval(function () {
+                    timeLeft--;
+                    me.game.HUD.setItemValue("timeLeft", toHHMMSS(timeLeft));
+                }, 1000);
 
-            me.game.repaint();
+                me.game.repaint();
 
-            me.debug.renderHitBox = true;
+                me.debug.renderHitBox = true;
+            },
 
-        });
-        socket.on('updateBombPos', function (data) {
-            for (var i = 0; i < bombs.length; i++) {
-                if (bombs[i].server_id == data.server_id) {
-                    bombs[i].setPos(data.pos);
+            onClientConnect: function (data) {
+                createNewPlayer(data);
+            },
+            onClientDisconnect: function (data) {
+                for (var i = 0; i < players.length; i++) {
+                    if (players[i].uid === data.uid) {
+                        me.game.remove(players[i]);
+                        players.splice(i, 1);
+                    }
                 }
-            }
-        });
-        socket.on("removeBombFromEnemy", function (server_id) {
-            for (var i = 0; i < bombs.length; i++) {
-                if (bombs[i].server_id == server_id) {
-                    me.game.remove(bombs[i]);
-                    bombs.splice(i, 1);
+            },
+            onClientMessage: function (data) {
+                for (var i = 0; i < players.length; i++) {
+                    if (players[i].uid === data.uid && data.uid != localUID) {
+                        players[i].setAction(data.action);
+                    }
                 }
-            }
-        });
-        socket.on("newBomb", function (data) {
-            for (var i = 0; i < players.length; i++) {
-                if (players[i].uid === data.uid) {
-                    players[i].createNewBomb(data);
+            },
+            onDisconnect: function (data) {
+                players = [];
+                bombs = [];
+            },
+            updatePosFromEnemy: function (playerData) {
+                for (var i = 0; i < players.length; i++) {
+                    if (players[i].uid === playerData.uid) {
+                        players[i].setPos(playerData.pos);
+                    }
                 }
+            },
+            init: function () {
+                socket.on('connected', Client.onConnected);
+                socket.on('clientConnect', Client.onClientConnect);
+                socket.on('clientDisconnect', Client.onClientDisconnect);
+                socket.on('clientMessage', Client.onClientMessage);
+                socket.on('disconnect', Client.onDisconnect);
+                socket.on('updatePosToAll', Client.updatePosFromEnemy);
             }
+        };
+        Client.init();
 
-        });
-        socket.on("setBombServerID", function (data) {
-            for (var i = 0; i < bombs.length; i++) {
-                if (bombs[i].id == data.id) {
-                    bombs[i].server_id = data.server_id;
+        var Bombs = {
+            onUpdateBombPos: function (data) {
+                for (var i = 0; i < bombs.length; i++) {
+                    if (bombs[i].server_id == data.server_id) {
+                        bombs[i].setPos(data.pos);
+                    }
                 }
-            }
-        });
-        socket.on('getAllBombs', function (bombs_data) {
-            //console.log(bombs_data);
-            for (var i = 0; i < bombs_data.length; i++) {
-                createNewBomb(bombs_data[i]);
-            }
-        });
-        socket.on('updatePosToAll', function (playerData) {
-            for (var i = 0; i < players.length; i++) {
-                if (players[i].uid === playerData.uid) {
-                    players[i].setPos(playerData.pos);
+            },
+            onRemoveBombFromEnemy: function (server_id) {
+                for (var i = 0; i < bombs.length; i++) {
+                    if (bombs[i].server_id == server_id) {
+                        me.game.remove(bombs[i]);
+                        bombs.splice(i, 1);
+                    }
                 }
-            }
-        });
-
-        socket.on('clientConnect', function (data) {
-            createNewPlayer(data);
-            /*
-             console.log("clientConnect\n==============");
-             console.log(players);
-             console.log("==========");*/
-        });
-
-
-        socket.on('clientDisconnect', function (data) {
-            //console.log("clientDisconnect");
-            for (var i = 0; i < players.length; i++) {
-                if (players[i].uid === data.uid) {
-                    me.game.remove(players[i]);
-                    players.splice(i, 1);
+            },
+            onNewBomb: function (data) {
+                for (var i = 0; i < players.length; i++) {
+                    if (players[i].uid === data.uid) {
+                        players[i].createNewBomb(data);
+                    }
                 }
-            }
-            /*
-             console.log("clientDisconnect\n==============");
-             console.log(players);
-             console.log("==========");*/
-        });
-
-        socket.on('clientMessage', function (data) {
-            for (var i = 0; i < players.length; i++) {
-                if (players[i].uid === data.uid && data.uid != localUID) {
-                    //console.log("sendAction");
-                    players[i].setAction(data.action);
+            },
+            onSetBombServerID: function (data) {
+                for (var i = 0; i < bombs.length; i++) {
+                    if (bombs[i].id == data.id) {
+                        bombs[i].server_id = data.server_id;
+                    }
                 }
-            }
-        });
+            },
+            getAll: function (bombs_data) {
+                //console.log(bombs_data);
+                for (var i = 0; i < bombs_data.length; i++) {
+                    createNewBomb(bombs_data[i]);
+                }
+            },
 
-        socket.on('disconnect', function (data) {
-            players = [];
-        });
+            init: function () {
+                socket.on('updateBombPos', Bombs.onUpdateBombPos);
+                socket.on("removeBombFromEnemy", Bombs.onRemoveBombFromEnemy);
+                socket.on("newBomb", Bombs.onNewBomb);
+                socket.on("setBombServerID", Bombs.onSetBombServerID);
+                socket.on('getAllBombs', Bombs.getAll);
+            }
+        };
+        Bombs.init();
+
+
         createNewPlayer = function (data) {
-            //var client = data.clients[prop];
             var gamePlayer = null;
-            //if (data.uid == localUID) {
-            //if (data.team == 1) {    
-            var playerType;
             if (data.team == 1) {
                 foo = "Gorilla"
             } else {
@@ -168,7 +173,6 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
             }
             me.game.sort();
         }
-
     };
     return initNetwork;
 });

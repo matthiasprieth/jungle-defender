@@ -126,13 +126,18 @@ var Client = {
         }
     },
     onPos: function (data) {
-        Client.clients[data.uid].data.x = data.pos.x;
-        Client.clients[data.uid].data.y = data.pos.y;
+        if(Client.clients[data.uid]){
+            Client.clients[data.uid].data.x = data.pos.x;
+            Client.clients[data.uid].data.y = data.pos.y;
+        }
+
     },
     onMessage: function (data) {
-        Client.clients[data.uid].data.action = data.action;
-        sio.sockets.emit('clientMessage', data);
-        //console.log(' client \t - '.blue + data.uid + 'sends data', data);
+        if(Client.clients[data.uid]){
+            Client.clients[data.uid].data.action = data.action;
+            sio.sockets.emit('clientMessage', data);
+            //console.log(' client \t - '.blue + data.uid + 'sends data', data);
+        }
     },
     onDisconnect: function () {
         var uid = this.id;
