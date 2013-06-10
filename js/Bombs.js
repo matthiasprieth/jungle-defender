@@ -203,7 +203,7 @@ define(function () {
                 if (collided.obj.type == me.game.ACTION_OBJECT) {
                     if (this.bombIsSpam) {
                         me.game.remove(this, true);
-                        //socket.emit("removeBomb", this.server_id);
+                        socket.emit("removeBomb", this.server_id);
                     }
 
                     if (this.bomb_updated != true) {
@@ -225,6 +225,7 @@ define(function () {
                 else if (collided.obj.type == me.game.ENEMY_OBJECT) {
                     // let's flicker in case we touched an enemy
                     // this.flicker(45);
+                    me.game.remove(this, true);
                 }
             } else if (!this.stacked) {
                 this.bomb_updated = false;
