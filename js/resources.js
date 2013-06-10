@@ -91,6 +91,12 @@ define(function(){
             name: "Explosion",
             type: "image",
             src: "data/sprite/explosions/Explosion.png"
+        },
+        // game font
+        {
+            name: "32x32_font",
+            type: "image",
+            src: "data/sprite/32x32_font.png"
         }
     ];
     return g_resources;
