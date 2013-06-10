@@ -155,32 +155,7 @@ define(function () {
             }
         },
         onDestroyEvent: function () {
-            /*if (this.stacked) {
-             console.log("stacked");
-             //this.collisionBox.translate(-48,-48);
-             //this.collisionBox.adjustSize(-48,32,-48, 32);
-             //this.collisionBox.colPos.x+=20;
-             //this.collisionBox.colPos.y+=20;
-             /*this.collisionBox.pos.x-=50;
-             this.collisionBox.pos.y-=50;
-             this.collisionBox.width*=2;
-             this.collisionBox.height*=2;
-             this.collisionBox.hHeight*=2;
-             this.collisionBox.hWidth*=2;*/
-            /*this.updateColRect(-48, this.collisionBox.width * 2,
-             -48, this.collisionBox.height * 2);
-             this.update();
-             //this.update();
-             //this.collisionBox.translate(48,48);
-             console.log(this.collisionBox);
 
-             var collided = me.game.collide(this);
-
-             if (collided && collided.obj.type == me.game.ACTION_OBJECT) {
-             // me.game.remove(collided.obj);
-             collided.obj.onBombsCollision(this);
-             }
-             }*/
         },
         moveBomb: function (direction) {
             switch (this.direction) {//name of the animation

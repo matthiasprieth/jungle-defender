@@ -38,6 +38,11 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 }
             }
 
+//<<<<<<< HEAD
+//=======
+            me.game.HUD.removeItem("connectingStatus");
+
+//>>>>>>> 49739830fac96c269013496d4df673b0bce8708d
             var timeLeft = data.timeLeft;
             me.game.HUD.setItemValue("timeLeft", toHHMMSS(timeLeft));
             setInterval(function () {
@@ -46,17 +51,11 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
             }, 1000);
 
             me.game.repaint();
-            /*console.log("connected\n==============");
-             console.log(players);
-             console.log("==========");*/
 
             me.debug.renderHitBox = true;
 
         });
         socket.on('updateBombPos', function (data) {
-            console.log("updateBombPos\n===================");
-            console.log(data);
-            console.log("===============");
             for (var i = 0; i < bombs.length; i++) {
                 if (bombs[i].server_id == data.server_id) {
                     bombs[i].setPos(data.pos);
