@@ -67,7 +67,10 @@ var Bombs = {
         Bombs.bombs = [];
     }
 };
-
+function isEmpty(ob){
+	for(var i in ob){ return false;}
+	return true;
+}
 
 var Client = {
     clients: {},
@@ -123,7 +126,8 @@ var Client = {
         var uid = this.id;
         sio.sockets.emit('clientDisconnect', {uid: uid});
         delete Client.clients[uid];
-        if (Client.clients == {}) {
+        console.log(Client.clients);
+				if (isEmpty(Client.clients)) {
             Bombs.clean();
         }
         console.log(' client\t - '.red + uid + ' disconnected');
