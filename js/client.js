@@ -27,8 +27,16 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
         socket = io.connect('/');
         localUID = 0;
         var players = [];
-
         bombs = [];
+        var timeLeft = null;
+
+        //testcase
+        var onRoundEnd = function (data) {
+            console.log("Team " + data.winnerTeam +": " + "has won with " + data.kills + " kills!");
+            timeLeft = data.timeLeft;
+            Bombs.clean();
+        };
+        socket.on('roundEnd', onRoundEnd);
 
         var Client = {
             onConnected: function (data) {
@@ -39,11 +47,13 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                     }
                 }
                 me.game.HUD.removeItem("connectingStatus");
-                var timeLeft = data.timeLeft;
+                if (timeLeft === null) {
+                    timeLeft = data.timeLeft;
+                }
                 me.game.HUD.setItemValue("timeLeft", toHHMMSS(timeLeft));
                 setInterval(function () {
-                    timeLeft--;
                     me.game.HUD.setItemValue("timeLeft", toHHMMSS(timeLeft));
+                    timeLeft--;
                 }, 1000);
 
                 me.game.repaint();
@@ -134,6 +144,12 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 socket.on("newBomb", Bombs.onNewBomb);
                 socket.on("setBombServerID", Bombs.onSetBombServerID);
                 socket.on('getAllBombs', Bombs.getAll);
+            },
+            clean: function () {      
+                for (var i in bombs) {
+                  me.game.remove(bombs[i]);
+                }
+                bombs = [];
             }
         };
         Bombs.init();

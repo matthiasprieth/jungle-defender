@@ -6,11 +6,24 @@ var serverPort = 8002,
     http = require('http'),
     server = http.createServer(app),
     sio = require('socket.io').listen(server),
+
     team = 1,
-    timeLeft = 300;
+
+    ROUNDTIME = 20, // Konstante: Rundenzeit 300 Sekunden (5 Minuten)
+    timeLeft = ROUNDTIME;
 
 setInterval(function(){
-    timeLeft--;
+    if (timeLeft <= 0) {
+        timeLeft = ROUNDTIME;
+        Bombs.clean();
+        sio.sockets.emit('roundEnd', {
+            'winnerTeam': 1,
+            'kills': 20,
+            'timeLeft': timeLeft
+        });
+    }else{
+        timeLeft--;
+    }
 }, 1000);
 
 /* ------  ------  ------ Express ------  ------  ------ */
@@ -147,6 +160,9 @@ var Client = {
             Bombs.clean();
         }
         console.log(' client\t - '.red + uid + ' disconnected');
+    },
+    clean: function () {
+        Client.clients = [];
     }
 };
 

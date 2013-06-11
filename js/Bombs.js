@@ -139,6 +139,7 @@ define(function () {
             //console.log("isCollided");
             var collided = me.game.collide(this);
             if (collided && collided.obj.type == me.game.ACTION_OBJECT) {
+                console.log("Action_object -> remove");
                 me.game.remove(this, true);
                 return true;
             }
