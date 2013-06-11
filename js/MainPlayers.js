@@ -146,27 +146,6 @@ define(['Bombs'], function (Bomb) {
         setAction: function (action) {
             this.action = action;
         },
-        // creates new Bomb with data properties
-        createNewBomb: function (data) {
-
-            // Creates new Bomb with params: \n
-            // data.id = local_bomb_id
-            // data.server_id = unique bomb id
-            // data.x and data.y = positions
-            // data.direction = direction, where bomb should be fired
-            // data.bombtype = type of bomb
-            var bomb = new Bomb(data.id, data.server_id, data.x, data.y, data.direction, {image: data.bombtype});
-
-            // add the object and give the z index of the current object
-            me.game.add(bomb, 99 + 1); //bullet should appear 1 layer before the mainPlayer
-
-            // gets bomb object from melonjs api (needed to manage bombs externally)
-            var bombObj = me.game.getLastGameObject();
-            // save bomb into bombs array
-            bombs.push(bombObj);
-            // sort the object list (to ensure the object is properly displayed)
-            me.game.sort();
-        },
         // updates player movement and checks for collision
         update: function () {
             // set move distance depending on the current fps-number
@@ -236,7 +215,7 @@ define(['Bombs'], function (Bomb) {
             this.shootReady = true;
 
             // determines the shoot inverval
-            this.SHOOT_INTERVAL = 400;
+            this.SHOOT_INTERVAL = 600;
             // emit position to server
             this.sendPosition();
         },
@@ -287,9 +266,10 @@ define(['Bombs'], function (Bomb) {
                 // bomb should appear 1 layer before the mainPlayer
                 me.game.add(shot, this.z + 1);
                 var bombObj = me.game.getLastGameObject();
+                this.local_bomb_id++;
 
                 if (!bombObj.isCollided()) {
-                    this.local_bomb_id++;
+
 
                     bombs.push(bombObj);
                     socket.emit("createBomb", {
