@@ -215,7 +215,7 @@ define(['Bombs'], function (Bomb) {
             this.shootReady = true;
 
             // determines the shoot inverval
-            this.SHOOT_INTERVAL = 600;
+            this.SHOOT_INTERVAL = 400;
             // emit position to server
             this.sendPosition();
         },

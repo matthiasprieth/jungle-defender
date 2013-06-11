@@ -104,9 +104,9 @@ define(function () {
              * @type {boolean}
              */
             this.bombIsSpam = true;
-            this.timeout = setTimeout(function () {
+            /*this.timeout = setTimeout(function () {
                 this.bombIsSpam = false;//set flags to avoid bomb in bomb spamming
-            }.bind(this), 33);
+            }.bind(this), 33);*/
 
         },
 
