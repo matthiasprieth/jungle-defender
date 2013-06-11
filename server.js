@@ -43,27 +43,33 @@ sio.configure(function () {
 
 var Bombs = {
     bombs: [],
+    counter: 1,
     onUpdate: function (data) {
-
         for (var i = 0; i < Bombs.bombs.length; i++) {
-            if (Bombs.bombs[i].id == data.id) {
+            if (Bombs.bombs[i].server_id == data.server_id) {
                 Bombs.bombs[i].x = data.pos.x;
                 Bombs.bombs[i].y = data.pos.y;
             }
         }
 
     },
-    onRemove: function (id) {
+    onRemove: function (server_id) {
         for (var i = 0; i < Bombs.bombs.length; i++) {
-            if (Bombs.bombs[i].id == id) {
+            if (Bombs.bombs[i].server_id == server_id) {
                 Bombs.bombs.splice(i, 1);
                 break;
             }
         }
     },
-    onMessage: function (data) {
+    onCreate: function (data) {
+        data.server_id= Bombs.counter;
+        Bombs.counter++;
         Bombs.bombs.push(data);
-        //console.log(bombs);
+
+        console.log("All Bombs\n==================");
+        console.log(Bombs.bombs);
+        console.log("======================");
+        return data;
     },
     all: function () {
         return Bombs.bombs;
@@ -120,19 +126,23 @@ var Client = {
         }
     },
     onPos: function (data) {
-        Client.clients[data.uid].data.x = data.pos.x;
-        Client.clients[data.uid].data.y = data.pos.y;
+        if(Client.clients[data.uid]){
+            Client.clients[data.uid].data.x = data.pos.x;
+            Client.clients[data.uid].data.y = data.pos.y;
+        }
+
     },
     onMessage: function (data) {
-        Client.clients[data.uid].data.action = data.action;
-        sio.sockets.emit('clientMessage', data);
-        //console.log(' client \t - '.blue + data.uid + 'sends data', data);
+        if(Client.clients[data.uid]){
+            Client.clients[data.uid].data.action = data.action;
+            sio.sockets.emit('clientMessage', data);
+            //console.log(' client \t - '.blue + data.uid + 'sends data', data);
+        }
     },
     onDisconnect: function () {
         var uid = this.id;
         sio.sockets.emit('clientDisconnect', {uid: uid});
         delete Client.clients[uid];
-        console.log(Client.clients);
 				if (isEmpty(Client.clients)) {
             Bombs.clean();
         }
@@ -145,18 +155,24 @@ sio.sockets.on('connection', function (socket) {
     Client.newClient(socket);
 
     socket.on('clientMessage', Client.onMessage);
-    socket.on('bombMessage', function (data) {
-        Bombs.onMessage(data);
-        console.log("bombMessage");
+    socket.on('createBomb', function (data) {
+        data = Bombs.onCreate(data);
+        socket.emit("setBombServerID", {
+           id: data.id,
+           server_id: data.server_id
+        });
         socket.broadcast.emit("newBomb", data);
     });
-    socket.on('removeBomb', Bombs.onRemove);
+    socket.on('removeBomb',function(server_id){
+        console.log("removeBomb");
+        Bombs.onRemove(server_id);
+        socket.broadcast.emit("removeBombFromEnemy", server_id);
+    });
     socket.on('sendPos', function (data) {
         Client.onPos(data);
         socket.broadcast.emit('updatePosToAll', data);
     });
     socket.on("updateBomb", function (data) {
-        console.log(data);
         Bombs.onUpdate(data);
         socket.broadcast.emit('updateBombPos', data);
     });

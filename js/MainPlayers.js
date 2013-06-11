@@ -23,9 +23,9 @@ define(['Bombs'], function (Bomb) {
 
             this.parent(x, y, settings);
 
-            this.updateColRect(0, 32, 18, 15); //set specific collision box
+            //this.updateColRect(0, 32, 18, 15); //set specific collision box
             //define the positions for the specific animation in the spritesheet
-            if (settings.image == "Gorilla"){
+            if (settings.image == "Gorilla") {
                 this.addAnimation("walkDown", [0, 1, 2]);
                 this.addAnimation("walkLeft", [3, 4, 5]);
                 this.addAnimation("walkRight", [6, 7, 8]);
@@ -49,10 +49,10 @@ define(['Bombs'], function (Bomb) {
             this.accel.y = 3;
             //this.addAnimation ("explosion", [0,1,2]);
         },
-	setPos: function(data){
-	  this.pos.x=data.x;
-	  this.pos.y=data.y;
-	},
+        setPos: function (data) {
+            this.pos.x = data.x;
+            this.pos.y = data.y;
+        },
 
         onCollision: function (res, obj) {
             // if we collide with an enemy
@@ -123,22 +123,20 @@ define(['Bombs'], function (Bomb) {
         setAction: function (action) {
             this.action = action;
         },
-	
-        createNewBomb: function(data){
-            console.log("createNewBomb -> MainPlayer.js, EnemyPlayer"); 
-	    
-            var bomb = new Bomb(counter, data.x, data.y, data.direction, {image: data.bombtype});
+        createNewBomb: function (data) {
+
+            var bomb = new Bomb(data.id, data.server_id, data.x, data.y, data.direction, {image: data.bombtype});
             //z-index of player=99 , 99 + 1
 
             me.game.add(bomb, 99 + 1); //bullet should appear 1 layer before the mainPlayer
 
             var bombObj = me.game.getLastGameObject();
             //console.log(melonObj.isCollided());
-            if (!bombObj.isCollided()) {
-                counter++;
+            //if (!bombObj.isCollided()) {
+            counter++;
 
-                bombs.push(bombObj);
-            }
+            bombs.push(bombObj);
+            //}
             me.game.sort();
         },
 
@@ -206,19 +204,19 @@ define(['Bombs'], function (Bomb) {
             // set the display to follow our position on both axis*/
             me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
             this.shootReady = true;
-						this.sendPosition();	
+            this.sendPosition();
 
             //this.emitPosition();
         },
-				sendPosition: function(){
-					var that=this;
-					setInterval(function(){
-						socket.emit("sendPos",{
-							uid: that.uid,
-							pos: that.pos
-						});
-					},500);
-				},
+        sendPosition: function () {
+            var that = this;
+            setInterval(function () {
+                socket.emit("sendPos", {
+                    uid: that.uid,
+                    pos: that.pos
+                });
+            }, 500);
+        },
         shoot: function () {
             var posX = this.pos.x;
             var posY = this.pos.y;
@@ -245,8 +243,9 @@ define(['Bombs'], function (Bomb) {
                         posY = this.pos.y + heightOffset;
                 }
 
-                var shot = new Bomb(counter, posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});
+                var shot = new Bomb(counter, 0, posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});
                 me.game.add(shot, this.z + 1); //bullet should appear 1 layer before the mainPlayer
+                //socket.emit("getBombServerID", shot.id);
                 var bombObj = me.game.getLastGameObject();
                 //console.log(melonObj.isCollided());
 
@@ -254,9 +253,10 @@ define(['Bombs'], function (Bomb) {
                     counter++;
 
                     bombs.push(bombObj);
-                    socket.emit("bombMessage", {
+                    socket.emit("createBomb", {
                         uid: localUID,
-			id: bombObj.id,
+                        id: bombObj.id,
+                        server_id: bombObj.server_id,
                         x: bombObj.pos.x,
                         y: bombObj.pos.y,
                         direction: bombObj.direction,
@@ -271,34 +271,34 @@ define(['Bombs'], function (Bomb) {
 
             }
         },
-        checkMoveControls: function(){
-            var new_action='';
+        checkMoveControls: function () {
+            var new_action = '';
             if (me.input.isKeyPressed('left')) {
                 //this.setCurrentAnimation("walkLeft");
                 if (me.input.isKeyPressed('down')) {
                     this.walkLeftDown();
-                    new_action ="leftdown";
+                    new_action = "leftdown";
                 } else if (me.input.isKeyPressed('up')) {
                     this.walkLeftUp();
-                    new_action="leftup";
+                    new_action = "leftup";
                 } else {
                     this.walkLeft();
-                    new_action="left";
+                    new_action = "left";
                 }
 
             } else if (me.input.isKeyPressed('right')) {
                 //this.setCurrentAnimation("walkRight");
                 if (me.input.isKeyPressed('down')) {
                     this.walkRightDown();
-                    new_action="rightdown";
+                    new_action = "rightdown";
 
                 } else if (me.input.isKeyPressed('up')) {
                     this.walkRightUp();
-                    new_action="rightup";
+                    new_action = "rightup";
 
                 } else {
                     this.walkRight();
-                    new_action="right";
+                    new_action = "right";
                 }
                 // update the entity velocity
                 //this.vel.x += this.accel.x * (60 / me.timer.fps);
@@ -308,7 +308,7 @@ define(['Bombs'], function (Bomb) {
                     this.vel.x = 0;
                 }
                 this.vel.y -= this.accel.y * (60 / me.timer.fps);
-                new_action="up";
+                new_action = "up";
             }
             else if (me.input.isKeyPressed('down')) {
                 this.setCurrentAnimation("walkDown");
@@ -318,19 +318,19 @@ define(['Bombs'], function (Bomb) {
                 }
                 // update the entity velocity
                 this.vel.y += this.accel.y * (60 / me.timer.fps);
-                new_action="down";
+                new_action = "down";
             }
             else {
                 //reset the current animation to the first frame
                 this.stand();
-                new_action="stand";
+                new_action = "stand";
             }
             if (this.last_send_action != new_action) {
                 this.last_send_action = new_action;
                 socket.emit("clientMessage", {action: new_action, uid: this.uid});
             }
         },
-        checkShootControls:function(){
+        checkShootControls: function () {
             if (me.input.isKeyPressed('shootLeft')) {
                 this.setCurrentAnimation("walkLeft");
                 this.shoot();
@@ -348,7 +348,7 @@ define(['Bombs'], function (Bomb) {
                 this.shoot();
             }
         },
-        checkCollision: function(){
+        checkCollision: function () {
             var collided = me.game.collide(this);
 
             if (collided) {

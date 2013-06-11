@@ -37,7 +37,7 @@ define(function () {
         }
     });
 
-    makeExplosion= function(obj){
+    makeExplosion = function (obj) {
         var explosion = new Explosion(obj.pos.x, obj.pos.y, {});
         me.game.add(explosion, obj.z + 1); //bullet should appear 1 layer before the mainPlayer
         me.game.sort();
@@ -53,13 +53,14 @@ define(function () {
          * initialize sprites, animation for Explosion
          * and other properties
          */
-        init: function (id, x, y, direction, settings) {
+        init: function (id, server_id, x, y, direction, settings) {
 
             /**
              * @type{Number}
              * unique id for identifying object
              */
             this.id = id;
+            this.server_id = server_id;
             this.bombtype = settings.image;
             settings.spritewidth = 32;
             settings.spriteheight = 32;
@@ -79,15 +80,15 @@ define(function () {
 
             this.setVelocity(24, 24);
 
-	    this.accel.x = 6;
-	    this.accel.y = 6;
+            this.accel.x = 6;
+            this.accel.y = 6;
             /**
              * defines, if melon is stacked or not
              * @type {boolean}
              */
             this.stacked = false;
 
-	    this.bomb_updated=false;
+            this.bomb_updated = false;
             /**
              * direction of melon animation
              * @type {String}
@@ -116,17 +117,16 @@ define(function () {
          * @param res
          * @param obj
          */
-	setPos: function(pos){
-	console.log("Bombs: SetPos()");		
-	this.pos.x=pos.x;
-		this.pos.y=pos.y;
-	},
+        setPos: function (pos) {
+            this.pos.x = pos.x;
+            this.pos.y = pos.y;
+        },
         onCollision: function (res, obj) {
             // if we collide with an enemy
             if (obj.type == me.game.ENEMY_OBJECT) {
                 //this.flicker(45);
                 makeExplosion(this);
-                socket.emit("removeBomb", this.id);
+                socket.emit("removeBomb", this.server_id);
             }
         },
 
@@ -151,38 +151,13 @@ define(function () {
                 makeExplosion(this);
 
                 me.game.remove(this, true);
-                socket.emit("removeBomb", this.id);
+                //socket.emit("removeBomb", this.server_id);
             }
         },
         onDestroyEvent: function () {
-            /*if (this.stacked) {
-                console.log("stacked");
-                //this.collisionBox.translate(-48,-48);
-                //this.collisionBox.adjustSize(-48,32,-48, 32);
-                //this.collisionBox.colPos.x+=20;
-                //this.collisionBox.colPos.y+=20;
-                /*this.collisionBox.pos.x-=50;
-                 this.collisionBox.pos.y-=50;
-                 this.collisionBox.width*=2;
-                 this.collisionBox.height*=2;
-                 this.collisionBox.hHeight*=2;
-                 this.collisionBox.hWidth*=2;*/
-                /*this.updateColRect(-48, this.collisionBox.width * 2,
-                    -48, this.collisionBox.height * 2);
-                this.update();
-                //this.update();
-                //this.collisionBox.translate(48,48);
-                console.log(this.collisionBox);
 
-                var collided = me.game.collide(this);
-
-                if (collided && collided.obj.type == me.game.ACTION_OBJECT) {
-                    // me.game.remove(collided.obj);
-                    collided.obj.onBombsCollision(this);
-                }
-            }*/
         },
-        moveBomb: function(direction){
+        moveBomb: function (direction) {
             switch (this.direction) {//name of the animation
                 case 'walkLeft':
                     this.vel.x -= 5;
@@ -197,44 +172,45 @@ define(function () {
                     this.vel.y += 5;
             }
         },
-        checkCollision: function(){
+        checkCollision: function () {
             var collided = me.game.collide(this);
             if (collided) {
                 if (collided.obj.type == me.game.ACTION_OBJECT) {
                     if (this.bombIsSpam) {
                         me.game.remove(this, true);
-                        socket.emit("removeBomb", this.id);
+                        socket.emit("removeBomb", this.server_id);
                     }
-		    
-		    if(this.bomb_updated!=true){
-                    	this.vel.x = 0;
-                    	this.vel.y = 0;
-                    	//this.maxVel = 0;
-                    	this.stacked = true;
-		    	//console.log("EEEEEEEEMIT");
-			socket.emit("updateBomb", 
-				{
-			  	id: this.id,
-			  	pos: this.pos	
-				});
-			this.bomb_updated=true;
-                    	//this.setMaxVelocity(0,0);
-			}
+
+                    if (this.bomb_updated != true) {
+                        this.vel.x = 0;
+                        this.vel.y = 0;
+                        //this.maxVel = 0;
+                        this.stacked = true;
+                        //console.log("EEEEEEEEMIT");
+                        socket.emit("updateBomb",
+                            {
+                                server_id: this.server_id,
+                                pos: this.pos
+                            });
+                        this.bomb_updated = true;
+                        //this.setMaxVelocity(0,0);
+                    }
                 }
                 // if we collide with an enemy
                 else if (collided.obj.type == me.game.ENEMY_OBJECT) {
                     // let's flicker in case we touched an enemy
-                   // this.flicker(45);
+                    // this.flicker(45);
+                    me.game.remove(this, true);
                 }
-            }else if(!this.stacked){
-		this.bomb_updated=false;
+            } else if (!this.stacked) {
+                this.bomb_updated = false;
                 this.moveBomb(this.direction);
             }
         },
         // manage the enemy movement
         update: function () {
-	    var max_velocity = 6 * (60 / me.timer.fps);
-	    this.setVelocity(max_velocity, max_velocity);
+            var max_velocity = 6 * (60 / me.timer.fps);
+            this.setVelocity(max_velocity, max_velocity);
 
             this.checkCollision();
 
