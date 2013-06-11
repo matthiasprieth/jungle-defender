@@ -16,6 +16,7 @@ setInterval(function(){
     if (timeLeft <= 0) {
         timeLeft = ROUNDTIME;
         Bombs.clean();
+
         sio.sockets.emit('roundEnd', {
             'winnerTeam': 1,
             'kills': 20,
@@ -98,11 +99,20 @@ function isEmpty(ob){
 
 var Client = {
     clients: {},
+    randomStartXPosition: [15, 16, 17],
+    randomStartYPosition: [15, 16, 17],
+    startPositionPos: 0,
 
     newClient: function (socket) {
         var clientUID = socket.id;
-        var posX = parseInt(15 * 32);
-        var posY = parseInt(15 * 32);
+
+
+        if (startPosition >= randomStartXPosition.length || startPosition >= randomStartXPosition.length){
+            startPostion = 0;
+        } 
+        var posX = parseInt(randomStartXPosition[startPositionPos] * 32);
+        var posY = parseInt(randomStartYPosition[startPositionPos] * 32);
+        startPositionPos++;
 
         //console.log("CLIENT_UID: ".black + clientUID);
         Client.clients[clientUID] = {
