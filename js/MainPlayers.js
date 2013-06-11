@@ -125,9 +125,9 @@ define(['Bombs'], function (Bomb) {
         },
 	
         createNewBomb: function(data){
-            console.log("createNewBomb, enemy");
+            console.log("createNewBomb -> MainPlayer.js, EnemyPlayer"); 
 	    
-		var bomb = new Bomb(counter, data.x, data.y, data.direction, {image: data.bombtype});
+            var bomb = new Bomb(counter, data.x, data.y, data.direction, {image: data.bombtype});
             //z-index of player=99 , 99 + 1
 
             me.game.add(bomb, 99 + 1); //bullet should appear 1 layer before the mainPlayer

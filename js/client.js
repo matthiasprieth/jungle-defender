@@ -146,6 +146,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
             players.push(gamePlayerObj);
         };
 	createNewBomb= function(data){
+      console.log("createNewBomb -> Client");  
 	  var bomb = new Bomb(counter, data.x, data.y, data.direction, {image: data.bombtype});
 	  me.game.add(bomb, 99+1);
 	  var bombObj = me.game.getLastGameObject();
