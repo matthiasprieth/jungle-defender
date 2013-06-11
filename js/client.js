@@ -38,11 +38,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                         createNewPlayer(data.clients[prop].data);
                     }
                 }
-//<<<<<<< HEAD
-//=======
                 me.game.HUD.removeItem("connectingStatus");
-
-//>>>>>>> 49739830fac96c269013496d4df673b0bce8708d
                 var timeLeft = data.timeLeft;
                 me.game.HUD.setItemValue("timeLeft", toHHMMSS(timeLeft));
                 setInterval(function () {
@@ -163,6 +159,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
 
             players.push(gamePlayerObj);
         };
+
         createNewBomb = function (data) {
             var bomb = new Bomb(data.id, data.server_id, data.x, data.y, data.direction, {image: data.bombtype});
             me.game.add(bomb, 99 + 1);
@@ -172,7 +169,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 bombs.push(bombObj);
             }
             me.game.sort();
-        }
+        };
     };
     return initNetwork;
 });

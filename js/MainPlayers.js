@@ -148,7 +148,6 @@ define(['Bombs'], function (Bomb) {
         },
         // creates new Bomb with data properties
         createNewBomb: function (data) {
-            console.log("createNewBomb, enemy");
 
             // Creates new Bomb with params: \n
             // data.id = local_bomb_id

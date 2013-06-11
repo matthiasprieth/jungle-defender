@@ -5,7 +5,6 @@ require.config({
 });
 require(["resources", "MainPlayers", "client"], function (g_resources, Players, initNetwork) {
 
-
     var game =
     {
         /* ---
