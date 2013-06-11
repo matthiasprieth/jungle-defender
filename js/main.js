@@ -114,7 +114,7 @@ require(["resources", "MainPlayers", "client"], function (g_resources, Players, 
                 // load a level
                 me.levelDirector.loadLevel("battlezone");
 
-                // add a default HUD to the game mngr
+                // add a default HUD to the game manager
                 me.game.addHUD(10, 10, 620, 460);
 
                 me.game.HUD.addItem("connectingStatus", new game.HUD_Object(150, 200, "left", "CONNECTING"));
