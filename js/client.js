@@ -84,6 +84,8 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 bombs = [];
             },
             updatePosFromEnemy: function (playerData) {
+                console.log("wuuuuuuuut?");
+                console.log(playerData);
                 for (var i = 0; i < players.length; i++) {
                     if (players[i].uid === playerData.uid) {
                         players[i].setPos(playerData.pos);

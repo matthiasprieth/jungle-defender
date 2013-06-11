@@ -9,7 +9,7 @@ var serverPort = 8002,
 
     team = 1,
 
-    ROUNDTIME = 20, // Konstante: Rundenzeit 300 Sekunden (5 Minuten)
+    ROUNDTIME = 180, // Konstante: Rundenzeit z.B. 300 Sekunden (5 Minuten)
     timeLeft = ROUNDTIME;
 
     randomStartXPosition = [15, 24, 30, 47, 47, 33, 1, 1],
@@ -19,13 +19,27 @@ var serverPort = 8002,
 setInterval(function(){
     if (timeLeft <= 0) {
         timeLeft = ROUNDTIME;
-        Bombs.clean();
-
         sio.sockets.emit('roundEnd', {
             'winnerTeam': 1,
             'kills': 20,
             'timeLeft': timeLeft
         });
+
+        Bombs.clean();
+        for (var i in Client.clients) {
+            if (startPositionPos >= randomStartXPosition.length || startPositionPos >= randomStartXPosition.length){
+                startPositionPos = 0;
+            } 
+            var posX = parseInt(randomStartXPosition[startPositionPos] * 32);
+            var posY = parseInt(randomStartYPosition[startPositionPos] * 32);
+            Client.clients[i].data.x = posX;
+            Client.clients[i].data.y = posY;
+            sio.sockets.emit('updatePosToAll', {
+                uid:  Client.clients[i].data.uid,
+                pos:  {x: posX, y: posY}
+            });    
+            startPositionPos++;
+        }    
     }else{
         timeLeft--;
     }
@@ -107,11 +121,8 @@ var Client = {
     newClient: function (socket) {
         var clientUID = socket.id;
 
-        console.log("Startposition: " + startPositionPos);
-        console.log("randomStartXPositionlength" + randomStartXPosition.length);
         if (startPositionPos >= randomStartXPosition.length || startPositionPos >= randomStartXPosition.length){
             startPositionPos = 0;
-            console.log("hey");
         } 
         var posX = parseInt(randomStartXPosition[startPositionPos] * 32);
         var posY = parseInt(randomStartYPosition[startPositionPos] * 32);
