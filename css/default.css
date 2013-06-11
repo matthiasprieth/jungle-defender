@@ -40,7 +40,7 @@ canvas {
     margin-left: -364px;
 }
 h1 {
-    margin:1% auto;
+    margin:10px auto 80px auto;
     text-align: center;
     font-size: 300%;
     color: #4A7B00;
@@ -62,6 +62,10 @@ ul#menue{
     height:60px;
     margin:0% auto;
     width:600px;
+    position: absolute;
+    left:-50%;
+    top:-8%;
+    z-index:50;
 }
 li{
     /*display:inline;*/
