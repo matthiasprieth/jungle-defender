@@ -12,6 +12,10 @@ var serverPort = 8002,
     ROUNDTIME = 20, // Konstante: Rundenzeit 300 Sekunden (5 Minuten)
     timeLeft = ROUNDTIME;
 
+    randomStartXPosition = [15, 24, 30, 47, 47, 33, 1, 1],
+    randomStartYPosition = [15, 24, 30, 30, 7, 7, 30, 2],
+    startPositionPos = 0;
+
 setInterval(function(){
     if (timeLeft <= 0) {
         timeLeft = ROUNDTIME;
@@ -99,16 +103,15 @@ function isEmpty(ob){
 
 var Client = {
     clients: {},
-    randomStartXPosition: [15, 16, 17],
-    randomStartYPosition: [15, 16, 17],
-    startPositionPos: 0,
 
     newClient: function (socket) {
         var clientUID = socket.id;
 
-
-        if (startPosition >= randomStartXPosition.length || startPosition >= randomStartXPosition.length){
-            startPostion = 0;
+        console.log("Startposition: " + startPositionPos);
+        console.log("randomStartXPositionlength" + randomStartXPosition.length);
+        if (startPositionPos >= randomStartXPosition.length || startPositionPos >= randomStartXPosition.length){
+            startPositionPos = 0;
+            console.log("hey");
         } 
         var posX = parseInt(randomStartXPosition[startPositionPos] * 32);
         var posY = parseInt(randomStartYPosition[startPositionPos] * 32);
