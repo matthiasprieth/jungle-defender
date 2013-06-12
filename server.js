@@ -6,7 +6,10 @@ var serverPort = 8002,
     http = require('http'),
     server = http.createServer(app),
     sio = require('socket.io').listen(server),
-
+    points= {
+        team1: 0,
+        team2: 0
+    },
     team = 1,
 
     ROUNDTIME = 180, // Konstante: Rundenzeit z.B. 300 Sekunden (5 Minuten)
@@ -20,8 +23,8 @@ setInterval(function(){
     if (timeLeft <= 0) {
         timeLeft = ROUNDTIME;
         sio.sockets.emit('roundEnd', {
-            'winnerTeam': 1,
-            'kills': 20,
+            'team1': points.team1,
+            'team2': points.team2,
             'timeLeft': timeLeft
         });
 
@@ -205,6 +208,11 @@ sio.sockets.on('connection', function (socket) {
     });
     socket.on('playerCollided',function(data){
         console.log("playerCollided");
+        if(data.team==1){
+            points.team2+=1;
+        }else if(data.team==2){
+            points.team1+=1;
+        }
         Bombs.onRemove(data.server_id);
         socket.broadcast.emit("EnemyCollidedWithBomb",{
             server_id: data.server_id,

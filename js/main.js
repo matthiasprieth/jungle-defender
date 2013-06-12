@@ -10,15 +10,15 @@ require(["jquery", "resources", "MainPlayers", "client"], function ($, g_resourc
 
     $("#help a").on("click", function(){
         $("section.infowindow").show();
-        $("section.infowindow div.impressum").css({"height":0}).hide();
-        $("section.infowindow div.help").show().animate({height:'424px'}, 1500);
+        $("section.infowindow>div:not(.help)").css({"height":0}).hide();
+        $("section.infowindow>div.help").show().animate({height:'424px'}, 1500);
 
     });
 
     $("#impressum a").on("click", function(){
         $("section.infowindow").show();
-        $("section.infowindow div.help").css({"height":0}).hide();
-        $("section.infowindow div.impressum").show().animate({height:'424px'}, 1500);
+        $("section.infowindow>div:not(.impressum)").css({"height":0}).hide();
+        $("section.infowindow>div.impressum").show().animate({height:'424px'}, 1500);
 
     });
 

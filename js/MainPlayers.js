@@ -260,9 +260,9 @@ define(['Bombs'], function (Bomb) {
                 // if object moving set another Offset
                 if (this.vel.x !== 0 || this.vel.y !== 0) {
                     // dependency of player moving speed in x-direction
-                    widthOffset += this.accel.x * 2;
+                    widthOffset += this.accel.x * 2 + 2;
                     // dependency of player moving speed in y-direction
-                    heightOffset += this.accel.y * 2;
+                    heightOffset += this.accel.y * 2 + 2;
                 }
                 // name of the animation
                 switch (this.current.name) {

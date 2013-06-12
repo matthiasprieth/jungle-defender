@@ -74,6 +74,24 @@ section .content{
     width: 92%;
     height: 92%;
 }
+div.team{
+    width:40%;
+    display:block;
+    height:100px;
+    float:left;
+    margin-left:4%;
+}
+p.won{
+    font-size: 150%;
+    margin-top: 15%;
+}
+span.team{
+    font-size:300%;
+}
+span.kills{
+    font-size:300%;
+}
+
 .allControls{
     margin: 0% auto;
     width: 60%;

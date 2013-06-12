@@ -32,9 +32,27 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
 
         //testcase
         var onRoundEnd = function (data) {
+            var $result= $("section.infowindow>div.result");
+            $result.find(".one .kills").html(data.team1);
+            $result.find(".two .kills").html(data.team2);
+            setTimeout(function(){
+                $("section.infowindow").show();
+                $("section.infowindow>div:not(.result)").css({"height":0}).hide();
+                $("section.infowindow>div.result").show().animate({height:'424px'}, 1500);
+            });
+            var $won=$result.find(".won");
+            if(data.team1>data.team2){
+                $won.html("Animals have won");
+            }else if(data.team2>data.team1){
+                $won.html("Humans have won");
+            }else{
+                $won.html("Draw");
+            }
             console.log("Team " + data.winnerTeam +": " + "has won with " + data.kills + " kills!");
             timeLeft = data.timeLeft;
             Bombs.clean();
+            me.game.HUD.setItemValue("scoreTeam1",0);
+            me.game.HUD.setItemValue("scoreTeam2",0);
         };
         socket.on('roundEnd', onRoundEnd);
 
