@@ -6,10 +6,19 @@ define(['Bombs'], function (Bomb) {
     // manages the player sprites, settings and their movement
     var Player = me.ObjectEntity.extend({
         // constructor function
-        init: function (x, y, settings, uid) {
+        init: function (x, y, settings, team, uid) {
             // set unique id for each player
             this.uid = uid;
 
+            this.team=team;
+
+            if (team == 1) {
+                this.bombtype="GreenCoconut";
+                settings.image = "Gorilla";
+            } else {
+                this.bombtype="Waterbomb";
+                settings.image = "Military";
+            }
             // defines the movement state of the player
             this.action="stand";
 
@@ -21,12 +30,12 @@ define(['Bombs'], function (Bomb) {
             this.parent(x, y, settings);
 
             // define the positions for the specific animation in the spritesheet
-            if (settings.image == "Gorilla") {
+            if (team==1) {
                 this.addAnimation("walkDown", [0, 1, 2]);
                 this.addAnimation("walkLeft", [3, 4, 5]);
                 this.addAnimation("walkRight", [6, 7, 8]);
                 this.addAnimation("walkUp", [9, 10, 11]);
-            } else if (settings.image == "Military") {
+            } else if (team==2) {
                 this.addAnimation("walkDown", [0, 1, 2]);
                 this.addAnimation("walkLeft", [12, 13, 14]);
                 this.addAnimation("walkRight", [24, 25, 26]);
@@ -34,12 +43,6 @@ define(['Bombs'], function (Bomb) {
             }
 
             this.setCurrentAnimation("walkDown");
-
-            if (settings.image == "Gorilla"){
-                this.team = 1;
-            }else{
-                this.team = 2;
-            }
 
             // make it collidable
             this.collidable = true;
@@ -59,8 +62,8 @@ define(['Bombs'], function (Bomb) {
         },
         // set new position of the player
         setPos: function (data) {
-            this.pos.x = parseInt(data.x);
-            this.pos.y = parseInt(data.y);
+            this.pos.x = data.x;
+            this.pos.y = data.y;
         },
         // checks and handles collision with bomb
         onCollision: function (res, obj) {
@@ -147,10 +150,10 @@ define(['Bombs'], function (Bomb) {
     // They inherit from abstract player.
     var EnemyPlayer = Player.extend({
         // constructor function
-        init: function (x, y, settings, uid) {
+        init: function (x, y, settings, team,  uid) {
 
             // calls parent constructor
-            this.parent(x, y, settings, uid);
+            this.parent(x, y, settings, team, uid);
         },
         // set new movement state
         setAction: function (action) {
@@ -211,10 +214,10 @@ define(['Bombs'], function (Bomb) {
 
     var MainPlayer = Player.extend({
         // constructor
-        init: function (x, y, settings, uid) {
+        init: function (x, y, settings, team,  uid) {
 
             // calls parent constructor
-            this.parent(x, y, settings, uid);
+            this.parent(x, y, settings, team, uid);
 
             // unique local_bomb_id to distinguish between local bombs
             this.local_bomb_id=1;
@@ -225,7 +228,7 @@ define(['Bombs'], function (Bomb) {
             this.shootReady = true;
 
             // determines the shoot inverval
-            this.SHOOT_INTERVAL = 700;
+            this.SHOOT_INTERVAL = 400;
             // emit position to server
             this.sendPosition();
         },
@@ -276,12 +279,8 @@ define(['Bombs'], function (Bomb) {
                         posY = this.pos.y + heightOffset;
                 }
 
-                if (this.team === 1){ 
-                    var shot = new Bomb(this.local_bomb_id, this.uid, 0, posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});    
-                }else{
-                    var shot = new Bomb(this.local_bomb_id, this.uid, 0, posX, posY, this.current.name, {image: "Waterbomb", spritewidth: 32, spriteheight: 32});
-                }
-                
+                var shot = new Bomb(this.local_bomb_id, this.uid, 0, posX, posY, this.current.name, {image: this.bombtype});
+
                 // bomb should appear 1 layer before the mainPlayer
                 me.game.add(shot, this.z + 1);
                 var bombObj = me.game.getLastGameObject();
