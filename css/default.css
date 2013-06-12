@@ -24,7 +24,7 @@ body > *{
 
 }
 
-canvas, section.help, section.impressum {
+canvas, section.infowindow {
     /*display: block;*/
     /*border-color: black;
     border-image: url("../assets/images/WoodBorder.png") 15% repeat;
@@ -43,7 +43,7 @@ canvas{
     margin-top: -513px;
 
 }
-section.help, section.impressum{
+section.infowindow{
     /*height: 0px;*/
     position: absolute;
     background-color: #7a4b12;
@@ -62,11 +62,53 @@ section > .bg{
     z-index:4;
     background: url("../assets/images/boden_muster.jpg") repeat;
 }
+section h1{
+    margin:1% auto 2% auto;
+}
 section .content{
     z-index: 120;
+    text-align:center;
     position: absolute;
-    width: 100%;
-    height: 100%;
+
+    padding: 4%;
+    width: 92%;
+    height: 92%;
+}
+.allControls{
+    margin: 0% auto;
+    width: 60%;
+}
+.keypanel{
+    float:left;
+    min-width: 100px;
+    margin-left:5%;
+}
+.keypanel:last-child{
+    margin-left:0%;
+}
+.keydescription{
+    width:100%;
+    margin:0% auto;
+    display:block;
+}
+.keydescription>*{
+    float:left;
+}
+.keydescription>span{
+    margin-top:2%;
+}
+.clear{
+    float:none;
+    clear:both;
+}
+.key{
+    display:block;
+    width:40px;
+    height:40px;
+}
+.key img{
+    width:100%;
+    height:100%;
 }
 a.closeWindow{
     position:absolute;
