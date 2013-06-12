@@ -84,8 +84,6 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 bombs = [];
             },
             updatePosFromEnemy: function (playerData) {
-                console.log("wuuuuuuuut?");
-                console.log(playerData);
                 for (var i = 0; i < players.length; i++) {
                     if (players[i].uid === playerData.uid) {
                         players[i].setPos(playerData.pos);
@@ -104,16 +102,23 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
         Client.init();
 
         var Bombs = {
+            
             onUpdateBombPos: function (data) {
+                console.log("onUpdateBomb\n================");
+                    
                 for (var i = 0; i < bombs.length; i++) {
                     if (bombs[i].server_id == data.server_id) {
                         bombs[i].setPos(data.pos);
                     }
+                    console.log(bombs[i].server_id);
+
                 }
+                console.log("============");
             },
             onRemoveBombFromEnemy: function (server_id) {
                 for (var i = 0; i < bombs.length; i++) {
                     if (bombs[i].server_id == server_id) {
+                        console.log("onRemoveBombFromEnemy");
                         me.game.remove(bombs[i]);
                         bombs.splice(i, 1);
                     }
@@ -123,11 +128,20 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 createNewBomb(data);
             },
             onSetBombServerID: function (data) {
+
+                console.log("onSetBombServerID(data)");
+               // console.log(data);
                 for (var i = 0; i < bombs.length; i++) {
-                    if (bombs[i].id == data.id) {
+                   
+                    if (bombs[i].id == data.id && bombs[i].uid==data.uid) {
+                        console.log("setServerid");
                         bombs[i].server_id = data.server_id;
                     }
+                    //console.log(i);
+                    //console.log(bombs[i].id);
+                     console.log(bombs[i].server_id);
                 }
+                console.log("===============");
             },
             getAll: function (bombs_data) {
                 console.log("getAllBombs\n===============");
@@ -158,14 +172,14 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
         createNewPlayer = function (data) {
             var gamePlayer = null;
             if (data.team == 1) {
-                foo = "Gorilla"
+                playerImage = "Gorilla"
             } else {
-                foo = "Military"
+                playerImage = "Military"
             }
             if (data.uid == localUID) {
-                gamePlayer = new Players.MainPlayer(data.x, data.y, {image: foo}, data.uid);
+                gamePlayer = new Players.MainPlayer(data.x, data.y, {image: playerImage}, data.uid);
             } else {
-                gamePlayer = new Players.EnemyPlayer(data.x, data.y, {image: foo}, data.uid);
+                gamePlayer = new Players.EnemyPlayer(data.x, data.y, {image: playerImage}, data.uid);
             }
             me.game.add(gamePlayer, 99);
             me.game.sort();
@@ -183,7 +197,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
             // data.x and data.y = positions
             // data.direction = direction, where bomb should be fired
             // data.bombtype = type of bomb
-            var bomb = new Bomb(data.id, data.server_id, data.x, data.y, data.direction, {image: data.bombtype});
+            var bomb = new Bomb(data.id, data.uid, data.server_id, data.x, data.y, data.direction, {image: data.bombtype});
             // add the object and give the z index of the current object
             me.game.add(bomb, 99 + 1);
             // gets bomb object from melonjs api (needed to manage bombs externally)
@@ -194,6 +208,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
             //}
             // sort the object list (to ensure the object is properly displayed)
             me.game.sort();
+            console.log(bombs);
         };
     };
     return initNetwork;

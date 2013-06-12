@@ -12,6 +12,7 @@ define(['Bombs'], function (Bomb) {
 
             // defines the movement state of the player
             this.action="stand";
+
             // set sprite size
             settings.spritewidth = 32;
             settings.spriteheight = 32;
@@ -33,6 +34,12 @@ define(['Bombs'], function (Bomb) {
             }
 
             this.setCurrentAnimation("walkDown");
+
+            if (settings.image == "Gorilla"){
+                this.team = 1;
+            }else{
+                this.team = 2;
+            }
 
             // make it collidable
             this.collidable = true;
@@ -229,6 +236,10 @@ define(['Bombs'], function (Bomb) {
             }, 500);
         },
         shoot: function () {
+            console.log("shoot\n=======");
+            console.log(bombs);
+
+            console.log("================");
             // origin shoot position
             var posX = this.pos.x;
             var posY = this.pos.y;
@@ -262,7 +273,12 @@ define(['Bombs'], function (Bomb) {
                         posY = this.pos.y + heightOffset;
                 }
 
-                var shot = new Bomb(this.local_bomb_id, 0, posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});
+               /* if (this.team === 1){ */
+                    var shot = new Bomb(this.local_bomb_id, this.uid, 0, posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});    
+               /* }else{
+                    var shot = new Bomb(this.local_bomb_id, 0, posX, posY, this.current.name, {image: "Waterbomb", spritewidth: 32, spriteheight: 32});
+                }*/
+                
                 // bomb should appear 1 layer before the mainPlayer
                 me.game.add(shot, this.z + 1);
                 var bombObj = me.game.getLastGameObject();

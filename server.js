@@ -79,8 +79,8 @@ var Bombs = {
     onUpdate: function (data) {
         for (var i = 0; i < Bombs.bombs.length; i++) {
             if (Bombs.bombs[i].server_id == data.server_id) {
-                Bombs.bombs[i].x = data.pos.x;
-                Bombs.bombs[i].y = data.pos.y;
+                Bombs.bombs[i].x = parseInt(data.pos.x);
+                Bombs.bombs[i].y = parseInt(data.pos.y);
             }
         }
 
@@ -94,14 +94,12 @@ var Bombs = {
         }
     },
     onCreate: function (data) {
-        data.server_id= Bombs.counter;
-        Bombs.counter++;
+        
         Bombs.bombs.push(data);
-
+        Bombs.counter++;
         console.log("All Bombs\n==================");
         console.log(Bombs.bombs);
         console.log("======================");
-        return data;
     },
     all: function () {
         return Bombs.bombs;
@@ -164,8 +162,8 @@ var Client = {
     },
     onPos: function (data) {
         if(Client.clients[data.uid]){
-            Client.clients[data.uid].data.x = data.pos.x;
-            Client.clients[data.uid].data.y = data.pos.y;
+            Client.clients[data.uid].data.x = parseInt(data.pos.x);
+            Client.clients[data.uid].data.y = parseInt(data.pos.y);
         }
 
     },
@@ -196,8 +194,10 @@ sio.sockets.on('connection', function (socket) {
 
     socket.on('clientMessage', Client.onMessage);
     socket.on('createBomb', function (data) {
-        data = Bombs.onCreate(data);
+        data.server_id=Bombs.counter;
+        Bombs.onCreate(data);
         socket.emit("setBombServerID", {
+           uid: data.uid,
            id: data.id,
            server_id: data.server_id
         });
@@ -213,8 +213,13 @@ sio.sockets.on('connection', function (socket) {
         socket.broadcast.emit('updatePosToAll', data);
     });
     socket.on("updateBomb", function (data) {
-        Bombs.onUpdate(data);
-        socket.broadcast.emit('updateBombPos', data);
+        //if(!data.server_id==0){
+           Bombs.onUpdate(data);
+            socket.broadcast.emit('updateBombPos', data);
+        //}else{
+             //console.log("wrong server id");
+        //}
+        
     });
     socket.on('disconnect', Client.onDisconnect);
 });

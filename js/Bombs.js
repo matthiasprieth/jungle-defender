@@ -53,13 +53,14 @@ define(function () {
          * initialize sprites, animation for Explosion
          * and other properties
          */
-        init: function (id, server_id, x, y, direction, settings) {
+        init: function (id, uid, server_id, x, y, direction, settings) {
 
             /**
              * @type{Number}
              * unique id for identifying object
              */
             this.id = id;
+            this.uid=uid;
             this.server_id = server_id;
             this.bombtype = settings.image;
             settings.spritewidth = 32;
@@ -98,6 +99,8 @@ define(function () {
 
             this.type = me.game.ACTION_OBJECT;
 
+            this.locked=false;
+
             /**
              * secure mechanism to prevent spaming,
              * melons should only create, if they don`t collide right now with a other object
@@ -118,29 +121,33 @@ define(function () {
          * @param obj
          */
         setPos: function (pos) {
-            this.pos.x = pos.x;
-            this.pos.y = pos.y;
+            this.pos.x = parseInt(pos.x);
+            this.pos.y = parseInt(pos.y);
         },
         onCollision: function (res, obj) {
             // if we collide with an enemy
             if (obj.type == me.game.ENEMY_OBJECT) {
                 //this.flicker(45);
+                console.log("onCollision");
                 makeExplosion(this);
                 socket.emit("removeBomb", this.server_id);
-            }
+            } 
+            // if we collide with an enemy
+            if (obj.type == me.game.ENEMY_OBJECT) {
+                    console.log("collided with enemy");
+                    me.game.remove(this);
+                    socket.emit("removeBomb", this.server_id);
+            }        
         },
-
 
         /**
          * Checks if an object is collided
          * @returns {boolean}
          */
         isCollided: function () {
-            //console.log("isCollided");
             var collided = me.game.collide(this);
             if (collided && collided.obj.type == me.game.ACTION_OBJECT) {
-                console.log("Action_object -> remove");
-                me.game.remove(this, true);
+                me.game.remove(this);
                 return true;
             }
             return false;
@@ -148,10 +155,9 @@ define(function () {
 
         onBombsCollision: function (obj) {
             if (obj.type == me.game.ACTION_OBJECT) {
-
+                console.log("onBombsCollision");
                 makeExplosion(this);
-
-                me.game.remove(this, true);
+                me.game.remove(this);
                 //socket.emit("removeBomb", this.server_id);
             }
         },
@@ -175,36 +181,23 @@ define(function () {
         },
         checkCollision: function () {
             var collided = me.game.collide(this);
+
             if (collided) {
                 if (collided.obj.type == me.game.ACTION_OBJECT) {
-                    /*if (this.bombIsSpam) {
-                        console.log("removeBomb");
-                        me.game.remove(this, true);
-                        socket.emit("removeBomb", this.server_id);
-                    }*/
 
                     if (this.bomb_updated != true) {
                         this.vel.x = 0;
                         this.vel.y = 0;
-                        //this.maxVel = 0;
                         this.stacked = true;
-                        //console.log("EEEEEEEEMIT");
-                        socket.emit("updateBomb",
-                            {
-                                server_id: this.server_id,
-                                pos: this.pos
-                            });
+                        
+                        console.log("bomb to emit: " + this);
+
+                        socket.emit("updateBomb",{
+                            server_id: this.server_id,
+                            pos: this.pos
+                        });
                         this.bomb_updated = true;
-                        //this.setMaxVelocity(0,0);
                     }
-                }
-                // if we collide with an enemy
-                else if (collided.obj.type == me.game.ENEMY_OBJECT) {
-                    // let's flicker in case we touched an enemy
-                    // this.flicker(45);
-                    console.log("collided with enemy");
-                    me.game.remove(this, true);
-                    socket.emit("removeBomb", this.server_id);
                 }
             } else if (!this.stacked) {
                 this.bomb_updated = false;
