@@ -9,14 +9,22 @@ require.config({
 require(["jquery", "resources", "MainPlayers", "client"], function ($, g_resources, Players, initNetwork) {
 
     $("#help a").on("click", function(){
-        $("section#help").show().animate({height:'432px'}, 1500);
-    });
-    $("#impressum a").on("click", function(){
-        $("section#impressum").show().animate({height:'432px'}, 1500);
+        $("section.infowindow").show();
+        $("section.infowindow div.impressum").css({"height":0}).hide();
+        $("section.infowindow div.help").show().animate({height:'424px'}, 1500);
+
     });
 
+    $("#impressum a").on("click", function(){
+        $("section.infowindow").show();
+        $("section.infowindow div.help").css({"height":0}).hide();
+        $("section.infowindow div.impressum").show().animate({height:'424px'}, 1500);
+
+    });
+
+
     $(".closeWindow").on("click", function(){
-        $("section").css("height",0).hide();
+        $("section.infowindow").hide();
     });
 
     var game =

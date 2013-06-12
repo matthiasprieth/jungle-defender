@@ -3,41 +3,119 @@
 <head>
     <title>Jungle Defender</title>
     <link rel="stylesheet" href="css/default.css" type="text/css"/>
-	<script>
-		if (window.location.port!=8002){
-			window.location="http://jungle.multimediatechnology.at:8002";
-		}
+    <script>
+        if (window.location.port != 8002) {
+            window.location = "http://jungle.multimediatechnology.at:8002";
+        }
 
-</script>    
+    </script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-    	var socket;
+        var socket;
     </script>
 </head>
 
 <body>
-	<h1>JungleDefender</h1>
-    <span id="framecounter">(60/60 fps)</span>
+<h1>JungleDefender</h1>
+<span id="framecounter">(60/60 fps)</span>
 
 
-
+<div id="wrap">
     <div id="woodborder">
         <img src="assets/images/WoodBorder.png" alt="canvasborder">
-        <ul id="menue">
-            <li id="help"><a>Hilfe</a></li>
-            <li id="impressum"><a>Impressum</a></li>
-        </ul>
-        <section id="help">
-            jskdfkdsjfkl
-            <a class="closeWindow"><b>X</b></a>
-        </section>
-        <section id="impressum">asdfsd
-
-            <a class="closeWindow"><b>X</b></a>
-        </section>
     </div>
+    <ul id="menue">
+        <li id="help"><a>Hilfe</a></li>
+        <li id="impressum"><a>Impressum</a></li>
+    </ul>
+    <!--<section class="help">
+        <div class="bg"></div>
+        <div class="content">
+            <a class="closeWindow"><b>X</b></a>
+        </div>
+    </section>-->
+    <section class="infowindow">
+        <div class="bg"></div>
+        <div class="content help">
+            <h1>Hilfe</h1>
+            <!--Spieler können sich mit folgenden Tasten fortbewegen.-->
+            <div class="allControls">
+            <div class="keypanel">
+                Spielerbewegung:
+                <div class="keydescription">
+                    <div class="key"><img src="assets/images/keys/w.png"></div>
+                    <span>nach oben</span>
 
-	<script type="text/javascript" src="lib/melonJSdevelopment.js"></script>
-	<script data-main="js/main" src="lib/require.js"></script>
+                    <div class="clear"></div>
+                </div>
+                <div class="keydescription">
+                    <div class="key"><img src="assets/images/keys/s.png"></div>
+                    <span>nach unten</span>
+
+                    <div class="clear"></div>
+                </div>
+                <div class="keydescription">
+                    <div class="key"><img src="assets/images/keys/a.png"></div>
+                    <span>nach links</span>
+
+                    <div class="clear"></div>
+                </div>
+                <div class="keydescription">
+                    <div class="key"><img src="assets/images/keys/d.png"></div>
+                    <span>nach rechts</span>
+
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="keypanel">
+                Bomben schiessen:
+                <div class="keydescription">
+                    <div class="key"><img src="assets/images/keys/haut.png"></div>
+                    <span>nach oben</span>
+
+                    <div class="clear"></div>
+                </div>
+                <div class="keydescription">
+                    <div class="key"><img src="assets/images/keys/bas.png"></div>
+                    <span>nach unten</span>
+
+                    <div class="clear"></div>
+                </div>
+                <div class="keydescription">
+                    <div class="key"><img src="assets/images/keys/gauche.png"></div>
+                    <span>nach links</span>
+
+                    <div class="clear"></div>
+                </div>
+                <div class="keydescription">
+                    <div class="key"><img src="assets/images/keys/droite.png"></div>
+                    <span>nach rechts</span>
+
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            </div>
+            <a class="closeWindow"><b>X</b></a>
+        </div>
+        <div class="content impressum">
+            <h1>Impressum</h1>
+
+            <h2>JungleDefender</h2>
+            JungleDefender ist ein von Studenten der Fachhoschule Salzburg Fachrichtung MultimediaTechnology
+            entstandenes Projekt. <br/>
+            Es wurde im Rahmen eines Basisqualifikationsprojekts fürs Sommersemester 2013 entwickelt.
+            <h2>Team</h2>
+            Das Team besteht aus:<br/>
+            <span>Prieth Matthias</span><br/>
+            <span>Rainer Michael</span>
+
+
+            <a class="closeWindow"><b>X</b></a>
+        </div>
+    </section>
+</div>
+<script type="text/javascript" src="lib/melonJSdevelopment.js"></script>
+<script data-main="js/main" src="lib/require.js"></script>
 </body>
 </html>
