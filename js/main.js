@@ -161,12 +161,12 @@ require(["jquery", "resources", "MainPlayers", "client"], function ($, g_resourc
                 me.game.HUD.addItem("timeLeft", new game.HUD_Object(0, 0, "left", "-:--"));
 
                 // add scores
-                me.game.HUD.addItem("scoreTeam1", new game.HUD_Object(580, 420, "right"));
-                me.game.HUD.addItem("scoreTeam2", new game.HUD_Object(40, 420, "left"));
+                me.game.HUD.addItem("scoreTeam2", new game.HUD_Object(580, 420, "right"));
+                me.game.HUD.addItem("scoreTeam1", new game.HUD_Object(40, 420, "left"));
 
                 // add teampictures
-                me.game.HUD.addItem("team2Picture", new game.HUD_Picture(5,420, "MonkeyPreview"));
-                me.game.HUD.addItem("team1Picture", new game.HUD_Picture(580,420, "MilitaryPreview"));
+                me.game.HUD.addItem("team1Picture", new game.HUD_Picture(5,420, "MonkeyPreview"));
+                me.game.HUD.addItem("team2Picture", new game.HUD_Picture(580,420, "MilitaryPreview"));
                 
 
                 setInterval(function(){
