@@ -219,6 +219,9 @@ define(function () {
 
             //me.game.remove(this, true); //removing an object and force immidiate deletion with true
             return false;
+        },
+        makeExplosion: function(){
+            makeExplosion(this);
         }
 
     });
