@@ -10,14 +10,14 @@ require(["jquery", "resources", "MainPlayers", "client"], function ($, g_resourc
 
     $("#help a").on("click", function(){
         $("section.infowindow").show();
-        $("section.infowindow>div:not(.help)").css({"height":0}).hide();
+        $("section.infowindow>div:not(.help, .bg)").css({"height":0}).hide();
         $("section.infowindow>div.help").show().animate({height:'424px'}, 1500);
 
     });
 
     $("#impressum a").on("click", function(){
         $("section.infowindow").show();
-        $("section.infowindow>div:not(.impressum)").css({"height":0}).hide();
+        $("section.infowindow>div:not(.impressum, .bg)").css({"height":0}).hide();
         $("section.infowindow>div.impressum").show().animate({height:'424px'}, 1500);
 
     });
@@ -169,12 +169,12 @@ require(["jquery", "resources", "MainPlayers", "client"], function ($, g_resourc
                 me.game.HUD.addItem("team2Picture", new game.HUD_Picture(580,420, "MilitaryPreview"));
                 
 
-                setInterval(function(){
+                /*setInterval(function(){
                     me.game.HUD.addItem("Shuffle", new game.HUD_Object(185, 420, "left", "SHUFFLE!"));
                     setTimeout(function () {
                         me.game.HUD.removeItem("Shuffle");
                     }, 2000);
-                }, 15000);
+                }, 15000);*/
 
                 // make sure everything is in the right order
                 me.game.sort();

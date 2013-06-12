@@ -37,7 +37,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
             $result.find(".two .kills").html(data.team2);
             setTimeout(function(){
                 $("section.infowindow").show();
-                $("section.infowindow>div:not(.result)").css({"height":0}).hide();
+                $("section.infowindow>div:not(.result, .bg)").css({"height":0}).hide();
                 $("section.infowindow>div.result").show().animate({height:'424px'}, 1500);
             });
             var $won=$result.find(".won");
@@ -76,7 +76,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
 
                 me.game.repaint();
 
-                me.debug.renderHitBox = true;
+                //me.debug.renderHitBox = true;
             },
 
             onClientConnect: function (data) {
