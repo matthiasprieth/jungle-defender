@@ -87,15 +87,15 @@ require(["jquery", "resources", "MainPlayers", "client"], function ($, g_resourc
             //Settings for 2PlayerOn1Machine
             //player1
 
-            me.input.bindKey(me.input.KEY.LEFT, "left");
-            me.input.bindKey(me.input.KEY.RIGHT, "right");
-            me.input.bindKey(me.input.KEY.UP, "up");
-            me.input.bindKey(me.input.KEY.DOWN, "down");
+            me.input.bindKey(me.input.KEY.A, "left");
+            me.input.bindKey(me.input.KEY.D, "right");
+            me.input.bindKey(me.input.KEY.W, "up");
+            me.input.bindKey(me.input.KEY.S, "down");
 
-            me.input.bindKey(me.input.KEY.A, "shootLeft");
-            me.input.bindKey(me.input.KEY.D, "shootRight");
-            me.input.bindKey(me.input.KEY.W, "shootUp");
-            me.input.bindKey(me.input.KEY.S, "shootDown");
+            me.input.bindKey(me.input.KEY.LEFT, "shootLeft");
+            me.input.bindKey(me.input.KEY.RIGHT, "shootRight");
+            me.input.bindKey(me.input.KEY.UP, "shootUp");
+            me.input.bindKey(me.input.KEY.DOWN, "shootDown");
 
             // start the game
             me.state.change(me.state.PLAY);

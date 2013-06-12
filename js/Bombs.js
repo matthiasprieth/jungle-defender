@@ -131,13 +131,9 @@ define(function () {
                 console.log("onCollision");
                 makeExplosion(this);
                 socket.emit("removeBomb", this.server_id);
-            } 
-            // if we collide with an enemy
-            if (obj.type == me.game.ENEMY_OBJECT) {
-                    console.log("collided with enemy");
-                    me.game.remove(this);
-                    socket.emit("removeBomb", this.server_id);
-            }        
+
+                me.game.remove(this);
+            }    
         },
 
         /**

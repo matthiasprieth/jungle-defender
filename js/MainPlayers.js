@@ -59,8 +59,8 @@ define(['Bombs'], function (Bomb) {
         },
         // set new position of the player
         setPos: function (data) {
-            this.pos.x = data.x;
-            this.pos.y = data.y;
+            this.pos.x = parseInt(data.x);
+            this.pos.y = parseInt(data.y);
         },
         // checks and handles collision with bomb
         onCollision: function (res, obj) {
@@ -225,7 +225,7 @@ define(['Bombs'], function (Bomb) {
             this.shootReady = true;
 
             // determines the shoot inverval
-            this.SHOOT_INTERVAL = 400;
+            this.SHOOT_INTERVAL = 700;
             // emit position to server
             this.sendPosition();
         },
