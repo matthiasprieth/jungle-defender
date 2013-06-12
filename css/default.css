@@ -123,10 +123,10 @@ a.closeWindow{
     /*z-index: 99;
     left: 50%;
     top: 115px;*/
-    left: 0%;
+    left: -1%;
     top: 0%;
     height: 540px;
-    width: 719px;
+    width: 728px;
     z-index:99;
 }
 #woodborder img{
