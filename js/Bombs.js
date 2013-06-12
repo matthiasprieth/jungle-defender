@@ -126,9 +126,10 @@ define(function () {
         },
         onCollision: function (res, obj) {
             // if we collide with an enemy
-            if (obj.type == me.game.ENEMY_OBJECT) {
+            if (obj.type == me.game.ENEMY_OBJECT && obj.bombtype!=this.bombtype) {
                 //this.flicker(45);
                 console.log("onCollision");
+                console.log(obj.bombtype);
                 makeExplosion(this);
                 socket.emit("removeBomb", this.server_id);
 
