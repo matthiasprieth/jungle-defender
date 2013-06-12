@@ -13,7 +13,7 @@ body > *{
     z-index:5;
     opacity:1;
 }
-canvas {
+canvas, section#help, section#impressum {
     /*display: block;*/
     /*border-color: black;
     border-image: url("../assets/images/WoodBorder.png") 15% repeat;
@@ -24,6 +24,24 @@ canvas {
     width: 640px;
     height: 480px;
     position: relative;
+}
+section#help, section#impressum{
+    height: 0px;
+    position: absolute;
+    background-color: #7a4b12;
+    margin-left: -44%;
+    top: 6%;
+    z-index: 50;
+    width: 88%;
+    display:none;
+    background: url("../assets/images/boden_muster.jpg") repeat;
+}
+a.closeWindow{
+    position:absolute;
+    font-size:150%;
+    top:2%;
+    right:2%;
+    cursor:pointer;
 }
 #woodborder{
     position: absolute;
