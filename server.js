@@ -203,10 +203,13 @@ sio.sockets.on('connection', function (socket) {
         });
         socket.broadcast.emit("newBomb", data);
     });
-    socket.on('removeBomb',function(server_id){
-        console.log("removeBomb");
-        Bombs.onRemove(server_id);
-        socket.broadcast.emit("removeBombFromEnemy", server_id);
+    socket.on('playerCollided',function(data){
+        console.log("playerCollided");
+        Bombs.onRemove(data.server_id);
+        socket.broadcast.emit("EnemyCollidedWithBomb",{
+            server_id: data.server_id,
+            team: data.team
+        });
     });
     socket.on('sendPos', function (data) {
         Client.onPos(data);

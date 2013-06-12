@@ -131,8 +131,16 @@ define(function () {
                 console.log("onCollision");
                 console.log(obj.bombtype);
                 makeExplosion(this);
-                socket.emit("removeBomb", this.server_id);
-
+                socket.emit("playerCollided",
+                    {
+                       server_id: this.server_id,
+                       team: obj.team
+                    });
+                if(obj.team==1){
+                    me.game.HUD.updateItemValue("scoreTeam2",1);
+                }else{
+                    me.game.HUD.updateItemValue("scoreTeam1",1);
+                }
                 me.game.remove(this);
             }    
         },

@@ -90,6 +90,14 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                     }
                 }
             },
+            onEnemyCollidedWithBomb: function(data){
+                Bombs.onRemoveBombFromEnemy(data.server_id);
+                if(data.team==1){
+                    me.game.HUD.updateItemValue("scoreTeam2",1);
+                }else{
+                    me.game.HUD.updateItemValue("scoreTeam1",1);
+                }
+            },
             init: function () {
                 socket.on('connected', Client.onConnected);
                 socket.on('clientConnect', Client.onClientConnect);
@@ -97,6 +105,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 socket.on('clientMessage', Client.onClientMessage);
                 socket.on('disconnect', Client.onDisconnect);
                 socket.on('updatePosToAll', Client.updatePosFromEnemy);
+                socket.on('EnemyCollidedWithBomb', Client.onEnemyCollidedWithBomb);
             }
         };
         Client.init();
@@ -148,7 +157,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
 
             init: function () {
                 socket.on('updateBombPos', Bombs.onUpdateBombPos);
-                socket.on("removeBombFromEnemy", Bombs.onRemoveBombFromEnemy);
+                //socket.on("removeBombFromEnemy", Bombs.onRemoveBombFromEnemy);
                 socket.on("newBomb", Bombs.onNewBomb);
                 socket.on("setBombServerID", Bombs.onSetBombServerID);
                 socket.on('getAllBombs', Bombs.getAll);
