@@ -32,7 +32,8 @@ section#help, section#impressum{
     margin-left: -44%;
     top: 6%;
     z-index: 50;
-    width: 88%;
+    width: 82%;
+    padding:3%;
     display:none;
     background: url("../assets/images/boden_muster.jpg") repeat;
 }

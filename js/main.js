@@ -9,14 +9,14 @@ require.config({
 require(["jquery", "resources", "MainPlayers", "client"], function ($, g_resources, Players, initNetwork) {
 
     $("#help a").on("click", function(){
-        $("section#help").show().animate({height:'473px'}, 1500);
+        $("section#help").show().animate({height:'432px'}, 1500);
     });
     $("#impressum a").on("click", function(){
-        $("section#impressum").show().animate({height:'473px'}, 1500);
+        $("section#impressum").show().animate({height:'432px'}, 1500);
     });
 
     $(".closeWindow").on("click", function(){
-        $("section#help, section#impressum").hide().css("height","0px");
+        $("section").css("height",0).hide();
     });
 
     var game =
