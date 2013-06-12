@@ -1,3 +1,8 @@
+/**
+ * Prieth Matthias, fhs33735
+ * Rainer Michael, fhs33736
+ */
+
 // this file handels the player characters of the game
 define(['Bombs'], function (Bomb) {
 

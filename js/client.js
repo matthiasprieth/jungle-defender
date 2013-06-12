@@ -1,11 +1,6 @@
 /**
- */
-/**
- * Created with JetBrains PhpStorm.
- * User: Mitch
- * Date: 04.05.13
- * Time: 14:32
- * To change this template use File | Settings | File Templates.
+ * Prieth Matthias, fhs33735
+ * Rainer Michael, fhs33736
  */
 var toHHMMSS = function (sec) {
     var sec_num = parseInt(sec, 10); // don't forget the second parm

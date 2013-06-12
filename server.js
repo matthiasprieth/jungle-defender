@@ -1,3 +1,7 @@
+/**
+ * Prieth Matthias, fhs33735
+ * Rainer Michael, fhs33736
+ */
 var serverPort = 8002,
     colors = require('colors'),
     express = require('express'),

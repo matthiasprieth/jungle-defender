@@ -1,11 +1,6 @@
 /**
- */
-/**
- * Created with JetBrains PhpStorm.
- * User: Mitch
- * Date: 19.05.13
- * Time: 21:59
- * To change this template use File | Settings | File Templates.
+ * Prieth Matthias, fhs33735
+ * Rainer Michael, fhs33736
  */
 define(function(){
     var g_resources = [

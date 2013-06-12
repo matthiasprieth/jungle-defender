@@ -1,5 +1,6 @@
 /**
- * Bombs!
+ * Prieth Matthias, fhs33735
+ * Rainer Michael, fhs33736
  */
 define(function () {
 

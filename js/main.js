@@ -1,4 +1,6 @@
 /**
+ * Prieth Matthias, fhs33735
+ * Rainer Michael, fhs33736
  */
 require.config({
     baseUrl: 'js',
