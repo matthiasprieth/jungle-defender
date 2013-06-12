@@ -1,9 +1,23 @@
 /**
  */
 require.config({
-    baseUrl: 'js'
+    baseUrl: 'js',
+	paths: {
+		'jquery': '../lib/jquery-2.0.2.min'
+	}
 });
-require(["resources", "MainPlayers", "client"], function (g_resources, Players, initNetwork) {
+require(["jquery", "resources", "MainPlayers", "client"], function ($, g_resources, Players, initNetwork) {
+
+    $("#help a").on("click", function(){
+        $("section#help").show().animate({height:'432px'}, 1500);
+    });
+    $("#impressum a").on("click", function(){
+        $("section#impressum").show().animate({height:'432px'}, 1500);
+    });
+
+    $(".closeWindow").on("click", function(){
+        $("section").css("height",0).hide();
+    });
 
     var game =
     {
@@ -113,7 +127,7 @@ require(["resources", "MainPlayers", "client"], function (g_resources, Players, 
                 // load a level
                 me.levelDirector.loadLevel("battlezone");
 
-                // add a default HUD to the game mngr
+                // add a default HUD to the game manager
                 me.game.addHUD(10, 10, 620, 460);
 
                 me.game.HUD.addItem("connectingStatus", new game.HUD_Object(150, 200, "left", "CONNECTING"));

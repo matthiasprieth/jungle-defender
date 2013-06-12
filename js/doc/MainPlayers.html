@@ -1,334 +1,143 @@
-<!DOCTYPE html><html lang="en"><head><title>MainPlayers</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="MainPlayers"><meta name="groc-project-path" content="MainPlayers.js"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">MainPlayers.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="cm">/*-------------------</span>
-<span class="cm"> a player entity</span>
-<span class="cm"> -------------------------------- */</span>
-
-<span class="nx">define</span><span class="p">([</span><span class="s1">&#39;Bombs&#39;</span><span class="p">],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">Melon</span><span class="p">)</span> <span class="p">{</span>
-
-
-    <span class="nx">counter</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
-
-    <span class="kd">var</span> <span class="nx">Player</span> <span class="o">=</span> <span class="nx">me</span><span class="p">.</span><span class="nx">ObjectEntity</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
-        <span class="cm">/* -----</span>
-<span class="cm">         constructor</span>
-<span class="cm">         ------ */</span>
-        <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">settings</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>call the constructor</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">settings</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>make it collidable</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">collidable</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">ENEMY_OBJECT</span><span class="p">;</span>
-            <span class="c1">//this.addAnimation (&quot;explosion&quot;, [0,1,2]);</span>
-        <span class="p">},</span>
-        <span class="nx">onCollision</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">res</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-            <span class="c1">//console.log(obj.type);</span>
-            <span class="c1">//console.log(me.game.ENEMY_OBJECT);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>if we collide with an enemy</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">ACTION_OBJECT</span><span class="p">)</span> <span class="p">{</span>
-                <span class="c1">//this.flicker(4);</span>
-                <span class="k">this</span><span class="p">.</span><span class="nx">setOpacity</span><span class="p">(</span><span class="mf">0.7</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>make sure it cannot be collidable "again"</p></div></div><div class="code"><div class="wrapper">                <span class="c1">//this.collidable = false;</span>
+<!DOCTYPE html><html lang="en"><head><title>MainPlayers</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="MainPlayers"><meta name="groc-project-path" content="MainPlayers.js"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">MainPlayers.js</div></div><div id="document"><div class="segment"><div class="comments"><div class="wrapper"><p>this file handels the player characters of the game</p></div></div><div class="code"><div class="wrapper"><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;Bombs&#39;</span><span class="p">],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">Bomb</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>abstract Player Entity
+manages the player sprites, settings and their movement</p></div></div><div class="code"><div class="wrapper">    <span class="kd">var</span> <span class="nx">Player</span> <span class="o">=</span> <span class="nx">me</span><span class="p">.</span><span class="nx">ObjectEntity</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>constructor function</p></div></div><div class="code"><div class="wrapper">        <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">settings</span><span class="p">,</span> <span class="nx">uid</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set unique id for each player</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">uid</span> <span class="o">=</span> <span class="nx">uid</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set sprite size</p></div></div><div class="code"><div class="wrapper">            <span class="nx">settings</span><span class="p">.</span><span class="nx">spritewidth</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+            <span class="nx">settings</span><span class="p">.</span><span class="nx">spriteheight</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>call parent constructor</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">settings</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>define the positions for the specific animation in the spritesheet</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="p">(</span><span class="nx">settings</span><span class="p">.</span><span class="nx">image</span> <span class="o">==</span> <span class="s2">&quot;Gorilla&quot;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkDown&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkLeft&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkRight&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkUp&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">]);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">settings</span><span class="p">.</span><span class="nx">image</span> <span class="o">==</span> <span class="s2">&quot;Military&quot;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkDown&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkLeft&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">]);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkRight&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">24</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">26</span><span class="p">]);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkUp&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">36</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">38</span><span class="p">]);</span>
             <span class="p">}</span>
-            <span class="c1">//if (obj.type == me.game.ACTION_OBJECT) {</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>//this.flicker(45);</p></div></div><div class="code"><div class="wrapper">            <span class="c1">//}</span>
+
+            <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkDown&quot;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>make it collidable</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">collidable</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set type to ENEMY_OBJECT to distinguish between the different objects</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">ENEMY_OBJECT</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set max speed</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">setVelocity</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set the default horizontal &amp; vertical speed (accel vector)</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="p">},</span>
+        <span class="nx">setPos</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set new position of the player</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span>
+        <span class="p">},</span>
+
+        <span class="nx">onCollision</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">res</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>if we collide with an enemy</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">ACTION_OBJECT</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>visualize the collision</p></div></div><div class="code"><div class="wrapper">                <span class="k">this</span><span class="p">.</span><span class="nx">setOpacity</span><span class="p">(</span><span class="mf">0.7</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="c1">//player walks left</span>
+        <span class="nx">walkLeft</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>sets left-animation-sprites</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkLeft&quot;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>and the right velocities</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="c1">//player walks left-down</span>
+        <span class="nx">walkLeftDown</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>sets left-down-animation-sprites</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkLeft&quot;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>and the right velocities</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">tick</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="c1">//player walks left-up</span>
+        <span class="nx">walkLeftUp</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>sets left-up-animation-sprites</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkLeft&quot;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>and the right velocities</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="c1">//player walks right</span>
+        <span class="nx">walkRight</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>sets right-animation-sprites</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkRight&quot;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>and the right velocities</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="c1">//player walks right-down</span>
+        <span class="nx">walkRightDown</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>sets right-down-animation-sprites</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkRight&quot;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>and the right velocities</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="nx">walkRightUp</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkRight&quot;</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="nx">walkUp</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkUp&quot;</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="nx">walkDown</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkDown&quot;</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="nx">stand</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">setAnimationFrame</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">//render the standing frame of every Animation if no key input action</span>
         <span class="p">}</span>
     <span class="p">});</span>
 
 
-    <span class="kd">var</span> <span class="nx">Gorilla</span> <span class="o">=</span> <span class="nx">Player</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+    <span class="kd">var</span> <span class="nx">EnemyPlayer</span> <span class="o">=</span> <span class="nx">Player</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
         <span class="cm">/* -----</span>
 <span class="cm">         constructor</span>
 <span class="cm">         ------ */</span>
         <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">settings</span><span class="p">,</span> <span class="nx">uid</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>call the constructor</p></div></div><div class="code"><div class="wrapper">            <span class="c1">//those settings we could also save in the .tmx file for every entity</span>
-            <span class="c1">//console.log(settings);</span>
-            <span class="nx">settings</span><span class="p">.</span><span class="nx">image</span> <span class="o">=</span> <span class="s2">&quot;Gorilla&quot;</span><span class="p">;</span>
-            <span class="nx">settings</span><span class="p">.</span><span class="nx">spritewidth</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
-            <span class="nx">settings</span><span class="p">.</span><span class="nx">spriteheight</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">uid</span> <span class="o">=</span> <span class="nx">uid</span><span class="p">;</span>
 
             <span class="k">this</span><span class="p">.</span><span class="nx">action</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
-
-            <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">settings</span><span class="p">);</span>
-
-            <span class="k">this</span><span class="p">.</span><span class="nx">setTransparency</span><span class="p">(</span><span class="s2">&quot;#78C380&quot;</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">updateColRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">15</span><span class="p">);</span> <span class="c1">//set specific collision box</span>
-
-            <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkDown&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]);</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkLeft&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]);</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkRight&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]);</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkUp&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">]);</span>
-
-            <span class="k">this</span><span class="p">.</span><span class="nx">setVelocity</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-            <span class="c1">//define the positions for the specific animation in the spritesheet</span>
-            <span class="cm">/*if(this.uid==localUID){</span>
-<span class="cm">             this.addAnimation(&quot;walkDown&quot;, [0, 1, 2]);</span>
-<span class="cm">             this.addAnimation(&quot;walkLeft&quot;, [3, 4, 5]);</span>
-<span class="cm">             this.addAnimation(&quot;walkRight&quot;, [6, 7, 8]);</span>
-<span class="cm">             this.addAnimation(&quot;walkUp&quot;, [9, 10, 11]);</span>
-
-<span class="cm">             this.setCurrentAnimation(&quot;walkDown&quot;);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set the default horizontal &amp; vertical speed (accel vector)</p></div></div><div class="code"><div class="wrapper"><span class="cm">             this.setVelocity(3, 3);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set the display to follow our position on both axis</p></div></div><div class="code"><div class="wrapper"><span class="cm">             me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);</span>
-<span class="cm">             //this.shootReady = true;</span>
-<span class="cm">             }*/</span>
-
-            <span class="c1">//this.emitPosition();</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">settings</span><span class="p">,</span> <span class="nx">uid</span><span class="p">);</span>
         <span class="p">},</span>
         <span class="nx">setAction</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="nx">action</span> <span class="o">=</span> <span class="nx">action</span><span class="p">;</span>
         <span class="p">},</span>
-        <span class="cm">/*shoot: function () {</span>
-<span class="cm">         console.log(this.shootReady);</span>
-<span class="cm">         var posX = this.pos.x;</span>
-<span class="cm">         var posY = this.pos.y;</span>
 
-<span class="cm">         if (this.shootReady === true) {</span>
-<span class="cm">         clearTimeout(this.timeout);</span>
-<span class="cm">         var widthOffset = this.width;</span>
-<span class="cm">         var heightOffset = this.height;</span>
-<span class="cm">         if (this.vel.x !== 0 || this.vel.y !== 0) {//if object moving set another Offset</span>
-<span class="cm">         widthOffset += this.accel.x * 2;//dependency of player moving speed in x-direction</span>
-<span class="cm">         heightOffset += this.accel.y * 2;//dependency of player moving speed in y-direction</span>
-<span class="cm">         }</span>
-<span class="cm">         switch (this.current.name) {//name of the animation</span>
-<span class="cm">         case &#39;walkLeft&#39;:</span>
-<span class="cm">         posX = this.pos.x - widthOffset;</span>
-<span class="cm">         break;</span>
-<span class="cm">         case &#39;walkRight&#39;:</span>
-<span class="cm">         posX = this.pos.x + widthOffset;</span>
-<span class="cm">         break;</span>
-<span class="cm">         case &#39;walkUp&#39;:</span>
-<span class="cm">         posY = this.pos.y - heightOffset;</span>
-<span class="cm">         break;</span>
-<span class="cm">         case &#39;walkDown&#39;:</span>
-<span class="cm">         posY = this.pos.y + heightOffset;</span>
-<span class="cm">         }</span>
-<span class="cm">         var shot = new Melon(posX, posY, this.current.name, {image: &quot;GreenCoconut&quot;, spritewidth: 32, spriteheight: 32});</span>
-<span class="cm">         me.game.add(shot, this.z + 1); //bullet should appear 1 layer before the mainPlayer</span>
-<span class="cm">         me.game.sort();</span>
-<span class="cm">         this.shootReady = false;</span>
-<span class="cm">         //var myPlayer = this;</span>
-<span class="cm">         //console.log(this);</span>
-<span class="cm">         this.timeout = setTimeout(function () {</span>
-<span class="cm">         //console.log(&quot;shootReady Gorilla&quot;);</span>
-<span class="cm">         this.shootReady = true;</span>
-<span class="cm">         //console.log(this);</span>
-<span class="cm">         }.bind(this), 400);</span>
-<span class="cm">         //clearTimeout()</span>
-<span class="cm">         }</span>
-<span class="cm">         },*/</span>
+        <span class="nx">createNewBomb</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;createNewBomb, enemy&quot;</span><span class="p">);</span>
 
-        <span class="cm">/*</span>
-<span class="cm">         emitPosition: function () {</span>
-<span class="cm">         setInterval(function(){</span>
-<span class="cm">         socket.emit(&#39;clientMessage&#39;, {</span>
-<span class="cm">         x: this.pos.x,</span>
-<span class="cm">         y: this.pos.y,</span>
-<span class="cm">         uid: this.uid</span>
-<span class="cm">         });</span>
-<span class="cm">         }.bind(this),200);</span>
-<span class="cm">         console.log(&quot;Piiiiiiiiiiiiiep&quot;);</span>
-<span class="cm">         }*/</span>
-        <span class="cm">/* -----</span>
-<span class="cm">         update the player pos</span>
-<span class="cm">         ------ ,*/</span>
+            <span class="kd">var</span> <span class="nx">bomb</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bomb</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">server_id</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">direction</span><span class="p">,</span> <span class="p">{</span><span class="nx">image</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">bombtype</span><span class="p">});</span>
+            <span class="c1">//z-index of player=99 , 99 + 1</span>
+
+            <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">bomb</span><span class="p">,</span> <span class="mi">99</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">//bullet should appear 1 layer before the mainPlayer</span>
+
+            <span class="kd">var</span> <span class="nx">bombObj</span> <span class="o">=</span> <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">getLastGameObject</span><span class="p">();</span>
+            <span class="c1">//console.log(melonObj.isCollided());</span>
+            <span class="c1">//if (!bombObj.isCollided()) {</span>
+
+            <span class="nx">bombs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">bombObj</span><span class="p">);</span>
+            <span class="c1">//}</span>
+            <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">sort</span><span class="p">();</span>
+        <span class="p">},</span>
+
         <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">max_velocity</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="nx">setVelocity</span><span class="p">(</span><span class="nx">max_velocity</span><span class="p">,</span> <span class="nx">max_velocity</span><span class="p">);</span>
 
             <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
                 <span class="k">case</span> <span class="s2">&quot;left&quot;</span><span class="o">:</span>
-                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">action</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkLeft&quot;</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkLeft</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="s2">&quot;leftdown&quot;</span><span class="o">:</span>
-                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">action</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkLeft&quot;</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">tick</span><span class="p">;</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkLeftDown</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="s2">&quot;leftup&quot;</span><span class="o">:</span>
-                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">action</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkLeft&quot;</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkLeftUp</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="s2">&quot;right&quot;</span><span class="o">:</span>
-                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">action</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkRight&quot;</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkRight</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="s2">&quot;rightdown&quot;</span><span class="o">:</span>
-                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">action</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkRight&quot;</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkRightDown</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="s2">&quot;rightup&quot;</span><span class="o">:</span>
-                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">action</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkRight&quot;</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkRightUp</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="s2">&quot;up&quot;</span><span class="o">:</span>
-                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">action</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkUp&quot;</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkUp</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="s2">&quot;down&quot;</span><span class="o">:</span>
-                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">action</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkDown&quot;</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkDown</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="s2">&quot;stand&quot;</span><span class="o">:</span>
-                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">action</span><span class="p">);</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">setAnimationFrame</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">//render the standing frame of every Animation if no key input action</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">stand</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">default</span><span class="o">:</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">setAnimationFrame</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">//render the standing frame of every Animation if no key input action</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">stand</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
-                <span class="cm">/*default:</span>
-<span class="cm">                 this.vel.x = 0;</span>
-<span class="cm">                 this.vel.y = 0;</span>
-<span class="cm">                 this.setAnimationFrame(1); //render the standing frame of every Animation if no key input action</span>
-<span class="cm">                 break;*/</span>
             <span class="p">}</span>
 
 
             <span class="k">this</span><span class="p">.</span><span class="nx">updateMovement</span><span class="p">();</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update animation if necessary</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">!==</span> <span class="mi">0</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update object animation</p></div></div><div class="code"><div class="wrapper">                <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">();</span>
                 <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
             <span class="p">}</span>
-
-
-            <span class="cm">/*</span>
-<span class="cm">             if (me.input.isKeyPressed(&#39;shootLeft&#39;)) {</span>
-<span class="cm">             this.setCurrentAnimation(&quot;walkLeft&quot;);</span>
-<span class="cm">             this.shoot();</span>
-<span class="cm">             }</span>
-<span class="cm">             if (me.input.isKeyPressed(&#39;shootRight&#39;)) {</span>
-<span class="cm">             this.setCurrentAnimation(&quot;walkRight&quot;);</span>
-<span class="cm">             this.shoot();</span>
-<span class="cm">             }</span>
-<span class="cm">             if (me.input.isKeyPressed(&#39;shootUp&#39;)) {</span>
-<span class="cm">             this.setCurrentAnimation(&quot;walkUp&quot;);</span>
-<span class="cm">             this.shoot();</span>
-<span class="cm">             }</span>
-<span class="cm">             if (me.input.isKeyPressed(&#39;shootDown&#39;)) {</span>
-<span class="cm">             this.setCurrentAnimation(&quot;walkDown&quot;);</span>
-<span class="cm">             this.shoot();</span>
-<span class="cm">             }</span>
-<span class="cm">             */</span>
-
-
-            <span class="cm">/*if (me.input.isKeyPressed(&#39;jump&#39;)) {</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>make sure we are not already jumping or falling</p></div></div><div class="code"><div class="wrapper"><span class="cm">             if (!this.jumping &amp;&amp; !this.falling) {</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set current vel to the maximum defined value
-gravity will then do the rest</p></div></div><div class="code"><div class="wrapper"><span class="cm">             this.vel.y = -this.maxVel.y * me.timer.tick;</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set the jumping flag</p></div></div><div class="code"><div class="wrapper"><span class="cm">             this.jumping = true;</span>
-<span class="cm">             }</span>
-<span class="cm">             }*/</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>check &amp; update player movement</p></div></div><div class="code"><div class="wrapper">            <span class="cm">/*      this.updateMovement();</span>
-<span class="cm">             var collided = me.game.collide(this);</span>
-
-<span class="cm">             if (collided) {</span>
-<span class="cm">             var that = this;</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>if we collide with an enemy</p></div></div><div class="code"><div class="wrapper"><span class="cm">             if (collided.obj.type == me.game.ENEMY_OBJECT) {</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>let's flicker in case we touched an enemy</p></div></div><div class="code"><div class="wrapper"><span class="cm">             //this.flicker(45);</span>
-<span class="cm">             this.setOpacity(0.5);</span>
-<span class="cm">             setTimeout(function () {</span>
-<span class="cm">             that.setOpacity(1);</span>
-<span class="cm">             }, 50);</span>
-<span class="cm">             }</span>
-<span class="cm">             if (collided.obj.type == me.game.ACTION_OBJECT) {</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>let's flicker in case we touched an enemy</p></div></div><div class="code"><div class="wrapper"><span class="cm">             //this.flicker(45);</span>
-<span class="cm">             this.setOpacity(0.3);</span>
-<span class="cm">             setTimeout(function () {</span>
-<span class="cm">             that.setOpacity(1);</span>
-<span class="cm">             }, 2000);</span>
-<span class="cm">             }</span>
-<span class="cm">             }</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update animation if necessary</p></div></div><div class="code"><div class="wrapper"><span class="cm">             if (this.vel.x !== 0 || this.vel.y !== 0) {</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update object animation</p></div></div><div class="code"><div class="wrapper"><span class="cm">             this.parent();</span>
-<span class="cm">             return true;</span>
-<span class="cm">             }*/</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>else inform the engine we did not perform
-any update (e.g. position, animation)</p></div></div><div class="code"><div class="wrapper">            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-        <span class="p">}</span><span class="cm">/*,</span>
-<span class="cm">         initKeys: function () {</span>
-<span class="cm">         console.log(&quot;initKeys&quot;);</span>
-<span class="cm">         //var canvas = document.getElementsByTagName(&quot;canvas&quot;)[0];</span>
-<span class="cm">         this.action = &quot;&quot;;</span>
-<span class="cm">         this.prev_action = &quot;&quot;;</span>
-<span class="cm">         var keys = [];</span>
-
-<span class="cm">         document.addEventListener(&#39;keypress&#39;, function (e) {</span>
-
-<span class="cm">         console.log(e);</span>
-<span class="cm">         switch (e.keyCode) {</span>
-<span class="cm">         //&#39;w&#39;</span>
-<span class="cm">         case 119:</span>
-<span class="cm">         this.action = &quot;up&quot;;</span>
-<span class="cm">         console.log(&quot;w&quot;);</span>
-<span class="cm">         break;</span>
-<span class="cm">         //&#39;a&#39;</span>
-<span class="cm">         case 97:</span>
-<span class="cm">         this.action = &quot;left&quot;;</span>
-<span class="cm">         console.log(&quot;a&quot;);</span>
-<span class="cm">         break;</span>
-<span class="cm">         //&#39;s&#39;</span>
-<span class="cm">         case 115:</span>
-<span class="cm">         this.action = &quot;down&quot;;</span>
-<span class="cm">         console.log(&quot;s&quot;);</span>
-<span class="cm">         break;</span>
-<span class="cm">         //&#39;d&#39;</span>
-<span class="cm">         case 100:</span>
-<span class="cm">         this.action = &quot;right&quot;;</span>
-<span class="cm">         console.log(&quot;d&quot;);</span>
-<span class="cm">         break;</span>
-<span class="cm">         default:</span>
-<span class="cm">         this.action = &quot;&quot;;</span>
-<span class="cm">         break;</span>
-<span class="cm">         }</span>
-<span class="cm">         ;</span>
-<span class="cm">         if (this.action != &quot;&quot;) {</span>
-<span class="cm">         socket.emit(&#39;clientMessage&#39;, {</span>
-<span class="cm">         event: this.action,</span>
-<span class="cm">         uid: this.uid</span>
-<span class="cm">         });</span>
-<span class="cm">         }</span>
-<span class="cm">         this.prev_action = this.action;</span>
-
-
-<span class="cm">         }.bind(this), false);</span>
-<span class="cm">         },</span>
-<span class="cm">         movePlayer: function (event) {</span>
-<span class="cm">         if (event == &#39;left&#39;) {</span>
-
-<span class="cm">         this.setCurrentAnimation(&quot;walkLeft&quot;);</span>
-<span class="cm">         if (me.input.isKeyPressed(&#39;down&#39;)) {</span>
-<span class="cm">         this.vel.y += this.accel.y * me.timer.tick;</span>
-<span class="cm">         } else if (me.input.isKeyPressed(&#39;up&#39;)) {</span>
-<span class="cm">         this.vel.y -= this.accel.y * me.timer.tick;</span>
-<span class="cm">         } else {</span>
-<span class="cm">         this.vel.y = 0;</span>
-<span class="cm">         }</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update the entity velocity</p></div></div><div class="code"><div class="wrapper"><span class="cm">         this.vel.x -= this.accel.x * me.timer.tick;</span>
-<span class="cm">         } else if (event == &#39;right&#39;) {</span>
-<span class="cm">         this.setCurrentAnimation(&quot;walkRight&quot;);</span>
-<span class="cm">         if (me.input.isKeyPressed(&#39;down&#39;)) {</span>
-<span class="cm">         this.vel.y += this.accel.y * me.timer.tick;</span>
-<span class="cm">         } else if (me.input.isKeyPressed(&#39;up&#39;)) {</span>
-<span class="cm">         this.vel.y -= this.accel.y * me.timer.tick;</span>
-<span class="cm">         } else {</span>
-<span class="cm">         this.vel.y = 0;</span>
-<span class="cm">         }</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update the entity velocity</p></div></div><div class="code"><div class="wrapper"><span class="cm">         this.vel.x += this.accel.x * me.timer.tick;</span>
-<span class="cm">         } else if (event == &#39;up&#39;) {</span>
-<span class="cm">         this.setCurrentAnimation(&quot;walkUp&quot;);</span>
-<span class="cm">         if (!me.input.isKeyPressed(&#39;right&#39;) || (me.input.isKeyPressed(&#39;left&#39;))) {</span>
-<span class="cm">         this.vel.x = 0;</span>
-<span class="cm">         }</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update the entity velocity</p></div></div><div class="code"><div class="wrapper"><span class="cm">         this.vel.y -= this.accel.y * me.timer.tick;</span>
-<span class="cm">         } else if (event == &#39;down&#39;) {</span>
-<span class="cm">         this.setCurrentAnimation(&quot;walkDown&quot;);</span>
-<span class="cm">         if (!me.input.isKeyPressed(&#39;right&#39;) || (me.input.isKeyPressed(&#39;left&#39;))) {</span>
-<span class="cm">         this.vel.x = 0;</span>
-<span class="cm">         }</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update the entity velocity</p></div></div><div class="code"><div class="wrapper"><span class="cm">         this.vel.y += this.accel.y * me.timer.tick;</span>
-<span class="cm">         }</span>
-<span class="cm">         else {</span>
-<span class="cm">         //reset the current animation to the first frame</span>
-<span class="cm">         this.vel.x = 0;</span>
-<span class="cm">         this.vel.y = 0;</span>
-<span class="cm">         this.setAnimationFrame(1); //render the standing frame of every Animation if no key input action</span>
-<span class="cm">         }</span>
-<span class="cm">         }*/</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
     <span class="p">});</span>
 
     <span class="kd">var</span> <span class="nx">MainPlayer</span> <span class="o">=</span> <span class="nx">Player</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
@@ -336,30 +145,24 @@ any update (e.g. position, animation)</p></div></div><div class="code"><div clas
 <span class="cm">         constructor</span>
 <span class="cm">         ------ */</span>
         <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">settings</span><span class="p">,</span> <span class="nx">uid</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>call the constructor</p></div></div><div class="code"><div class="wrapper">            <span class="c1">//those settings we could also save in the .tmx file for every entity</span>
-            <span class="nx">settings</span><span class="p">.</span><span class="nx">image</span> <span class="o">=</span> <span class="s2">&quot;Gorilla&quot;</span><span class="p">;</span>
-            <span class="nx">settings</span><span class="p">.</span><span class="nx">spritewidth</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
-            <span class="nx">settings</span><span class="p">.</span><span class="nx">spriteheight</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">uid</span> <span class="o">=</span> <span class="nx">uid</span><span class="p">;</span>
-
+            <span class="c1">//settings.image = &quot;Gorilla&quot;;</span>
             <span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">settings</span><span class="p">,</span> <span class="nx">uid</span><span class="p">);</span>
 
-            <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">settings</span><span class="p">);</span>
-
-            <span class="k">this</span><span class="p">.</span><span class="nx">setTransparency</span><span class="p">(</span><span class="s2">&quot;#78C380&quot;</span><span class="p">);</span>
-            <span class="c1">//this.updateColRect(0, 32, 18, 15); //set specific collision box</span>
-            <span class="c1">//define the positions for the specific animation in the spritesheet</span>
-
-            <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkDown&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]);</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkLeft&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]);</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkRight&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]);</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">addAnimation</span><span class="p">(</span><span class="s2">&quot;walkUp&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">]);</span>
-
-            <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkDown&quot;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set the default horizontal &amp; vertical speed (accel vector)</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">setVelocity</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set the display to follow our position on both axis*/</p></div></div><div class="code"><div class="wrapper">            <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">viewport</span><span class="p">.</span><span class="nx">follow</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">pos</span><span class="p">,</span> <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">viewport</span><span class="p">.</span><span class="nx">AXIS</span><span class="p">.</span><span class="nx">BOTH</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">local_bomb_id</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set the display to follow our position on both axis*/</p></div></div><div class="code"><div class="wrapper">            <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">viewport</span><span class="p">.</span><span class="nx">follow</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">pos</span><span class="p">,</span> <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">viewport</span><span class="p">.</span><span class="nx">AXIS</span><span class="p">.</span><span class="nx">BOTH</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="nx">shootReady</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">sendPosition</span><span class="p">();</span>
 
             <span class="c1">//this.emitPosition();</span>
+        <span class="p">},</span>
+        <span class="nx">sendPosition</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+            <span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;sendPos&quot;</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="nx">uid</span><span class="o">:</span> <span class="nx">that</span><span class="p">.</span><span class="nx">uid</span><span class="p">,</span>
+                    <span class="nx">pos</span><span class="o">:</span> <span class="nx">that</span><span class="p">.</span><span class="nx">pos</span>
+                <span class="p">});</span>
+            <span class="p">},</span> <span class="mi">500</span><span class="p">);</span>
         <span class="p">},</span>
         <span class="nx">shoot</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">posX</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
@@ -387,141 +190,91 @@ any update (e.g. position, animation)</p></div></div><div class="code"><div clas
                         <span class="nx">posY</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">heightOffset</span><span class="p">;</span>
                 <span class="p">}</span>
 
-                <span class="kd">var</span> <span class="nx">shot</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Melon</span><span class="p">(</span><span class="nx">counter</span><span class="p">,</span> <span class="nx">posX</span><span class="p">,</span> <span class="nx">posY</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="p">{</span><span class="nx">image</span><span class="o">:</span> <span class="s2">&quot;GreenCoconut&quot;</span><span class="p">,</span> <span class="nx">spritewidth</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span> <span class="nx">spriteheight</span><span class="o">:</span> <span class="mi">32</span><span class="p">});</span>
+                <span class="kd">var</span> <span class="nx">shot</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bomb</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">local_bomb_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">posX</span><span class="p">,</span> <span class="nx">posY</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="p">{</span><span class="nx">image</span><span class="o">:</span> <span class="s2">&quot;GreenCoconut&quot;</span><span class="p">,</span> <span class="nx">spritewidth</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span> <span class="nx">spriteheight</span><span class="o">:</span> <span class="mi">32</span><span class="p">});</span>
                 <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">shot</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">z</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">//bullet should appear 1 layer before the mainPlayer</span>
-                <span class="kd">var</span> <span class="nx">melonObj</span><span class="o">=</span> <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">getLastGameObject</span><span class="p">();</span>
+                <span class="c1">//socket.emit(&quot;getBombServerID&quot;, shot.id);</span>
+                <span class="kd">var</span> <span class="nx">bombObj</span> <span class="o">=</span> <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">getLastGameObject</span><span class="p">();</span>
                 <span class="c1">//console.log(melonObj.isCollided());</span>
 
-                <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">melonObj</span><span class="p">.</span><span class="nx">isCollided</span><span class="p">()){</span>
-                    <span class="nx">counter</span><span class="o">++</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">bombObj</span><span class="p">.</span><span class="nx">isCollided</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">local_bomb_id</span><span class="o">++</span><span class="p">;</span>
 
-                    <span class="nx">bombs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">melonObj</span><span class="p">);</span>
-                    <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;bombMessage&quot;</span><span class="p">,{</span>
-                        <span class="nx">id</span><span class="o">:</span> <span class="nx">melonObj</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
-                        <span class="nx">x</span><span class="o">:</span> <span class="nx">melonObj</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
-                        <span class="nx">y</span><span class="o">:</span> <span class="nx">melonObj</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
-                        <span class="nx">direction</span><span class="o">:</span> <span class="nx">melonObj</span><span class="p">.</span><span class="nx">direction</span><span class="p">,</span>
-                        <span class="nx">bombtype</span><span class="o">:</span> <span class="nx">melonObj</span><span class="p">.</span><span class="nx">bombtype</span>
+                    <span class="nx">bombs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">bombObj</span><span class="p">);</span>
+                    <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;createBomb&quot;</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="nx">uid</span><span class="o">:</span> <span class="nx">localUID</span><span class="p">,</span>
+                        <span class="nx">id</span><span class="o">:</span> <span class="nx">bombObj</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+                        <span class="nx">server_id</span><span class="o">:</span> <span class="nx">bombObj</span><span class="p">.</span><span class="nx">server_id</span><span class="p">,</span>
+                        <span class="nx">x</span><span class="o">:</span> <span class="nx">bombObj</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+                        <span class="nx">y</span><span class="o">:</span> <span class="nx">bombObj</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+                        <span class="nx">direction</span><span class="o">:</span> <span class="nx">bombObj</span><span class="p">.</span><span class="nx">direction</span><span class="p">,</span>
+                        <span class="nx">bombtype</span><span class="o">:</span> <span class="nx">bombObj</span><span class="p">.</span><span class="nx">bombtype</span>
                     <span class="p">});</span>
                 <span class="p">}</span>
                 <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">sort</span><span class="p">();</span>
                 <span class="k">this</span><span class="p">.</span><span class="nx">shootReady</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-                <span class="c1">//var myPlayer = this;</span>
-                <span class="c1">//console.log(this);</span>
                 <span class="k">this</span><span class="p">.</span><span class="nx">timeout</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-                    <span class="c1">//console.log(&quot;shootReady Gorilla&quot;);</span>
                     <span class="k">this</span><span class="p">.</span><span class="nx">shootReady</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-                    <span class="c1">//console.log(this);</span>
                 <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="mi">400</span><span class="p">);</span>
 
             <span class="p">}</span>
         <span class="p">},</span>
-        <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-            <span class="c1">//console.log(me.timer.fps);</span>
-            <span class="kd">var</span> <span class="nx">max_velocity</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">setVelocity</span><span class="p">(</span><span class="nx">max_velocity</span><span class="p">,</span> <span class="nx">max_velocity</span><span class="p">);</span>
-
+        <span class="nx">checkMoveControls</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">new_action</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
             <span class="k">if</span> <span class="p">(</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">))</span> <span class="p">{</span>
-                <span class="c1">//console.log(&quot;x: &quot;+this.vel.x+&quot; y: &quot;+this.accel.y);</span>
-                <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkLeft&quot;</span><span class="p">);</span>
+                <span class="c1">//this.setCurrentAnimation(&quot;walkLeft&quot;);</span>
                 <span class="k">if</span> <span class="p">(</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;down&#39;</span><span class="p">))</span> <span class="p">{</span>
-
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
-
-                    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">!=</span> <span class="s2">&quot;leftdown&quot;</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">=</span> <span class="s2">&quot;leftdown&quot;</span><span class="p">;</span>
-                        <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;clientMessage&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">action</span><span class="o">:</span> <span class="s2">&quot;leftdown&quot;</span><span class="p">,</span> <span class="nx">uid</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">uid</span><span class="p">});</span>
-
-                    <span class="p">}</span>
-
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkLeftDown</span><span class="p">();</span>
+                    <span class="nx">new_action</span> <span class="o">=</span> <span class="s2">&quot;leftdown&quot;</span><span class="p">;</span>
                 <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;up&#39;</span><span class="p">))</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">));</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">!=</span> <span class="s2">&quot;leftup&quot;</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">=</span> <span class="s2">&quot;leftup&quot;</span><span class="p">;</span>
-                        <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;clientMessage&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">action</span><span class="o">:</span> <span class="s2">&quot;leftup&quot;</span><span class="p">,</span> <span class="nx">uid</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">uid</span><span class="p">});</span>
-
-                    <span class="p">}</span>
-
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkLeftUp</span><span class="p">();</span>
+                    <span class="nx">new_action</span> <span class="o">=</span> <span class="s2">&quot;leftup&quot;</span><span class="p">;</span>
                 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">!=</span> <span class="s2">&quot;left&quot;</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">=</span> <span class="s2">&quot;left&quot;</span><span class="p">;</span>
-                        <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;clientMessage&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">action</span><span class="o">:</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="nx">uid</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">uid</span><span class="p">});</span>
-
-                    <span class="p">}</span>
-
-                <span class="p">}</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update the entity velocity</p></div></div><div class="code"><div class="wrapper">                <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
-
-
-                <span class="cm">/*console.log(&quot;Velocity\n=========&quot;);</span>
-<span class="cm">                 console.log(&quot;x: &quot;+this.vel.x+&quot; y: &quot;+this.vel.y);</span>
-<span class="cm">                 console.log(me.timer.tick);*/</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkLeft</span><span class="p">();</span>
+                    <span class="nx">new_action</span> <span class="o">=</span> <span class="s2">&quot;left&quot;</span><span class="p">;</span>
+                <span class="p">}</span>
 
             <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">))</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkRight&quot;</span><span class="p">);</span>
+                <span class="c1">//this.setCurrentAnimation(&quot;walkRight&quot;);</span>
                 <span class="k">if</span> <span class="p">(</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;down&#39;</span><span class="p">))</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">!=</span> <span class="s2">&quot;rightdown&quot;</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">=</span> <span class="s2">&quot;rightdown&quot;</span><span class="p">;</span>
-                        <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;clientMessage&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">action</span><span class="o">:</span> <span class="s2">&quot;rightdown&quot;</span><span class="p">,</span> <span class="nx">uid</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">uid</span><span class="p">});</span>
-
-                    <span class="p">}</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkRightDown</span><span class="p">();</span>
+                    <span class="nx">new_action</span> <span class="o">=</span> <span class="s2">&quot;rightdown&quot;</span><span class="p">;</span>
 
                 <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;up&#39;</span><span class="p">))</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">!=</span> <span class="s2">&quot;rightup&quot;</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">=</span> <span class="s2">&quot;rightup&quot;</span><span class="p">;</span>
-                        <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;clientMessage&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">action</span><span class="o">:</span> <span class="s2">&quot;rightup&quot;</span><span class="p">,</span> <span class="nx">uid</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">uid</span><span class="p">});</span>
-
-                    <span class="p">}</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkRightUp</span><span class="p">();</span>
+                    <span class="nx">new_action</span> <span class="o">=</span> <span class="s2">&quot;rightup&quot;</span><span class="p">;</span>
 
                 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">!=</span> <span class="s2">&quot;right&quot;</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">=</span> <span class="s2">&quot;right&quot;</span><span class="p">;</span>
-                        <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;clientMessage&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">action</span><span class="o">:</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="nx">uid</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">uid</span><span class="p">});</span>
-
-                    <span class="p">}</span>
-
-                <span class="p">}</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update the entity velocity</p></div></div><div class="code"><div class="wrapper">                <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">walkRight</span><span class="p">();</span>
+                    <span class="nx">new_action</span> <span class="o">=</span> <span class="s2">&quot;right&quot;</span><span class="p">;</span>
+                <span class="p">}</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update the entity velocity</p></div></div><div class="code"><div class="wrapper">                <span class="c1">//this.vel.x += this.accel.x * (60 / me.timer.fps);</span>
             <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;up&#39;</span><span class="p">))</span> <span class="p">{</span>
                 <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkUp&quot;</span><span class="p">);</span>
                 <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">)))</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">!=</span> <span class="s2">&quot;up&quot;</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">=</span> <span class="s2">&quot;up&quot;</span><span class="p">;</span>
-                    <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;clientMessage&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">action</span><span class="o">:</span> <span class="s2">&quot;up&quot;</span><span class="p">,</span> <span class="nx">uid</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">uid</span><span class="p">});</span>
-
-                <span class="p">}</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update the entity velocity</p></div></div><div class="code"><div class="wrapper">            <span class="p">}</span>
+                <span class="nx">new_action</span> <span class="o">=</span> <span class="s2">&quot;up&quot;</span><span class="p">;</span>
+            <span class="p">}</span>
             <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;down&#39;</span><span class="p">))</span> <span class="p">{</span>
                 <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkDown&quot;</span><span class="p">);</span>
 
                 <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">)))</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
                 <span class="p">}</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update the entity velocity</p></div></div><div class="code"><div class="wrapper">                <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accel</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">!=</span> <span class="s2">&quot;down&quot;</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">=</span> <span class="s2">&quot;down&quot;</span><span class="p">;</span>
-                    <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;clientMessage&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">action</span><span class="o">:</span> <span class="s2">&quot;down&quot;</span><span class="p">,</span> <span class="nx">uid</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">uid</span><span class="p">});</span>
-
-                <span class="p">}</span>
+                <span class="nx">new_action</span> <span class="o">=</span> <span class="s2">&quot;down&quot;</span><span class="p">;</span>
             <span class="p">}</span>
             <span class="k">else</span> <span class="p">{</span>
                 <span class="c1">//reset the current animation to the first frame</span>
-                <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-                <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">!=</span> <span class="s2">&quot;stand&quot;</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">=</span> <span class="s2">&quot;stand&quot;</span><span class="p">;</span>
-                    <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;clientMessage&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">action</span><span class="o">:</span> <span class="s2">&quot;stand&quot;</span><span class="p">,</span> <span class="nx">uid</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">uid</span><span class="p">});</span>
-
-                <span class="p">}</span>
-
-                <span class="k">this</span><span class="p">.</span><span class="nx">setAnimationFrame</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">//render the standing frame of every Animation if no key input action</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">stand</span><span class="p">();</span>
+                <span class="nx">new_action</span> <span class="o">=</span> <span class="s2">&quot;stand&quot;</span><span class="p">;</span>
             <span class="p">}</span>
-
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">!=</span> <span class="nx">new_action</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">last_send_action</span> <span class="o">=</span> <span class="nx">new_action</span><span class="p">;</span>
+                <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;clientMessage&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">action</span><span class="o">:</span> <span class="nx">new_action</span><span class="p">,</span> <span class="nx">uid</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">uid</span><span class="p">});</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nx">checkShootControls</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nx">me</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">isKeyPressed</span><span class="p">(</span><span class="s1">&#39;shootLeft&#39;</span><span class="p">))</span> <span class="p">{</span>
-
                 <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkLeft&quot;</span><span class="p">);</span>
                 <span class="k">this</span><span class="p">.</span><span class="nx">shoot</span><span class="p">();</span>
             <span class="p">}</span>
@@ -537,10 +290,8 @@ any update (e.g. position, animation)</p></div></div><div class="code"><div clas
                 <span class="k">this</span><span class="p">.</span><span class="nx">setCurrentAnimation</span><span class="p">(</span><span class="s2">&quot;walkDown&quot;</span><span class="p">);</span>
                 <span class="k">this</span><span class="p">.</span><span class="nx">shoot</span><span class="p">();</span>
             <span class="p">}</span>
-            <span class="cm">/*if (me.input.isKeyPressed(&#39;jump&#39;)) {</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>make sure we are not already jumping or falling</p></div></div><div class="code"><div class="wrapper"><span class="cm">             if (!this.jumping &amp;&amp; !this.falling) {</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set current vel to the maximum defined value
-gravity will then do the rest</p></div></div><div class="code"><div class="wrapper"><span class="cm">             this.vel.y = -this.maxVel.y * me.timer.tick;</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>set the jumping flag</p></div></div><div class="code"><div class="wrapper"><span class="cm">             this.jumping = true;</span>
-<span class="cm">             }</span>
-<span class="cm">             }*/</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>check &amp; update player movement</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">updateMovement</span><span class="p">();</span>
+        <span class="p">},</span>
+        <span class="nx">checkCollision</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">collided</span> <span class="o">=</span> <span class="nx">me</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">collide</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="nx">collided</span><span class="p">)</span> <span class="p">{</span>
@@ -558,17 +309,25 @@ gravity will then do the rest</p></div></div><div class="code"><div class="wrapp
                         <span class="nx">that</span><span class="p">.</span><span class="nx">setOpacity</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
                     <span class="p">},</span> <span class="mi">2000</span><span class="p">);</span>
                 <span class="p">}</span>
-            <span class="p">}</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update animation if necessary</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">!==</span> <span class="mi">0</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update object animation</p></div></div><div class="code"><div class="wrapper">                <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">max_velocity</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nx">me</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">fps</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">setVelocity</span><span class="p">(</span><span class="nx">max_velocity</span><span class="p">,</span> <span class="nx">max_velocity</span><span class="p">);</span>
+
+            <span class="k">this</span><span class="p">.</span><span class="nx">checkMoveControls</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">checkShootControls</span><span class="p">();</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>check &amp; update player movement</p></div></div><div class="code"><div class="wrapper">            <span class="k">this</span><span class="p">.</span><span class="nx">updateMovement</span><span class="p">();</span>
+
+            <span class="k">this</span><span class="p">.</span><span class="nx">checkCollision</span><span class="p">();</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update animation if necessary</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">x</span> <span class="o">!==</span> <span class="mi">0</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">vel</span><span class="p">.</span><span class="nx">y</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>update object animation</p></div></div><div class="code"><div class="wrapper">                <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">();</span>
                 <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
             <span class="p">}</span>
+
             <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
         <span class="p">}</span>
-
-
     <span class="p">});</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s1">&#39;Gorilla&#39;</span><span class="o">:</span> <span class="nx">Gorilla</span><span class="p">,</span>
+        <span class="s1">&#39;EnemyPlayer&#39;</span><span class="o">:</span> <span class="nx">EnemyPlayer</span><span class="p">,</span>
         <span class="s1">&#39;MainPlayer&#39;</span><span class="o">:</span> <span class="nx">MainPlayer</span>
     <span class="p">};</span>
 <span class="p">});</span></div></div></div></div></body></html>

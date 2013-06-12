@@ -1,30 +1,25 @@
-/**
- */
-
-/*-------------------
- a player entity
- -------------------------------- */
-
+// this file handels the player characters of the game
 define(['Bombs'], function (Bomb) {
 
 
-    counter = 1;
-
+    // abstract Player Entity :
+    // manages the player sprites, settings and their movement
     var Player = me.ObjectEntity.extend({
-        /* -----
-         constructor
-         ------ */
+        // constructor function
         init: function (x, y, settings, uid) {
-            // call the constructor
+            // set unique id for each player
             this.uid = uid;
 
+            // defines the movement state of the player
+            this.action="stand";
+            // set sprite size
             settings.spritewidth = 32;
             settings.spriteheight = 32;
 
+            // call parent constructor
             this.parent(x, y, settings);
 
-            //this.updateColRect(0, 32, 18, 15); //set specific collision box
-            //define the positions for the specific animation in the spritesheet
+            // define the positions for the specific animation in the spritesheet
             if (settings.image == "Gorilla") {
                 this.addAnimation("walkDown", [0, 1, 2]);
                 this.addAnimation("walkLeft", [3, 4, 5]);
@@ -41,109 +36,123 @@ define(['Bombs'], function (Bomb) {
 
             // make it collidable
             this.collidable = true;
+
+            // set type to ENEMY_OBJECT to distinguish between the different objects
             this.type = me.game.ENEMY_OBJECT;
 
-            // set the default horizontal & vertical speed (accel vector)
+            // set max speed
             this.setVelocity(12, 12);
+
+            // set the default horizontal & vertical speed (accel vector)
             this.accel.x = 3;
             this.accel.y = 3;
-            //this.addAnimation ("explosion", [0,1,2]);
         },
+        // set new position of the player
         setPos: function (data) {
             this.pos.x = data.x;
             this.pos.y = data.y;
         },
-
+        // checks and handles collision with bomb
         onCollision: function (res, obj) {
-            // if we collide with an enemy
+            // if we collide with a bomb
             if (obj.type == me.game.ACTION_OBJECT) {
-                //this.flicker(4);
+                // visualize the collision
                 this.setOpacity(0.7);
             }
         },
+        // player walks left
         walkLeft: function () {
+            // sets left-animation-sprites
             this.setCurrentAnimation("walkLeft");
+            // and the right velocities
             this.vel.y = 0;
             this.vel.x -= this.accel.x * (60 / me.timer.fps);
         },
+        // player walks left-down
         walkLeftDown: function () {
+            // sets left-animation-sprites
             this.setCurrentAnimation("walkLeft");
+            // and the right velocities
             this.vel.y += this.accel.y * me.timer.tick;
             this.vel.x -= this.accel.x * (60 / me.timer.fps);
         },
+        // player walks left-up
         walkLeftUp: function () {
+            // sets left-animation-sprites
             this.setCurrentAnimation("walkLeft");
+            // and the right velocities
             this.vel.y -= this.accel.y * (60 / me.timer.fps);
             this.vel.x -= this.accel.x * (60 / me.timer.fps);
         },
+        // player walks right
         walkRight: function () {
+            // sets right-animation-sprites
             this.setCurrentAnimation("walkRight");
+            // and the right velocities
             this.vel.y = 0;
             this.vel.x += this.accel.x * (60 / me.timer.fps);
         },
+        // player walks right-down
         walkRightDown: function () {
+            // sets right-animation-sprites
             this.setCurrentAnimation("walkRight");
+            // and the right velocities
             this.vel.y += this.accel.y * (60 / me.timer.fps);
             this.vel.x += this.accel.x * (60 / me.timer.fps);
         },
+        // player walks right-up
         walkRightUp: function () {
+            // sets right-animation-sprites
             this.setCurrentAnimation("walkRight");
+            // and the right velocities
             this.vel.y -= this.accel.y * (60 / me.timer.fps);
             this.vel.x += this.accel.x * (60 / me.timer.fps);
         },
+        // player walks up
         walkUp: function () {
+            // sets up-animation-sprites
             this.setCurrentAnimation("walkUp");
+            // and the right velocities
             this.vel.x = 0;
             this.vel.y -= this.accel.y * (60 / me.timer.fps);
         },
+        // player walks down
         walkDown: function () {
+            // sets down-animation-sprites
             this.setCurrentAnimation("walkDown");
+            // and the right velocities
             this.vel.x = 0;
             this.vel.y += this.accel.y * (60 / me.timer.fps);
         },
+        // player stands
         stand: function () {
+            // set velocity to zero
             this.vel.x = 0;
             this.vel.y = 0;
             this.setAnimationFrame(1); //render the standing frame of every Animation if no key input action
         }
     });
 
-
+    // These objects are all other players, that are not controlled by this user.
+    // They inherit from abstract player.
     var EnemyPlayer = Player.extend({
-        /* -----
-         constructor
-         ------ */
+        // constructor function
         init: function (x, y, settings, uid) {
-            // call the constructor
-            //those settings we could also save in the .tmx file for every entity
 
-            this.action = "";
+            // calls parent constructor
             this.parent(x, y, settings, uid);
         },
+        // set new movement state
         setAction: function (action) {
             this.action = action;
         },
-        createNewBomb: function (data) {
-
-            var bomb = new Bomb(data.id, data.server_id, data.x, data.y, data.direction, {image: data.bombtype});
-            //z-index of player=99 , 99 + 1
-
-            me.game.add(bomb, 99 + 1); //bullet should appear 1 layer before the mainPlayer
-
-            var bombObj = me.game.getLastGameObject();
-            //console.log(melonObj.isCollided());
-            //if (!bombObj.isCollided()) {
-            counter++;
-
-            bombs.push(bombObj);
-            //}
-            me.game.sort();
-        },
-
+        // updates player movement and checks for collision
         update: function () {
+            // set move distance depending on the current fps-number
             var max_velocity = 3 * (60 / me.timer.fps);
             this.setVelocity(max_velocity, max_velocity);
 
+            // set velocities
             switch (this.action) {
                 case "left":
                     this.walkLeft();
@@ -177,7 +186,7 @@ define(['Bombs'], function (Bomb) {
                     break;
             }
 
-
+            // makes player movement
             this.updateMovement();
 
             // update animation if necessary
@@ -191,22 +200,24 @@ define(['Bombs'], function (Bomb) {
     });
 
     var MainPlayer = Player.extend({
-        /* -----
-         constructor
-         ------ */
+        // constructor
         init: function (x, y, settings, uid) {
-            // call the constructor
-            //those settings we could also save in the .tmx file for every entity
-            //settings.image = "Gorilla";
-            this.last_send_action = "";
+
+            // calls parent constructor
             this.parent(x, y, settings, uid);
 
-            // set the display to follow our position on both axis*/
+            // unique local_bomb_id to distinguish between local bombs
+            this.local_bomb_id=1;
+            // set the display to follow our position on both axis
             me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
-            this.shootReady = true;
-            this.sendPosition();
 
-            //this.emitPosition();
+            // determines, if player can should or not
+            this.shootReady = true;
+
+            // determines the shoot inverval
+            this.SHOOT_INTERVAL = 400;
+            // emit position to server
+            this.sendPosition();
         },
         sendPosition: function () {
             var that = this;
@@ -218,18 +229,26 @@ define(['Bombs'], function (Bomb) {
             }, 500);
         },
         shoot: function () {
+            // origin shoot position
             var posX = this.pos.x;
             var posY = this.pos.y;
 
+            // timeout, so player can shoot only after specific time
             if (this.shootReady === true) {
                 clearTimeout(this.timeout);
+
                 var widthOffset = this.width;
                 var heightOffset = this.height;
-                if (this.vel.x !== 0 || this.vel.y !== 0) {//if object moving set another Offset
-                    widthOffset += this.accel.x * 2;//dependency of player moving speed in x-direction
-                    heightOffset += this.accel.y * 2;//dependency of player moving speed in y-direction
+
+                // if object moving set another Offset
+                if (this.vel.x !== 0 || this.vel.y !== 0) {
+                    // dependency of player moving speed in x-direction
+                    widthOffset += this.accel.x * 2;
+                    // dependency of player moving speed in y-direction
+                    heightOffset += this.accel.y * 2;
                 }
-                switch (this.current.name) {//name of the animation
+                // name of the animation
+                switch (this.current.name) {
                     case 'walkLeft':
                         posX = this.pos.x - widthOffset;
                         break;
@@ -243,14 +262,14 @@ define(['Bombs'], function (Bomb) {
                         posY = this.pos.y + heightOffset;
                 }
 
-                var shot = new Bomb(counter, 0, posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});
-                me.game.add(shot, this.z + 1); //bullet should appear 1 layer before the mainPlayer
-                //socket.emit("getBombServerID", shot.id);
+                var shot = new Bomb(this.local_bomb_id, 0, posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});
+                // bomb should appear 1 layer before the mainPlayer
+                me.game.add(shot, this.z + 1);
                 var bombObj = me.game.getLastGameObject();
-                //console.log(melonObj.isCollided());
+                this.local_bomb_id++;
 
                 if (!bombObj.isCollided()) {
-                    counter++;
+
 
                     bombs.push(bombObj);
                     socket.emit("createBomb", {
@@ -263,14 +282,17 @@ define(['Bombs'], function (Bomb) {
                         bombtype: bombObj.bombtype
                     });
                 }
+                // sort the object list (to ensure the object is properly displayed)
                 me.game.sort();
                 this.shootReady = false;
+
                 this.timeout = setTimeout(function () {
                     this.shootReady = true;
-                }.bind(this), 400);
+                }.bind(this), this.SHOOT_INTERVAL);
 
             }
         },
+        // checks, which Key is pressed by the user and then sets player movement
         checkMoveControls: function () {
             var new_action = '';
             if (me.input.isKeyPressed('left')) {
@@ -300,8 +322,6 @@ define(['Bombs'], function (Bomb) {
                     this.walkRight();
                     new_action = "right";
                 }
-                // update the entity velocity
-                //this.vel.x += this.accel.x * (60 / me.timer.fps);
             } else if (me.input.isKeyPressed('up')) {
                 this.setCurrentAnimation("walkUp");
                 if (!me.input.isKeyPressed('right') || (me.input.isKeyPressed('left'))) {
@@ -325,11 +345,12 @@ define(['Bombs'], function (Bomb) {
                 this.stand();
                 new_action = "stand";
             }
-            if (this.last_send_action != new_action) {
-                this.last_send_action = new_action;
+            if (this.action != new_action) {
+                this.action = new_action;
                 socket.emit("clientMessage", {action: new_action, uid: this.uid});
             }
         },
+        //checks, if shoot controls are pressed
         checkShootControls: function () {
             if (me.input.isKeyPressed('shootLeft')) {
                 this.setCurrentAnimation("walkLeft");
@@ -374,6 +395,7 @@ define(['Bombs'], function (Bomb) {
                 }
             }
         },
+        // updates player movement
         update: function () {
             var max_velocity = 3 * (60 / me.timer.fps);
             this.setVelocity(max_velocity, max_velocity);
@@ -392,7 +414,6 @@ define(['Bombs'], function (Bomb) {
                 this.parent();
                 return true;
             }
-
             return false;
         }
     });

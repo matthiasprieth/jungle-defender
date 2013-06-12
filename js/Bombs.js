@@ -104,9 +104,9 @@ define(function () {
              * @type {boolean}
              */
             this.bombIsSpam = true;
-            this.timeout = setTimeout(function () {
+            /*this.timeout = setTimeout(function () {
                 this.bombIsSpam = false;//set flags to avoid bomb in bomb spamming
-            }.bind(this), 33);
+            }.bind(this), 33);*/
 
         },
 
@@ -177,10 +177,11 @@ define(function () {
             var collided = me.game.collide(this);
             if (collided) {
                 if (collided.obj.type == me.game.ACTION_OBJECT) {
-                    if (this.bombIsSpam) {
+                    /*if (this.bombIsSpam) {
+                        console.log("removeBomb");
                         me.game.remove(this, true);
                         socket.emit("removeBomb", this.server_id);
-                    }
+                    }*/
 
                     if (this.bomb_updated != true) {
                         this.vel.x = 0;
@@ -201,7 +202,9 @@ define(function () {
                 else if (collided.obj.type == me.game.ENEMY_OBJECT) {
                     // let's flicker in case we touched an enemy
                     // this.flicker(45);
+                    console.log("collided with enemy");
                     me.game.remove(this, true);
+                    socket.emit("removeBomb", this.server_id);
                 }
             } else if (!this.stacked) {
                 this.bomb_updated = false;

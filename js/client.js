@@ -120,11 +120,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 }
             },
             onNewBomb: function (data) {
-                for (var i = 0; i < players.length; i++) {
-                    if (players[i].uid === data.uid) {
-                        players[i].createNewBomb(data);
-                    }
-                }
+                createNewBomb(data);
             },
             onSetBombServerID: function (data) {
                 for (var i = 0; i < bombs.length; i++) {
@@ -134,7 +130,9 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 }
             },
             getAll: function (bombs_data) {
-                //console.log(bombs_data);
+                console.log("getAllBombs\n===============");
+                console.log(bombs_data);
+                console.log("==================");
                 for (var i = 0; i < bombs_data.length; i++) {
                     createNewBomb(bombs_data[i]);
                 }
@@ -177,15 +175,24 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
 
             players.push(gamePlayerObj);
         };
-
+        // creates new Bomb with data properties
         createNewBomb = function (data) {
+            // Creates new Bomb with params: \n
+            // data.id = local_bomb_id
+            // data.server_id = unique bomb id
+            // data.x and data.y = positions
+            // data.direction = direction, where bomb should be fired
+            // data.bombtype = type of bomb
             var bomb = new Bomb(data.id, data.server_id, data.x, data.y, data.direction, {image: data.bombtype});
+            // add the object and give the z index of the current object
             me.game.add(bomb, 99 + 1);
+            // gets bomb object from melonjs api (needed to manage bombs externally)
             var bombObj = me.game.getLastGameObject();
-            if (!bombObj.isCollided()) {
-                counter++;
+            // save bomb into bombs array
+            //if (!bombObj.isCollided()) {
                 bombs.push(bombObj);
-            }
+            //}
+            // sort the object list (to ensure the object is properly displayed)
             me.game.sort();
         };
     };
