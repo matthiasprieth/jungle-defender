@@ -44,6 +44,9 @@ define(['Bombs'], function (Bomb) {
             // make it collidable
             this.collidable = true;
 
+            // adjust the bounding box
+            this.updateColRect(0, 32, 5, 27);
+
             // set type to ENEMY_OBJECT to distinguish between the different objects
             this.type = me.game.ENEMY_OBJECT;
 
@@ -273,11 +276,11 @@ define(['Bombs'], function (Bomb) {
                         posY = this.pos.y + heightOffset;
                 }
 
-               /* if (this.team === 1){ */
+                if (this.team === 1){ 
                     var shot = new Bomb(this.local_bomb_id, this.uid, 0, posX, posY, this.current.name, {image: "GreenCoconut", spritewidth: 32, spriteheight: 32});    
-               /* }else{
-                    var shot = new Bomb(this.local_bomb_id, 0, posX, posY, this.current.name, {image: "Waterbomb", spritewidth: 32, spriteheight: 32});
-                }*/
+                }else{
+                    var shot = new Bomb(this.local_bomb_id, this.uid, 0, posX, posY, this.current.name, {image: "Waterbomb", spritewidth: 32, spriteheight: 32});
+                }
                 
                 // bomb should appear 1 layer before the mainPlayer
                 me.game.add(shot, this.z + 1);
