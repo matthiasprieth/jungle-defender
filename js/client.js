@@ -119,6 +119,7 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 for (var i = 0; i < bombs.length; i++) {
                     if (bombs[i].server_id == server_id) {
                         console.log("onRemoveBombFromEnemy");
+                        bombs[i].makeExplosion();
                         me.game.remove(bombs[i]);
                         bombs.splice(i, 1);
                     }
@@ -128,20 +129,13 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                 createNewBomb(data);
             },
             onSetBombServerID: function (data) {
-
-                console.log("onSetBombServerID(data)");
-               // console.log(data);
                 for (var i = 0; i < bombs.length; i++) {
                    
                     if (bombs[i].id == data.id && bombs[i].uid==data.uid) {
                         console.log("setServerid");
                         bombs[i].server_id = data.server_id;
                     }
-                    //console.log(i);
-                    //console.log(bombs[i].id);
-                     console.log(bombs[i].server_id);
                 }
-                console.log("===============");
             },
             getAll: function (bombs_data) {
                 console.log("getAllBombs\n===============");
