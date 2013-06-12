@@ -97,6 +97,18 @@ define(function(){
             name: "32x32_font",
             type: "image",
             src: "data/sprite/32x32_font.png"
+        },
+        // monkey previewpicture
+        {
+            name: "MilitaryPreview",
+            type: "image",
+            src: "data/sprite/mainPlayer/preview/faceMilitary.png"
+        },
+        // military previewpicture
+        {
+            name: "MonkeyPreview",
+            type: "image",
+            src: "data/sprite/mainPlayer/preview/faceMonkey.png"
         }
     ];
     return g_resources;

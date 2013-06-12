@@ -124,7 +124,20 @@ require(["jquery", "resources", "MainPlayers", "client"], function ($, g_resourc
         draw: function(context, x, y) {
             this.font.draw(context, this.value, this.pos.x + x, this.pos.y + y);
         }
-     
+    });
+
+
+    //// HUD PICTURE
+    game.HUD_Picture = me.HUD_Item.extend({
+        init: function(x, y, image) {
+            this.parent(x, y);
+            this.image = me.loader.getImage(image);
+            this.x = x;
+            this.y = y;
+        },
+        draw: function(context, x, y) {
+            context.drawImage(this.image, this.x, this.y);
+        }
     });
 
     game.PlayScreen = me.ScreenObject.extend(
@@ -148,8 +161,13 @@ require(["jquery", "resources", "MainPlayers", "client"], function ($, g_resourc
                 me.game.HUD.addItem("timeLeft", new game.HUD_Object(0, 0, "left", "-:--"));
 
                 // add scores
-                me.game.HUD.addItem("scoreTeam1", new game.HUD_Object(620, 420, "right"));
-                me.game.HUD.addItem("scoreTeam2", new game.HUD_Object(0, 420, "left"));
+                me.game.HUD.addItem("scoreTeam1", new game.HUD_Object(580, 420, "right"));
+                me.game.HUD.addItem("scoreTeam2", new game.HUD_Object(40, 420, "left"));
+
+                // add teampictures
+                me.game.HUD.addItem("team2Picture", new game.HUD_Picture(5,420, "MonkeyPreview"));
+                me.game.HUD.addItem("team1Picture", new game.HUD_Picture(580,420, "MilitaryPreview"));
+                
 
                 setInterval(function(){
                     me.game.HUD.addItem("Shuffle", new game.HUD_Object(185, 420, "left", "SHUFFLE!"));
