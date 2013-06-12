@@ -1,10 +1,14 @@
 /**
  */
 require.config({
-    baseUrl: 'js'
+    baseUrl: 'js',
+	paths: {
+		'jquery': '../lib/jquery-2.0.2.min'
+	}
 });
-require(["resources", "MainPlayers", "client"], function (g_resources, Players, initNetwork) {
+require(["jquery", "resources", "MainPlayers", "client"], function ($, g_resources, Players, initNetwork) {
 
+	
     var game =
     {
         /* ---
