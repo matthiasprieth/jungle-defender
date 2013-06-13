@@ -31,6 +31,8 @@ setInterval(function(){
             'team2': points.team2,
             'timeLeft': timeLeft
         });
+				points.team1=0;
+				points.team2=0;
 
         Bombs.clean();
         for (var i in Client.clients) {
