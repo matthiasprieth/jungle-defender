@@ -30,11 +30,14 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
             var $result= $("section.infowindow>div.result");
             $result.find(".one .kills").html(data.team1);
             $result.find(".two .kills").html(data.team2);
-            setTimeout(function(){
-                $("section.infowindow").show();
-                $("section.infowindow>div:not(.result, .bg)").css({"height":0}).hide();
-                $("section.infowindow>div.result").show().animate({height:'424px'}, 1500);
-            });
+            
+						$("section.infowindow").show();
+            $("section.infowindow>div:not(.result, .bg)").css({"height":0}).hide();
+            $("section.infowindow>div.result").show().animate({height:'424px'}, 1500);
+            
+						setTimeout(function(){
+							$("section.infowindow").hide();
+						},5000);
             var $won=$result.find(".won");
             if(data.team1>data.team2){
                 $won.html("Animals have won");
