@@ -139,6 +139,9 @@ a.closeWindow{
     right:2%;
     cursor:pointer;
 }
+#framecounter{
+		display:none;
+}
 #woodborder{
     position: absolute;
     display:block;
