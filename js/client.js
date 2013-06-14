@@ -17,6 +17,28 @@ var toHHMMSS = function (sec) {
 
 define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
     //game resources
+
+    var shuffle_Object = me.HUD_Item.extend({
+        init: function(x, y, align, value) {
+            // call the parent constructor
+            this.parent(x, y);
+            // create a font
+            this.font = new me.BitmapFont("32x32_font", 32);
+            this.font.set(align);
+            if(value)
+                this.value = value;
+        },
+
+        /* -----
+
+         draw our score
+
+         ------ */
+        draw: function(context, x, y) {
+            this.font.draw(context, this.value, this.pos.x + x, this.pos.y + y);
+        }
+    });
+
     var initNetwork = function () {
 
         socket = io.connect('/');
@@ -170,13 +192,24 @@ define(['MainPlayers', 'Bombs'], function (Players, Bomb) {
                     createNewBomb(bombs_data[i]);
                 }
             },
-
+            onShuffle: function(data){
+               for(var i=0;i<bombs.length; i++){
+                  bombs[i].changeBombType();
+               }
+                me.game.HUD.addItem("Shuffle", new shuffle_Object(185, 420, "left", "SHUFFLE!"));
+                setTimeout(function () {
+                    me.game.HUD.removeItem("Shuffle");
+                }, 2000);
+                me.game.sort();
+                me.game.repaint();
+            },
             init: function () {
                 socket.on('updateBombPos', Bombs.onUpdateBombPos);
                 //socket.on("removeBombFromEnemy", Bombs.onRemoveBombFromEnemy);
                 socket.on("newBomb", Bombs.onNewBomb);
                 socket.on("setBombServerID", Bombs.onSetBombServerID);
                 socket.on('getAllBombs', Bombs.getAll);
+                socket.on("shuffle", Bombs.onShuffle);
             },
             clean: function () {      
                 for (var i in bombs) {
