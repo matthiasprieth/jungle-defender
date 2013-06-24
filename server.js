@@ -103,7 +103,7 @@ var Bombs = {
                 break;
             }
         }
-    },
+    }/*,
     changeBombtypes: function(){
         var bombtypes=[];
         for(var i=0;i<Bombs.bombs.length; i++){
@@ -116,7 +116,7 @@ var Bombs = {
             }
         }
         return bombtypes;
-    },
+    }*/,
     onCreate: function (data) {
         
         Bombs.bombs.push(data);
