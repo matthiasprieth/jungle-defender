@@ -114,19 +114,6 @@ define(function () {
 
         },
 
-        changeBombType: function(){
-
-            //console.log("changeBomb: "+bombtype+ "  server_id: " + this.server_id);
-            if(this.bombtype=="GreenCoconut"){
-                this.bombtype="Waterbomb";
-            }else{
-                this.bombtype="GreenCoconut";
-            }
-            this.image = me.loader.getImage(this.bombtype);
-            //this.bombtype=bombtype;
-
-        },
-
         // call by the engine when colliding with another object
         // obj parameter corresponds to the other object (typically the player) touching this one
         /**

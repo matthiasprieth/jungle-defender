@@ -54,8 +54,6 @@ setInterval(function(){
     }
 }, 1000);
 
-
-
 /* ------  ------  ------ Express ------  ------  ------ */
 
 server.listen(serverPort);
@@ -103,20 +101,7 @@ var Bombs = {
                 break;
             }
         }
-    }/*,
-    changeBombtypes: function(){
-        var bombtypes=[];
-        for(var i=0;i<Bombs.bombs.length; i++){
-            if(Bombs.bombs[i].bombtype=="GreenCoconut"){
-                Bombs.bombs[i].bombtype="Waterbomb";
-                bombtypes.push("Waterbomb");
-            }else if(Bombs.bombs[i].bombtype=="Waterbomb"){
-                Bombs.bombs[i].bomtype="GreenCoconut";
-                bombtypes.push("GreenCoconut");
-            }
-        }
-        return bombtypes;
-    }*/,
+    },
     onCreate: function (data) {
         
         Bombs.bombs.push(data);
@@ -211,9 +196,6 @@ var Client = {
         Client.clients = [];
     }
 };
-var shuffle= setInterval(function(){
-    sio.sockets.emit('shuffle', true);
-},15000);
 
 sio.sockets.on('connection', function (socket) {
 
