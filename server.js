@@ -56,8 +56,8 @@ setInterval(function(){
 
 /* ------  ------  ------ Express ------  ------  ------ */
 
-server.listen(serverPort);
-console.log('\t :: Express :: Listening on port ' + serverPort);
+server.listen(process.env.PORT || serverPort);
+console.log('\t :: Express :: Listening on port ' + (process.env.PORT || serverPort));
 
 app.get('/', function (req, res) {
     res.sendfile(__dirname + '/index.html');
