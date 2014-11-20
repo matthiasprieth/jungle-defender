@@ -10,4 +10,6 @@ Join a team by klicking on the link below. Use the WASD-keys to run and the arro
 - [live demo](http://jungledefender.herokuapp.com/)
 - [portfolio link](http://portfolio.multimediaart.at/projects/2013-jungledefender)
 
+![jungledefender game](http://portfolio.multimediaart.at/system/projects/1391/media/5981/presentation_media.png)
+
 presented by Prieth Matthias & Rainer Michael
