@@ -7,7 +7,7 @@ Animals try to defend their territory in the jungle against humans.
 Join a team by klicking on the link below. Use the WASD-keys to run and the arrow keys to shoot.
 
 ##Links:
-- [live demo](http://jungledefender.herokuapp.com/)
+- [live demo](https://jungle-defender.onrender.com/) (free tier instance - might need up to 50 seconds to spin up)
 - [portfolio link](http://portfolio.multimediaart.at/projects/2013-jungledefender)
 
 ![jungledefender game](http://portfolio.multimediaart.at/system/projects/1391/media/5981/presentation_media.png)
